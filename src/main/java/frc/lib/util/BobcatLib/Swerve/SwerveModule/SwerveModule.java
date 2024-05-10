@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Swerve;
+package frc.lib.util.BobcatLib.Swerve.SwerveModule;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -180,5 +180,9 @@ public class SwerveModule {
     /** Returns the timestamps of the samples received this cycle. */
     public double[] getOdometryTimestamps() {
         return inputs.odometryTimestamps;
+    }
+
+    public double getDriveAcceleration(){
+        return inputs.driveAcceleration;
     }
 }

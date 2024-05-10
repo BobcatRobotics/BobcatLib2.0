@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Swerve;
+package frc.lib.util.BobcatLib.Swerve.SwerveModule;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -13,9 +13,16 @@ public interface SwerveModuleIO {
 
         public double drivePositionRot = 0.0;
         public double driveVelocityRotPerSec = 0.0;
+        public double driveAcceleration = 0.0;
                 
         public double canCoderPositionRot = 0.0;
         public double rawCanCoderPositionDeg = 0.0;
+
+        public double internalTempDrive = 0;
+        public double processorTempDrive = 0;
+        public double internalTempAngle = 0;
+        public double processorTempAngle = 0;
+
 
         public double[] odometryTimestamps = new double[] {};
         public double[] odometryDrivePositionsRad = new double[] {};

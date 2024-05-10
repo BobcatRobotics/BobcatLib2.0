@@ -4,15 +4,11 @@
 
 package frc.robot.Commands.Auto;
 
-import java.util.function.BooleanSupplier;
 
 
-import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Shooter.Shooter;
 import frc.robot.Subsystems.Spivit.Spivit;
 import frc.robot.Subsystems.Swerve.Swerve;
@@ -43,14 +39,14 @@ public class SubwooferShot extends Command {
   @Override
   public void initialize() {
     shooter.setSpeed(shooterRPM, shooterRPM);
-    spivit.setAngle(swerve.calcAngleBasedOnRealRegression());
+    spivit.setAngle(swerve.calcAngleBasedOnHashMap());
     timer.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    spivit.setAngle(swerve.calcAngleBasedOnRealRegression());
+    spivit.setAngle(swerve.calcAngleBasedOnHashMap());
     if(shooter.aboveSpeed(3700)){
       upToSpeed = true;
     }

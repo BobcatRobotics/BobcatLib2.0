@@ -2,14 +2,12 @@ package frc.robot.Subsystems.Amp;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Constants.AmpConstants;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 
@@ -78,13 +76,18 @@ public class AmpIOFalcon implements AmpIO {
     public void updateInputs(AmpIOInputs inputs) {
         BaseStatusSignal.refreshAll(motorPosition, statorCurrent);
         inputs.motorPosition = (motorPosition.getValueAsDouble()/30)*(360); //degrees
+        inputs.current = statorCurrent.getValueAsDouble();
     }
 
     /*
      * runs the motor to rotiation amount for pid
      */
     public void setPos(double rotationAmount) {
-        motor.setControl(m_request.withPosition(rotationAmount*30).withFeedForward(0.1));
+        motor.setControl(m_request.withPosition(rotationAmount*30));//.withFeedForward(0.1));
+    }
+
+    public void setPosWithFeedforward(double pos, double ff) {
+        motor.setControl(m_request.withPosition(pos*30)); //.withFeedForward(ff));
     }
 
     /**
@@ -101,14 +104,17 @@ public class AmpIOFalcon implements AmpIO {
         motor.stopMotor();
     }
 
+    public void stopMotorFeedforward(){
+        //motor.set(0.03);
+    }
+
+    public void stopMotorStowPos() {
+        motor.set(-0.01);
+    }
+
     public void zeroPosition() {
         motor.getConfigurator().setPosition(0);
     }
 
-    @Override
-    public boolean currentLimitReached(){
-        
-        return motor.getStatorCurrent().getValueAsDouble() > AmpConstants.ampStatorCurrentLimit;
-    }
 
 } 

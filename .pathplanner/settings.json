@@ -1,8 +1,19 @@
 {
-  "robotWidth": 0.52,
-  "robotLength": 0.521,
+  "robotWidth": 0.813,
+  "robotLength": 0.81,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "Amp Side 2",
+    "Amp Side Auto",
+    "Amp Side Outside First",
+    "Fast Food",
+    "Leftovers",
+    "Note Hunting Auto",
+    "Out Of The Way 2",
+    "Out of The Way 3",
+    "Side of Ranch",
+    "centerline sweeps"
+  ],
   "autoFolders": [
     "New Folder"
   ],

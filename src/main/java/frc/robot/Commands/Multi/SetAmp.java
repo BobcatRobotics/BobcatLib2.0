@@ -4,9 +4,6 @@
 
 package frc.robot.Commands.Multi;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Subsystems.Amp.Amp;
@@ -36,41 +33,39 @@ public class SetAmp extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    spivit.raiseForAmpMovement();
-    SmartDashboard.putBoolean("amp", false);
+    spivit.raiseForAmpScore();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putBoolean("deployed", amp.deployed());
-    if (spivit.getAngle() >= ShooterConstants.ampDeploySafeValue - 1.5) {
-      if (deploy) {
+    if (deploy) {
+      if (spivit.getAngle() >= ShooterConstants.ampDeploySafeValue) {
         amp.deploy();
-        if (amp.beyondCrashThreshold()) {
-          spivit.raiseForAmpScore();
-        }
-      } else {
-        amp.retract();
-        if (amp.retracted()) {
-          spivit.stow();
-        }
+        spivit.raiseForAmpScore();
       }
+    } else {
+      // spivit.stow();
+      spivit.raiseForAmpScore();
+      amp.retract();
     }
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putBoolean("amp", true);
-    amp.stop();
+    if (deploy) {
+      amp.stopMotorFeedforward();
+    } else {
+      amp.stopMotorStowPos();
+    }
     spivit.stopMotorFeedforward();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (deploy ? amp.deployed() : amp.retracted()) || DriverStation.isDisabled();
+    // return (deploy ? amp.deployed() : amp.retracted()) || DriverStation.isDisabled();
+    return false;
   }
 }

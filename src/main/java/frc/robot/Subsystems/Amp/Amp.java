@@ -25,15 +25,15 @@ public class Amp extends SubsystemBase {
         io.setPos(degrees/360.0); // degrees -> rotationsss
     }
 
+    public void setPosWithFeedforward(double degrees, double ff) {
+        io.setPosWithFeedforward(degrees/360.0, ff);
+    }
+
     public void deploy(){
         setPos(AmpConstants.deployValue);
     }
     public void retract(){
-        setPos(AmpConstants.retractValue);
-    }
-
-    public boolean beyondCrashThreshold(){
-        return inputs.motorPosition > AmpConstants.crashThreshold-2; //TODO not sure if this should be > or <, need to check motor invert and gearing stuff
+        setPosWithFeedforward(AmpConstants.retractValue, -0.06);
     }
 
     /**
@@ -62,5 +62,14 @@ public class Amp extends SubsystemBase {
 
     public double getAngle(){
         return inputs.motorPosition;
+    }
+
+    
+    public void stopMotorFeedforward(){
+        io.stopMotorFeedforward();
+    }
+
+    public void stopMotorStowPos() {
+        io.stopMotorStowPos();
     }
 } 

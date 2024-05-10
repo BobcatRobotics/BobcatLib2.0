@@ -4,8 +4,6 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 
 import frc.robot.Constants.ShooterConstants;
@@ -41,6 +39,8 @@ public class ShooterIOFalcon implements ShooterIO {
         topConfigs.Slot0.kS = ShooterConstants.kTopS;
         topConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         topConfigs.CurrentLimits.StatorCurrentLimit = ShooterConstants.topCurrentLimit;
+        topConfigs.TorqueCurrent.PeakForwardTorqueCurrent = ShooterConstants.topCurrentLimit;
+        topConfigs.TorqueCurrent.PeakReverseTorqueCurrent = ShooterConstants.topCurrentLimit;
         topMotor.getConfigurator().apply(topConfigs);
 
         // Bottom motor configurations
@@ -53,6 +53,8 @@ public class ShooterIOFalcon implements ShooterIO {
         bottomConfigs.Slot0.kS = ShooterConstants.kBottomS;
         bottomConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         bottomConfigs.CurrentLimits.StatorCurrentLimit = ShooterConstants.bottomCurrentLimit;
+        bottomConfigs.TorqueCurrent.PeakForwardTorqueCurrent = ShooterConstants.bottomCurrentLimit;
+        bottomConfigs.TorqueCurrent.PeakReverseTorqueCurrent = ShooterConstants.bottomCurrentLimit;
 
         bottomMotor.getConfigurator().apply(bottomConfigs);
 

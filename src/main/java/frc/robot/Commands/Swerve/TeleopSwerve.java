@@ -1,7 +1,9 @@
 package frc.robot.Commands.Swerve;
 
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Subsystems.Swerve.Swerve;
+import frc.robot.Util.BobcatUtil;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -9,7 +11,9 @@ import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -24,8 +28,13 @@ public class TeleopSwerve extends Command {
     private DoubleSupplier fineTrans;
     private BooleanSupplier snapToAmp;
     private BooleanSupplier snapToSpeaker;
-    private double angleToSpeaker = 0.0;
+    private BooleanSupplier pass;
+    private BooleanSupplier ampAssist;
+    private double autoAlignAngle = 0.0;
     private boolean overriden = false;
+    private PIDController ampAssistController = new PIDController(0.1, 0, 0); //TODO tune
+    private BooleanSupplier rotateToNote;
+    
 
     /**
      * 
@@ -40,8 +49,11 @@ public class TeleopSwerve extends Command {
      * @param fineTrans slow speed control, cancled if translation or strafe is in use
      * @param snapToAmp should we automatically rotate to the amp
      * @param snapToSpeaker should we automatically align to the speaker
+     * @param pass align to be facing the amp for passing notes
      */
-    public TeleopSwerve(Swerve swerve, DoubleSupplier translation, DoubleSupplier strafe, DoubleSupplier rotation, BooleanSupplier robotCentric, DoubleSupplier fineStrafe, DoubleSupplier fineTrans, BooleanSupplier snapToAmp, BooleanSupplier snapToSpeaker) {
+    public TeleopSwerve(Swerve swerve, DoubleSupplier translation, DoubleSupplier strafe, 
+    DoubleSupplier rotation, BooleanSupplier robotCentric, DoubleSupplier fineStrafe, DoubleSupplier fineTrans, 
+    BooleanSupplier snapToAmp, BooleanSupplier snapToSpeaker, BooleanSupplier pass, BooleanSupplier ampAssist, BooleanSupplier rotateToNote) {
         this.swerve = swerve;
         addRequirements(swerve);
 
@@ -52,7 +64,13 @@ public class TeleopSwerve extends Command {
         this.fineStrafe = fineStrafe;
         this.fineTrans = fineTrans;
         this.snapToAmp = snapToAmp;
-        this.snapToSpeaker = snapToSpeaker;        
+        this.snapToSpeaker = snapToSpeaker;    
+        this.pass = pass;   
+        this.ampAssist = ampAssist; 
+        this.rotateToNote = rotateToNote;
+        ampAssistController.setSetpoint(0);
+        Logger.recordOutput("RotationToNote", -1);
+        
     }
 
     @Override
@@ -62,24 +80,37 @@ public class TeleopSwerve extends Command {
         double translationVal = MathUtil.applyDeadband(translation.getAsDouble(), SwerveConstants.stickDeadband);
         double strafeVal = MathUtil.applyDeadband(strafe.getAsDouble(), SwerveConstants.stickDeadband);
         double rotationVal = MathUtil.applyDeadband(rotation.getAsDouble(), SwerveConstants.stickDeadband); //from 0 to one
+        // Rotation2d ampVal = BobcatUtil.isBlue()?Constants.FieldConstants.blueAmpCenter.getRotation() : Constants.FieldConstants.redAmpCenter.getRotation();
 
-        if (snapToSpeaker.getAsBoolean() && rotationVal == 0) {
+        if(pass.getAsBoolean() && rotationVal == 0){
+            autoAlignAngle = BobcatUtil.isRed() ? swerve.getAngleToPassArea() : swerve.getAngleToPassArea();
+            overriden = false;
+            Logger.recordOutput("Swerve/PassAngle",new Pose2d(swerve.getPose().getTranslation(), Rotation2d.fromRadians(swerve.getAngleToPassArea())));
+
+        }else if (snapToSpeaker.getAsBoolean() && rotationVal == 0) {
             //Translation2d speaker = swerve.getTranslationToSpeaker();
             //angleToSpeaker = Math.atan(speaker.getY()/speaker.getX());
-            angleToSpeaker = swerve.getAngleToSpeakerApriltag().getRadians();
-            Logger.recordOutput("Swerve/AlignmentToSpeaker",new Pose2d(swerve.getPose().getTranslation(), swerve.getAngleToSpeakerApriltag()) );
+            // angleToSpeaker = swerve.getAngleToSpeakerApriltag().getRadians();
+            // Logger.recordOutput("Swerve/AlignmentToSpeaker",new Pose2d(swerve.getPose().getTranslation(), swerve.getAngleToSpeakerApriltag()) );
+            // angleToSpeaker = swerve.getAngleToSpeakerTagAuto().getRadians();
+            autoAlignAngle = BobcatUtil.isRed() ? swerve.getShootWhileMoveBallistics(ShooterConstants.encoderOffsetFromHorizontal)[0] : swerve.getShootWhileMoveBallistics(ShooterConstants.encoderOffsetFromHorizontal)[0] + Math.PI;
+            Logger.recordOutput("Swerve/AlignmentToSpeaker",new Pose2d(swerve.getPose().getTranslation(), swerve.getAngleToSpeakerTagAuto()));
             overriden = false;
             
-        } else {
+        }else {
             overriden = true;
         }
+        Logger.recordOutput("RotationToNote/rotatingRotationToNote should run", rotateToNote.getAsBoolean() && rotationVal == 0);
+        Logger.recordOutput("RotationToNote/rotatingRot button pressed", rotateToNote.getAsBoolean());
+
         // overriden = true;
 
-        if (snapToAmp.getAsBoolean() && rotationVal == 0) {
-            snapToAmp = () -> true;
-        } else {
-            snapToAmp = () -> false;
-        }
+        // if (snapToAmp.getAsBoolean() && rotationVal == 0) {
+        //     snapToAmp = () -> true;
+        // } else {
+        //     snapToAmp = () -> false;
+        // }
+
 
         /* If joysticks not receiving any normal input, use twist values for fine adjust */
         if (strafeVal == 0.0) {
@@ -89,14 +120,38 @@ public class TeleopSwerve extends Command {
             translationVal = fineTrans.getAsDouble();
         }
 
+        
+         
+        if(ampAssist.getAsBoolean() && swerve.getXDistanceToAmp() < 1){ // if button pressed and were within 1 meter of the amp, apply aim assist for amp alignment
+            translationVal += ampAssistController.calculate(swerve.getXDistanceToAmp());
+            Logger.recordOutput("AimAssist/AssistValue", ampAssistController.calculate(swerve.getXDistanceToAmp()));
+            Logger.recordOutput("AimAssist/distanceToAmp", swerve.getXDistanceToAmp());
+        }
+
+        Logger.recordOutput("AmpAlign/snapToAmp", snapToAmp.getAsBoolean());
         /* Drive */
+        // if(!snapToAmp.getAsBoolean()){
         swerve.drive(
             new Translation2d(translationVal, strafeVal).times(SwerveConstants.maxSpeed), 
             rotationVal * SwerveConstants.maxAngularVelocity,
             !robotCentric.getAsBoolean(),
             snapToAmp.getAsBoolean(),
-            snapToSpeaker.getAsBoolean() && !overriden,
-            angleToSpeaker
+            (snapToSpeaker.getAsBoolean() || pass.getAsBoolean()) && !overriden,
+            autoAlignAngle,
+            rotateToNote.getAsBoolean(),
+            swerve.getRotationToNote()
         );
+    // }else{
+    //     swerve.drive(
+    //         new Translation2d(translationVal, strafeVal).times(SwerveConstants.maxSpeed), 
+    //         ampVal,
+    //         !robotCentric.getAsBoolean(),
+    //         false,
+    //         false,
+    //         0
+    //     );
+
+    // }
+        
     }
 }

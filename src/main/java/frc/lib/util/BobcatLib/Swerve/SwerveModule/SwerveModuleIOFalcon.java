@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Swerve;
+package frc.lib.util.BobcatLib.Swerve.SwerveModule;
 
 import java.util.Queue;
 
@@ -15,6 +15,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.ModuleConstants;
+import frc.lib.util.BobcatLib.Swerve.PhoenixOdometryThread;
 import frc.robot.Constants.SwerveConstants;
 
 public class SwerveModuleIOFalcon implements SwerveModuleIO {
@@ -27,11 +28,17 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
     private final DutyCycleOut driveRequest;
     private final DutyCycleOut angleRequest;
 
+    private final StatusSignal<Double> internalTempDrive;
+    private final StatusSignal<Double> processorTempDrive;
+    private final StatusSignal<Double> internalTempAngle;
+    private final StatusSignal<Double> processorTempAngle;
+
     private final Queue<Double> timestampQueue;
 
     private final Queue<Double> drivePositionQueue;
     private final StatusSignal<Double> drivePosition;
     private final StatusSignal<Double> driveVelocity;
+    private final StatusSignal<Double> driveAcceleration;
 
     private final Queue<Double> anglePositionQueue;
     private final StatusSignal<Double> angleAbsolutePosition;
@@ -39,11 +46,11 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
     public SwerveModuleIOFalcon(ModuleConstants moduleConstants) {
         encoderOffset = moduleConstants.angleOffset;
 
-        angleEncoder = new CANcoder(moduleConstants.cancoderID, SwerveConstants.canivore);
+        angleEncoder = new CANcoder(moduleConstants.cancoderID);
         configAngleEncoder();
-        angleMotor = new TalonFX(moduleConstants.angleMotorID, SwerveConstants.canivore);
+        angleMotor = new TalonFX(moduleConstants.angleMotorID);
         configAngleMotor();
-        driveMotor = new TalonFX(moduleConstants.driveMotorID, SwerveConstants.canivore);
+        driveMotor = new TalonFX(moduleConstants.driveMotorID);
         configDriveMotor();
 
         driveRequest = new DutyCycleOut(0.0).withEnableFOC(SwerveConstants.useFOC);
@@ -55,13 +62,19 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         drivePositionQueue =
             PhoenixOdometryThread.getInstance().registerSignal(driveMotor, driveMotor.getPosition());
         driveVelocity = driveMotor.getVelocity();
-
+        driveAcceleration = driveMotor.getAcceleration();
         angleAbsolutePosition = angleEncoder.getAbsolutePosition();
         anglePositionQueue =
             PhoenixOdometryThread.getInstance().registerSignal(angleEncoder, angleEncoder.getPosition());
 
+        internalTempDrive = driveMotor.getDeviceTemp();
+        processorTempDrive = driveMotor.getProcessorTemp();
+        internalTempAngle = angleMotor.getDeviceTemp();
+        processorTempAngle = angleMotor.getProcessorTemp();
+
         BaseStatusSignal.setUpdateFrequencyForAll(
-            100.0, drivePosition, driveVelocity, angleAbsolutePosition);
+            50.0, drivePosition, driveVelocity, angleAbsolutePosition);
+        BaseStatusSignal.setUpdateFrequencyForAll(5, internalTempAngle, internalTempDrive, processorTempAngle, processorTempDrive);
         driveMotor.optimizeBusUtilization();
         angleMotor.optimizeBusUtilization();
     }
@@ -71,7 +84,12 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         BaseStatusSignal.refreshAll(
         drivePosition,
         driveVelocity,
-        angleAbsolutePosition);
+        angleAbsolutePosition,
+        internalTempAngle,
+        internalTempDrive,
+        processorTempAngle,
+        processorTempDrive,
+        driveAcceleration);
 
         inputs.drivePositionRot = drivePosition.getValueAsDouble() / SwerveConstants.driveGearRatio;
         inputs.driveVelocityRotPerSec = driveVelocity.getValueAsDouble() / SwerveConstants.driveGearRatio;
@@ -94,6 +112,11 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         timestampQueue.clear();
         drivePositionQueue.clear();
         anglePositionQueue.clear();
+
+        inputs.internalTempAngle = internalTempAngle.getValueAsDouble();
+        inputs.internalTempDrive = internalTempDrive.getValueAsDouble();
+        inputs.processorTempAngle = processorTempAngle.getValueAsDouble();
+        inputs.processorTempDrive = processorTempDrive.getValueAsDouble();
     }
 
     /**

@@ -6,8 +6,6 @@ package frc.robot.Commands.Auto;
 
 import java.util.function.BooleanSupplier;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,7 +43,7 @@ public class ContinouslyAlignAndShoot extends Command {
   @Override
   public void initialize() {
     shooter.setSpeed(shooterRPM, shooterRPM);
-    spivit.setAngle(swerve.calcAngleBasedOnRealRegression());
+    spivit.setAngle(swerve.calcAngleBasedOnHashMap());
     intake.intakeToShooter();
   }
 
@@ -59,7 +57,7 @@ public class ContinouslyAlignAndShoot extends Command {
       swerve.setRotationTarget(Rotation2d.fromRadians(swerve.getAngleToSpeaker() + Math.PI));
     }
     //shooter.setSpeed(shooterRPM, shooterRPM);
-    spivit.setAngle(swerve.calcAngleBasedOnRealRegression()-3);
+    spivit.setAngle(swerve.calcAngleBasedOnHashMap()-3);
   }
 
   // Called once the command ends or is interrupted.
