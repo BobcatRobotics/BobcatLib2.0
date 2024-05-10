@@ -51,6 +51,7 @@ import frc.robot.Subsystems.Vision.Vision;
 import frc.robot.Util.BobcatUtil;
 import frc.robot.Util.RobotPoseLookup;
 import frc.lib.util.BobcatLib.Swerve.GyroIOInputsAutoLogged;
+import frc.lib.util.BobcatLib.Swerve.PhoenixOdometryThread;
 
 
 public class Swerve extends SubsystemBase {
@@ -87,7 +88,7 @@ public class Swerve extends SubsystemBase {
     private double lastMovingYaw = 0.0;
     private boolean rotating = false;
 
-    static final Lock odometryLock = new ReentrantLock();
+    static final public Lock odometryLock = new ReentrantLock();
 
     Pose2d desiredPose = new Pose2d();
     private Rotation2d lastYaw = new Rotation2d();
@@ -197,7 +198,9 @@ public class Swerve extends SubsystemBase {
 
         Logger.recordOutput("Swerve/YawSetpoint", lastMovingYaw);
         Logger.recordOutput("Swerve/CurrentYaw", getYaw().getRadians());
+        Logger.recordOutput("Swerve/PureOdom", poseEstimator.getPureOdometry());
         Logger.processInputs("Swerve/Gyro", gyroInputs);
+        
 
         // Update odometry
         double[] sampleTimestamps = modules[0].getOdometryTimestamps();
