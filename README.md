@@ -1,68 +1,38 @@
-02/18/2024 Shooter PID Testing
-From: Wing
+# Welcome to BobcatLib 2.0!
 
-Angle encoder: 259.5
+#### This repo contains several utilities and code templates, allowing for quick creation of a robot's codbase at the beginning of a season. This readme won't necessarily cover every single file in BobcatLib, but it will cover all the important ones 
 
-Note from Devin: Add 180 degree offset to the pigeon in configs
+## Overview
 
-4000 rpm pid gains:
+### PoseEstimation:
 
-top p: 0.05
-top i: 0
-top d: 0.1
-top v: 0.0115
+#### BobcatSwerveEstimator
+This is the class you should instantiate when creating a swerve pose estimator, it has all of the functionality of WPILib's swerve estimator, but also supports dynamic odometry std devs, as well as the ability to log pure odometry values.
 
-bottom p: 0.14
-bottom i: 0
-bottom d: 0.11
-bottom v: 0.01165
+The pure odometry should only be used for debugging and tuning Std Devs
 
-5000 rpm pid gains:
+#### BobcatEstimator & BaseBobcatSwerveEstimator
+These are the classes that do all the heavy lifting of pose estimation, do NOT instantiate these classes. BobcatSwerveEstimator essentially just contains two base swerve estimators, one of them recieves all updates and functions like normal, but the second one only recieves odometry updates, and is only used for tracking pure odometry values.
 
-top p: 0.05
-top i: 0
-top d: 0.1
-top v: 0.0113
+### Swerve:
+I'm not going to go into too much detail, but this folder contains various classes necessary for creating a swerve drive.
 
-bottom p: 0.25
-bottom i: 0
-bottom d: 0.11
-bottom v: 0.014
+#### SwerveBase
+(wip)
 
+## Sysid:
 
+### Sysid.java
+This class abstracts out a lot of the sysid logic, for quicker tuning. To use it, create an instance in robot container, and pass in your swerve drive in the constructor. Use the getSysidTest() method to get the commands necessary for running the tests, data will be stored on the rio, and has to be retrived via the sysid tool.
 
-Shooter testing:
+### SysidCompatibleSwerve
+Your swerve subsystem MUST implement this interface. It contains all of the methods that Sysid needs and expects to control the robot and log data properly.
 
+## Team6328:
+Thanks Jonah ;)
 
+This folder contains a bunch of code that we ~~stole~~ borrowed from 6328. Some of this is code that they stole from 254.
 
-Distance from Speaker: 19 feet 3 inches (Wing)
-
-Angle: 259.5
-RPM: 5000
-Result: Consistently hitting front half of speaker (too high)
-
-Angle: 257.5
-RPM: 5000
-Result: Made most (4/7) in, 2 of them went too high, 1 went too low
-
-Angle: 256.5
-RPM: 5000
-Result: Changed feeding technique, went too high for most of them, made only 2 out of 7.
-
-
-Distance from Speaker: 15 feet 3 inches (Stage shot)
-
-Angle: 259
-RPM: 5000
-Results: 100% money!!!! first try
-
-
-Distance from Speaker: 10 feet (Podium)
-
-Angle: 267
-RPM: 5000
-Results: 8/8 holy smokes!
-
-
-
-
+### LoggedTunableNumber
+DOES NOT WORK RN <p>
+This is a double that is automatically published to NT and recorded by AK, very useful for tuning PIDs without having to redeploy every time, just make sure to get rid of it after you're done tuning.

@@ -10,6 +10,7 @@ public class DynamicTunePID extends PIDController {
     private double d;
 
     /**
+     * @deprecated
      * TODO: WIP <p>
      * 
      * NOT FOR USE IN COMP <n>

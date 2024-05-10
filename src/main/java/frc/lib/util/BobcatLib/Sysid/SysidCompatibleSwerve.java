@@ -5,7 +5,7 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 
 public interface SysidCompatibleSwerve {
-
+    //TODO: better documentation
     /**
      * set all modules to supplied voltage
      */
