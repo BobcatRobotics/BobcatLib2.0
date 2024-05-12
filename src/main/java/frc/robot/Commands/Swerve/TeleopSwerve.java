@@ -1,9 +1,9 @@
 package frc.robot.Commands.Swerve;
 
+import frc.lib.util.BobcatLib.BobcatUtil;
+import frc.lib.util.BobcatLib.Swerve.Swerve;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Subsystems.Swerve.Swerve;
-import frc.robot.Util.BobcatUtil;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;

@@ -18,8 +18,6 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
 
-import frc.robot.Subsystems.Swerve.Swerve;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.CANdle;
+package frc.lib.util.BobcatLib.CANdle;
 
 import org.littletonrobotics.junction.AutoLog;
 

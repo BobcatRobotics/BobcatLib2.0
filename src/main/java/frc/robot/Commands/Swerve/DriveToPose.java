@@ -6,7 +6,7 @@ package frc.robot.Commands.Swerve;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.Swerve.Swerve;
+import frc.lib.util.BobcatLib.Swerve.Swerve;
 
 public class DriveToPose extends Command {
   /** Creates a new DriveToPose. */

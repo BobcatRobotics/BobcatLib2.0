@@ -11,10 +11,10 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.util.BobcatLib.Swerve.Swerve;
 import frc.robot.Subsystems.CANdle.CANdle;
 import frc.robot.Subsystems.CANdle.CANdleState;
 import frc.robot.Subsystems.Spivit.Spivit;
-import frc.robot.Subsystems.Swerve.Swerve;
 
 public class CandleAlignment extends Command {
   Spivit spivit;

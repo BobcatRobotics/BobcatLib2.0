@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.CANdle;
+package frc.lib.util.BobcatLib.CANdle;
 
 public enum BuiltInAnimations {
         ColorFlow,

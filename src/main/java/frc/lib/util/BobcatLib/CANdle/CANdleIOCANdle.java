@@ -1,10 +1,10 @@
-package frc.robot.Subsystems.CANdle;
+package frc.lib.util.BobcatLib.CANdle;
 
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.StrobeAnimation;
 
+import frc.lib.util.BobcatLib.BobcatUtil;
 import frc.robot.Constants.CANdleConstants;
-import frc.robot.Util.BobcatUtil;
 
 public class CANdleIOCANdle implements CANdleIO {
     

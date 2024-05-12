@@ -26,7 +26,6 @@ public class VisionIOLimelight implements VisionIO{
     public final int detectorPiplineIndex; 
     public final int apriltagPipelineIndex;
     public final int horPixels;
-    public final double filterTimeConstant; // in seconds, inputs occuring over a time period significantly shorter than this will be thrown out
     public final Vector<N3> visionMeasurementStdDevs;
     public final int movingAverageNumTaps;
     public final LinearFilter distanceFilter;
@@ -40,7 +39,6 @@ public class VisionIOLimelight implements VisionIO{
     detectorPiplineIndex=limelightConstants.detectorPiplineIndex;
     apriltagPipelineIndex=limelightConstants.apriltagPipelineIndex;
     horPixels=limelightConstants.horPixels;
-    filterTimeConstant=limelightConstants.filterTimeConstant;
     visionMeasurementStdDevs=limelightConstants.visionMeasurementStdDevs;
     movingAverageNumTaps=limelightConstants.movingAverageNumTaps;
     distanceFilter = LinearFilter.movingAverage(movingAverageNumTaps);
@@ -113,24 +111,4 @@ public class VisionIOLimelight implements VisionIO{
     return pixels/horPixels;
   }
 
-  /**
-   * 
-   * @param widthPercent [0,1], percentage of the vertical width of the image that the note is taking up
-   * @return distance in meters
-   */
-  public double distanceFromCameraPercentage(double widthPercent){
-    
-    if (LimelightHelpersFast.getTV(name)){
-    widthPercent = pixlesToPercent(widthPercent);
-    // double horizontalLength = Constants.FieldConstants.noteDiameter / widthPercent;
-    // double cornerFOVAngle = Units.degreesToRadians(90 - (Constants.LimelightConstants.horizontalFOV/2));
-    // double hypotDist = (horizontalLength/2)*Math.tan(cornerFOVAngle); //distance from note to camera
-    double hypotDist = ((180*Constants.FieldConstants.noteDiameter)/(63.3*Math.PI)) * (1/widthPercent);
-    double intakeDist = Math.sqrt((hypotDist*hypotDist) - (limelightMountHeight*limelightMountHeight)); //distance to intake
-    
-    return intakeDist;
-    }else{
-      return 0;
-    }
-  }
 }

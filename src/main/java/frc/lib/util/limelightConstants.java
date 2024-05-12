@@ -11,9 +11,7 @@ public class limelightConstants {
     public final int detectorPiplineIndex; 
     public final int apriltagPipelineIndex;
     public final int horPixels;
-    public final double filterTimeConstant; // in seconds, inputs occuring over a time period significantly shorter than this will be thrown out
     public final Vector<N3> visionMeasurementStdDevs;
-    public final int movingAverageNumTaps;
 
 
 
@@ -32,7 +30,7 @@ public class limelightConstants {
      */
 
     public limelightConstants(String name, double verticalFOV, double horizontalFOV, double limelightMountHeight, int detectorPiplineIndex, int apriltagPipelineIndex,
-    int horPixels, double filterTimeConstant, Vector<N3> visionMeasurementStdDevs, int movingAverageNumTaps) {
+    int horPixels, Vector<N3> visionMeasurementStdDevs) {
         this.name = name;
         this.verticalFOV = verticalFOV; //degrees obviously
         this.horizontalFOV = horizontalFOV;
@@ -40,9 +38,7 @@ public class limelightConstants {
         this.detectorPiplineIndex = detectorPiplineIndex; 
         this.apriltagPipelineIndex = apriltagPipelineIndex;
         this.horPixels = horPixels;
-        this.filterTimeConstant = filterTimeConstant; // in seconds, inputs occuring over a time period significantly shorter than this will be thrown out
         this.visionMeasurementStdDevs = visionMeasurementStdDevs;
-        this.movingAverageNumTaps = movingAverageNumTaps;
 
     
     }

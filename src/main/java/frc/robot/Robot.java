@@ -18,9 +18,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.util.BobcatLib.BobcatUtil;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.Subsystems.Vision.CamMode;
-import frc.robot.Util.BobcatUtil;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -86,19 +86,8 @@ public class Robot extends LoggedRobot {
     m_robotContainer = new RobotContainer();
 
 
-    m_robotContainer.m_intakeVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_intakeVision.setPipeline(LimelightConstants.intake.detectorPiplineIndex);
-    m_robotContainer.m_shooterLeftVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_shooterLeftVision.setPipeline(LimelightConstants.shooterLeft.apriltagPipelineIndex);
-    m_robotContainer.m_shooterRightVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_shooterRightVision.setPipeline(LimelightConstants.shooterRight.apriltagPipelineIndex);
-    m_robotContainer.m_shooterCenterVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_shooterCenterVision.setPipeline(LimelightConstants.shooterRight.apriltagPipelineIndex);
-    m_robotContainer.m_intakeTagVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_intakeTagVision.setPipeline(LimelightConstants.shooterRight.apriltagPipelineIndex);
-
-
-    
+    m_robotContainer.limelight1.setCamMode(CamMode.VISION);
+    m_robotContainer.limelight1.setPipeline(LimelightConstants.shooterLeft.apriltagPipelineIndex);
   }
 
   @Override
@@ -119,28 +108,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
-    Logger.recordOutput("Alignment/feeding", false);
-    m_robotContainer.m_intakeVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_intakeVision.setPipeline(LimelightConstants.intake.detectorPiplineIndex);
-    m_robotContainer.m_shooterLeftVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_shooterLeftVision.setPipeline(LimelightConstants.shooterLeft.apriltagPipelineIndex);
-    m_robotContainer.m_shooterRightVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_shooterRightVision.setPipeline(LimelightConstants.shooterRight.apriltagPipelineIndex);
-    m_robotContainer.m_shooterCenterVision.setCamMode(CamMode.VISION);
-    
-    if(m_robotContainer.autoChooserInitialized()){
-      if(m_robotContainer.shouldUseHighResPipelineCenterLimelight()){
-        m_robotContainer.m_shooterCenterVision.setPipeline(Constants.LimelightConstants.shooterCenter.resPipline);
-      }else{
-        m_robotContainer.m_shooterCenterVision.setPipeline(Constants.LimelightConstants.shooterCenter.fpsPipline);
-      }
-    }else{
-      m_robotContainer.m_shooterCenterVision.setPipeline(Constants.LimelightConstants.shooterCenter.fpsPipline);
-    }
-    
-    m_robotContainer.m_intakeTagVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_intakeTagVision.setPipeline(LimelightConstants.shooterRight.apriltagPipelineIndex);
-
 
   }
 
@@ -154,26 +121,6 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-    m_robotContainer.m_intakeVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_intakeVision.setPipeline(LimelightConstants.intake.detectorPiplineIndex);
-    m_robotContainer.m_shooterLeftVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_shooterLeftVision.setPipeline(LimelightConstants.shooterLeft.apriltagPipelineIndex);
-    m_robotContainer.m_shooterRightVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_shooterRightVision.setPipeline(LimelightConstants.shooterRight.apriltagPipelineIndex);
-    m_robotContainer.m_shooterCenterVision.setCamMode(CamMode.VISION);
-    // if(m_robotContainer.autoChooserInitialized()){
-    //   if(m_robotContainer.shouldUseHighResPipelineCenterLimelight()){
-    //     m_robotContainer.m_shooterCenterVision.setPipeline(Constants.LimelightConstants.shooterCenter.resPipline);
-    //   }else{
-    //     m_robotContainer.m_shooterCenterVision.setPipeline(Constants.LimelightConstants.shooterCenter.fpsPipline);
-    //   }
-    // }else{
-    //   m_robotContainer.m_shooterCenterVision.setPipeline(Constants.LimelightConstants.shooterCenter.fpsPipline);
-    // }
-    m_robotContainer.m_intakeTagVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_intakeTagVision.setPipeline(LimelightConstants.shooterRight.apriltagPipelineIndex);
-
   }
 
   @Override
@@ -188,18 +135,6 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.configureBindings();  
-
-    m_robotContainer.m_intakeVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_intakeVision.setPipeline(LimelightConstants.intake.detectorPiplineIndex);
-    m_robotContainer.m_shooterLeftVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_shooterLeftVision.setPipeline(LimelightConstants.shooterLeft.apriltagPipelineIndex);
-    m_robotContainer.m_shooterRightVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_shooterRightVision.setPipeline(LimelightConstants.shooterRight.apriltagPipelineIndex);
-    m_robotContainer.m_shooterCenterVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_shooterCenterVision.setPipeline(Constants.LimelightConstants.shooterCenter.resPipline);
-    m_robotContainer.m_intakeTagVision.setCamMode(CamMode.VISION);
-    m_robotContainer.m_intakeTagVision.setPipeline(LimelightConstants.shooterRight.apriltagPipelineIndex);
-
   }
 
   @Override

@@ -1,4 +1,4 @@
-package frc.robot.Util;
+package frc.lib.util.BobcatLib;
 
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.ColorFlowAnimation;
@@ -14,13 +14,10 @@ import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation;
 import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Constants.AmpConstants;
+import frc.lib.util.BobcatLib.CANdle.BuiltInAnimations;
 import frc.robot.Constants.CANdleConstants;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.Subsystems.CANdle.BuiltInAnimations;
 
 public class BobcatUtil {
     public static Alliance getAlliance() {
@@ -35,17 +32,6 @@ public class BobcatUtil {
         return getAlliance() == Alliance.Red;
     }
 
-    public static double getShooterSpeed(double spivitAngle, double ampAngle) {
-        if(ampAngle <= AmpConstants.deployValue + 30){ //if the amp is within 15 degrees of being deployed, use the amp speed
-            return ShooterConstants.ampShootRPMSetpoint;
-        } else if (spivitAngle >= ShooterConstants.slowShooterSpivitAngle) { // if the spivit is high, we are close to
-                                                                             // the speaker, and we can use a slower
-                                                                             // setpoint
-            return ShooterConstants.slowShooterRPMSetpoint;
-        } else {
-            return ShooterConstants.fastShooterRPMSetpoint; // otherwise use our fast setpoint
-        }
-    }
     public static Animation getBuiltInAnimation(BuiltInAnimations animation) {
         switch (animation) {
             case ColorFlow:
@@ -75,10 +61,11 @@ public class BobcatUtil {
 
     public static double get0to2Pi(double rad) {
         rad = rad % (2 * Math.PI);
-        if (rad < (2 * Math.PI)) {
+        if (rad < (0)) {
             rad += (2 * Math.PI);
         } //should this be here?
         return rad;
     }
+
 
 }
