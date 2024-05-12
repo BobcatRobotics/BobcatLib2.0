@@ -1,4 +1,4 @@
-package frc.lib.util;
+package frc.lib.util.BobcatLib.Team6328;
 
 // Copyright (c) 2023 FRC 6328
 // http://github.com/Mechanical-Advantage

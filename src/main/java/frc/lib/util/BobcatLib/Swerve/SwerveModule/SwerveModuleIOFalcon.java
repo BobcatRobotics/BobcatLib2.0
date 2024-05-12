@@ -14,8 +14,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import frc.lib.util.ModuleConstants;
 import frc.lib.util.BobcatLib.Swerve.PhoenixOdometryThread;
+import frc.lib.util.BobcatLib.Team254.ModuleConstants;
 import frc.robot.Constants.SwerveConstants;
 
 public class SwerveModuleIOFalcon implements SwerveModuleIO {
@@ -231,5 +231,9 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         config.MagnetSensor.SensorDirection = SwerveConstants.sensorDirection;
 
         angleEncoder.getConfigurator().apply(config);
+    }
+
+    public void runCharachterization(){
+        angleMotor.
     }
 }

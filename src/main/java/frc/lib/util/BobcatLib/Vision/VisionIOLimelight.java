@@ -2,16 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Subsystems.Vision;
+package frc.lib.util.BobcatLib.Vision;
 
-
-import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.numbers.N3;
-import frc.lib.util.limelightConstants;
-import frc.robot.Constants;
 
 import frc.robot.LimelightHelpersFast;
 
@@ -19,31 +11,13 @@ public class VisionIOLimelight implements VisionIO{
   /** Creates a new VisionIOLimelight. */
     LEDMode currentLedMode = LEDMode.FORCEOFF;
     CamMode currentCamMode = CamMode.VISION;
-    public final String name;
-    public final double verticalFOV;
-    public final double horizontalFOV;
-    public final double limelightMountHeight;
-    public final int detectorPiplineIndex; 
-    public final int apriltagPipelineIndex;
-    public final int horPixels;
-    public final Vector<N3> visionMeasurementStdDevs;
-    public final int movingAverageNumTaps;
-    public final LinearFilter distanceFilter;
-
+    public final limelightConstants constants;
+    private final String name;
 
   public VisionIOLimelight(limelightConstants limelightConstants) {
-    name = limelightConstants.name;
-    verticalFOV = limelightConstants.verticalFOV;
-    horizontalFOV = limelightConstants.horizontalFOV;
-    limelightMountHeight=limelightConstants.limelightMountHeight;
-    detectorPiplineIndex=limelightConstants.detectorPiplineIndex;
-    apriltagPipelineIndex=limelightConstants.apriltagPipelineIndex;
-    horPixels=limelightConstants.horPixels;
-    visionMeasurementStdDevs=limelightConstants.visionMeasurementStdDevs;
-    movingAverageNumTaps=limelightConstants.movingAverageNumTaps;
-    distanceFilter = LinearFilter.movingAverage(movingAverageNumTaps);
-
-
+    constants = limelightConstants;
+    name = constants.name;
+    
   }
 
   @Override
@@ -57,9 +31,6 @@ public class VisionIOLimelight implements VisionIO{
     inputs.tx = LimelightHelpersFast.getTX(name);
     inputs.ty = LimelightHelpersFast.getTY(name);
     inputs.fiducialID = LimelightHelpersFast.getFiducialID(name);
-    inputs.boundingHorizontalPixels = LimelightHelpersFast.getLimelightNTDouble(name, "thor");
-    inputs.distanceToNote = distanceFilter.calculate(distanceFromCameraPercentage(inputs.boundingHorizontalPixels));
-    inputs.rawDistanceToNote = distanceFromCameraPercentage(inputs.boundingHorizontalPixels);
     inputs.tClass=LimelightHelpersFast.getNeuralClassID(name);
     inputs.name=name;
   }
@@ -105,10 +76,4 @@ public class VisionIOLimelight implements VisionIO{
   public void setPipeline(String limelight, int index){    
     LimelightHelpersFast.setPipelineIndex(limelight, index);
   }
-
-  public double pixlesToPercent(double pixels){
-    Logger.recordOutput("Limelight/horPercent", pixels/horPixels);
-    return pixels/horPixels;
-  }
-
 }

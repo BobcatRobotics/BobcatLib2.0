@@ -1,8 +1,7 @@
 package frc.robot.Commands.Swerve;
 
-import frc.lib.util.BobcatLib.BobcatUtil;
 import frc.lib.util.BobcatLib.Swerve.Swerve;
-import frc.robot.Constants.ShooterConstants;
+import frc.lib.util.BobcatLib.Team254.BobcatUtil;
 import frc.robot.Constants.SwerveConstants;
 
 import java.util.function.BooleanSupplier;
@@ -54,6 +53,7 @@ public class TeleopSwerve extends Command {
     public TeleopSwerve(Swerve swerve, DoubleSupplier translation, DoubleSupplier strafe, 
     DoubleSupplier rotation, BooleanSupplier robotCentric, DoubleSupplier fineStrafe, DoubleSupplier fineTrans, 
     BooleanSupplier snapToAmp, BooleanSupplier snapToSpeaker, BooleanSupplier pass, BooleanSupplier ampAssist, BooleanSupplier rotateToNote) {
+        
         this.swerve = swerve;
         addRequirements(swerve);
 
@@ -82,26 +82,12 @@ public class TeleopSwerve extends Command {
         double rotationVal = MathUtil.applyDeadband(rotation.getAsDouble(), SwerveConstants.stickDeadband); //from 0 to one
         // Rotation2d ampVal = BobcatUtil.isBlue()?Constants.FieldConstants.blueAmpCenter.getRotation() : Constants.FieldConstants.redAmpCenter.getRotation();
 
-        if(pass.getAsBoolean() && rotationVal == 0){
-            autoAlignAngle = BobcatUtil.isRed() ? swerve.getAngleToPassArea() : swerve.getAngleToPassArea();
-            overriden = false;
-            Logger.recordOutput("Swerve/PassAngle",new Pose2d(swerve.getPose().getTranslation(), Rotation2d.fromRadians(swerve.getAngleToPassArea())));
+        overriden = rotationVal == 0 ? false : true;
 
-        }else if (snapToSpeaker.getAsBoolean() && rotationVal == 0) {
-            //Translation2d speaker = swerve.getTranslationToSpeaker();
-            //angleToSpeaker = Math.atan(speaker.getY()/speaker.getX());
-            // angleToSpeaker = swerve.getAngleToSpeakerApriltag().getRadians();
-            // Logger.recordOutput("Swerve/AlignmentToSpeaker",new Pose2d(swerve.getPose().getTranslation(), swerve.getAngleToSpeakerApriltag()) );
-            // angleToSpeaker = swerve.getAngleToSpeakerTagAuto().getRadians();
-            autoAlignAngle = BobcatUtil.isRed() ? swerve.getShootWhileMoveBallistics(ShooterConstants.encoderOffsetFromHorizontal)[0] : swerve.getShootWhileMoveBallistics(ShooterConstants.encoderOffsetFromHorizontal)[0] + Math.PI;
-            Logger.recordOutput("Swerve/AlignmentToSpeaker",new Pose2d(swerve.getPose().getTranslation(), swerve.getAngleToSpeakerTagAuto()));
-            overriden = false;
-            
-        }else {
-            overriden = true;
+        if (snapToSpeaker.getAsBoolean() && !overriden) {
+            autoAlignAngle = 0;            
         }
-        Logger.recordOutput("RotationToNote/rotatingRotationToNote should run", rotateToNote.getAsBoolean() && rotationVal == 0);
-        Logger.recordOutput("RotationToNote/rotatingRot button pressed", rotateToNote.getAsBoolean());
+
 
         // overriden = true;
 
@@ -136,22 +122,8 @@ public class TeleopSwerve extends Command {
             rotationVal * SwerveConstants.maxAngularVelocity,
             !robotCentric.getAsBoolean(),
             snapToAmp.getAsBoolean(),
-            (snapToSpeaker.getAsBoolean() || pass.getAsBoolean()) && !overriden,
-            autoAlignAngle,
-            rotateToNote.getAsBoolean(),
-            swerve.getRotationToNote()
+            autoAlignAngle
         );
-    // }else{
-    //     swerve.drive(
-    //         new Translation2d(translationVal, strafeVal).times(SwerveConstants.maxSpeed), 
-    //         ampVal,
-    //         !robotCentric.getAsBoolean(),
-    //         false,
-    //         false,
-    //         0
-    //     );
-
-    // }
         
     }
 }

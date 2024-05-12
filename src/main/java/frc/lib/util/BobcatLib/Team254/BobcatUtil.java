@@ -1,4 +1,4 @@
-package frc.lib.util.BobcatLib;
+package frc.lib.util.BobcatLib.Team254;
 
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.ColorFlowAnimation;

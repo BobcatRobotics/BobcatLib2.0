@@ -19,11 +19,12 @@ import frc.lib.util.BobcatLib.Swerve.Swerve;
 import frc.lib.util.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
 import frc.lib.util.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import frc.lib.util.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
-import frc.robot.Constants.LimelightConstants;
+import frc.lib.util.BobcatLib.Vision.Vision;
+import frc.lib.util.BobcatLib.Vision.VisionIO;
+import frc.lib.util.BobcatLib.Vision.VisionIOLimelight;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.Commands.Swerve.TeleopSwerve;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Subsystems.Vision.Vision;
-import frc.robot.Subsystems.Vision.VisionIO;
-import frc.robot.Subsystems.Vision.VisionIOLimelight;
 
 public class RobotContainer {
 
@@ -43,7 +44,7 @@ public class RobotContainer {
                 switch (Constants.currentMode) {
                         // Real robot, instantiate hardware IO implementations
                         case REAL:
-                                limelight1 = new Vision(new VisionIOLimelight(LimelightConstants.limelight1.constants));
+                                limelight1 = new Vision(new VisionIOLimelight(VisionConstants.limelight1.constants));
                                 cameras = new Vision[]{limelight1};
                                 swerve = new Swerve(new GyroIOPigeon2(),
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module0Constants.constants), //fl
@@ -55,7 +56,7 @@ public class RobotContainer {
 
                         // Sim robot, instantiate physics sim IO implementations
                         case SIM:
-                                limelight1 = new Vision(new VisionIOLimelight(LimelightConstants.limelight1.constants));
+                                limelight1 = new Vision(new VisionIOLimelight(VisionConstants.limelight1.constants));
                                 cameras = new Vision[]{limelight1};
 
                                 swerve = new Swerve(new GyroIO() {
@@ -129,6 +130,12 @@ public class RobotContainer {
          * () -> buttonOrAxisValue
          */
         public void configureBindings() {
+
+                swerve.setDefaultCommand(
+                        new TeleopSwerve(swerve, null, null, null, null, null, null, null, null, null, null, null)
+                );
+
+
                 
                 //will run when 'a' button is pressed
                 gp.a.onTrue(

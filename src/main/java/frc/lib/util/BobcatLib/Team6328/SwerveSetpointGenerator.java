@@ -1,6 +1,4 @@
-package frc.lib.util.swerve;
-
-import static frc.lib.util.EqualsUtil.*;
+package frc.lib.util.BobcatLib.Team6328;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -8,8 +6,10 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.lib.util.EqualsUtil;
-import frc.lib.util.GeomUtil;
+import frc.lib.util.BobcatLib.Team254.EqualsUtil;
+
+import static frc.lib.util.BobcatLib.Team254.EqualsUtil.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

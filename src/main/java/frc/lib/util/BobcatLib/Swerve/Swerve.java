@@ -25,22 +25,25 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.util.BobcatLib.BobcatUtil;
 import frc.lib.util.BobcatLib.PoseEstimation.BobcatSwerveEstimator;
 import frc.lib.util.BobcatLib.Swerve.SwerveModule.SwerveModule;
 import frc.lib.util.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
+import frc.lib.util.BobcatLib.Sysid.SysidCompatibleSwerve;
+import frc.lib.util.BobcatLib.Team254.BobcatUtil;
+import frc.lib.util.BobcatLib.Vision.Vision;
 import frc.robot.Constants;
-import frc.robot.Constants.LimelightConstants;
-import frc.robot.Constants.PoseEstimatorConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.lib.util.BobcatLib.Swerve.SwerveConstants.Gains;
-import frc.robot.Subsystems.Vision.Vision;
 
 
-public class Swerve extends SubsystemBase {
+public class Swerve extends SubsystemBase implements SysidCompatibleSwerve {
+
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final SwerveModule[] modules;
@@ -90,10 +93,10 @@ public class Swerve extends SubsystemBase {
         autoAlignPID = new PIDController(SwerveConstants.Gains.AutoAlign.rotationKP, SwerveConstants.Gains.AutoAlign.rotationKI, SwerveConstants.Gains.AutoAlign.rotationKI);
         autoAlignPID.enableContinuousInput(0, 2 * Math.PI);
 
-
+        //std devs will be actually set later, so we dont need to initialize them to actual values here
         poseEstimator = new BobcatSwerveEstimator(SwerveConstants.kinematics, getYaw(), getModulePositions(),
-                new Pose2d(), LimelightConstants.autoStateStdDevs, VecBuilder.fill(0, 0, 0));
-
+                new Pose2d(), VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0));
+        
 
         // setpointGenerator =
         // SwerveSetpointGenerator.builder()
@@ -153,7 +156,8 @@ public class Swerve extends SubsystemBase {
     public void setRotationTarget(Rotation2d target) {
         ppRotationOverride = target;
     }
-
+    
+    @Override
     public void periodic() {
         //Priority IDs should be set in your SEASON SPECIFIC swerve subsystem, NOT in this base subsystem
         
@@ -195,13 +199,13 @@ public class Swerve extends SubsystemBase {
                 case THROWOUT:
                     break;
                 case DISTRUST:
-                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, PoseEstimatorConstants.distrustStdDevs);
+                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, SwerveConstants.Odometry.distrustStdDevs);
                     break;
                 case TRUST:
-                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, PoseEstimatorConstants.trustStdDevs);
+                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, SwerveConstants.Odometry.trustStdDevs);
                     break;
                 default:
-                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, PoseEstimatorConstants.trustStdDevs);
+                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, SwerveConstants.Odometry.trustStdDevs);
                     break;
             }
             
@@ -244,7 +248,7 @@ public class Swerve extends SubsystemBase {
             //tells the cameras which tag to ignore, 
             //we do this multiple times because sometimes the code will execute before the LLs are booted up
             if(DriverStation.isDisabled()){
-                camera.tagThrowOut(SwerveConstants.PoseEstimaton.throwoutTagIDs);
+                camera.setPermittedTags(VisionConstants.filtertags);
             }
         }
     }
@@ -502,40 +506,14 @@ public class Swerve extends SubsystemBase {
 
 
 
-    /**
-     * 
-     * @deprecated
-     */
-    public void addVision(Vision vision) {
-        Matrix<N3, N1> stdDev;
-        Matrix<N3, N1> truststdDev = DriverStation.isAutonomous() ? LimelightConstants.trustautostdDev
-                : LimelightConstants.trusttelestdDev;
-        Matrix<N3, N1> regstdDev = DriverStation.isAutonomous() ? LimelightConstants.regautostdDev
-                : LimelightConstants.regtelestdDev;
-        Logger.recordOutput("Pose/" + vision.getLimelightName(), vision.getBotPose());
-
-        // stdDev = regstdDev;
-        if (vision.getPoseEstimate().tagCount >= 2) {
-            stdDev = truststdDev;
-        } else {
-            stdDev = regstdDev;
-        }
-
-        if (vision.getPoseValid(getYaw())) {
-            poseEstimator.addVisionMeasurement(vision.getBotPose(), vision.getPoseTimestampMG2(), stdDev);
-            // System.out.println("yes " + vision.getLimelightName() + " " +
-            // Timer.getFPGATimestamp());
-        }
-
-    }
 
     public void addVisionMG2(Vision vision) {
 
         Matrix<N3, N1> stdDev;
-        Matrix<N3, N1> truststdDev = DriverStation.isAutonomous() ? LimelightConstants.trustautostdDev
-                : LimelightConstants.trusttelestdDev;
-        Matrix<N3, N1> regstdDev = DriverStation.isAutonomous() ? LimelightConstants.regautostdDev
-                : LimelightConstants.regtelestdDev;
+        Matrix<N3, N1> truststdDev = DriverStation.isAutonomous() ? VisionConstants.trustautostdDev
+                : VisionConstants.trusttelestdDev;
+        Matrix<N3, N1> regstdDev = DriverStation.isAutonomous() ? VisionConstants.regautostdDev
+                : VisionConstants.regtelestdDev;
         Logger.recordOutput("Pose/" + vision.getLimelightName(), vision.getBotPoseMG2());
 
         // stdDev = regstdDev;
@@ -563,6 +541,37 @@ public enum AlignmentCheckType{
     AUTOALIGN,
     BASE_ROTATION
 }
+
+ /* sysid stuff */
+
+     /**
+     * set all modules to supplied voltage
+     */
+    public void sysidVoltage(Measure<Voltage> volts){
+        for (SwerveModule mod : modules){
+            mod.
+        }
+    }
+    
+    /**
+     * volts
+     */
+    public double getModuleVoltage(int moduleNumber){
+        return 0;
+    }
+    /**
+     * meters
+     */
+    public double getModuleDistance(int moduleNumber){
+        return 0;
+    }
+    /**
+     * meters/sec
+     */
+    public double getModuleSpeed(int moduleNumber){
+
+    }
+
 }
 
 

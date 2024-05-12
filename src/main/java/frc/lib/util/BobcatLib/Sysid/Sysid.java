@@ -30,7 +30,7 @@ public class Sysid extends SubsystemBase {
         private final MutableMeasure<Velocity<Distance>> m_velocity = mutable(MetersPerSecond.of(0));
 
         public Sysid(SysidCompatibleSwerve swerve) {
-                this.swerve = swerve; // TODO: once we have a state machine, this should just be Swerve.getInstance()
+                this.swerve = swerve;
                 routine = new SysIdRoutine(new SysIdRoutine.Config(),
                                 new SysIdRoutine.Mechanism(
                                                 (swerve::sysidVoltage),

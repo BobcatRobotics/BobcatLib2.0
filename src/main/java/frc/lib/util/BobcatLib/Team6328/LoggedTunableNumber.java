@@ -5,12 +5,13 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.lib.util.Bobcatlib.Team6328;
+package frc.lib.util.BobcatLib.Team6328;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.littletonrobotics.frc2023.Constants;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+
+import frc.robot.Constants;
 
 /**
  * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not or
@@ -54,7 +55,7 @@ public class LoggedTunableNumber {
     if (!hasDefault) {
       hasDefault = true;
       this.defaultValue = defaultValue;
-      if (Constants.tuningMode) {
+      if (Constants.isTuningMode) {
         dashboardNumber = new LoggedDashboardNumber(key, defaultValue);
       }
     }
@@ -69,7 +70,7 @@ public class LoggedTunableNumber {
     if (!hasDefault) {
       return 0.0;
     } else {
-      return Constants.tuningMode ? dashboardNumber.get() : defaultValue;
+      return Constants.isTuningMode ? dashboardNumber.get() : defaultValue;
     }
   }
 

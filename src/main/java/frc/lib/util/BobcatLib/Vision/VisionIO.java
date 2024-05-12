@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Subsystems.Vision;
+package frc.lib.util.BobcatLib.Vision;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -22,9 +22,6 @@ public interface VisionIO {
       public double tx;
       public double ty;
       public double fiducialID;
-      public double boundingHorizontalPixels;
-      public double distanceToNote;
-      public double rawDistanceToNote;
       public double tClass;
       public String name;
       public CamMode camMode = CamMode.VISION;
@@ -37,23 +34,9 @@ public interface VisionIO {
 
     public default void setPipeline(String limelight, int index){}
 
-    public default double pixlesToPercent(double pixels){
-      return 0.0;
-    }
     public default double getTClass(){
       return 0.0;
     }
 
-    public default void setCamMode(CamMode mode){}
-
-  /**
-   * 
-   * @param widthPercent [0,1], percentage of the vertical width of the image that the note is taking up
-   * @return distance in meters
-   */
-  public default double distanceFromCameraPercentage(double widthPercent){
-   return 0.0;
-  }
-    
-  
+    public default void setCamMode(CamMode mode){} 
 }

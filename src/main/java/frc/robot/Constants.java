@@ -14,14 +14,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.lib.util.ModuleConstants;
-import frc.lib.util.limelightConstants;
+import frc.lib.util.BobcatLib.Team254.ModuleConstants;
+import frc.lib.util.BobcatLib.Vision.limelightConstants;
 
 
 public class Constants {
     public static final Mode currentMode = RobotBase.isSimulation() ? Mode.SIM
             : (RobotBase.isReal() ? Mode.REAL : Mode.REPLAY);
+    public static final boolean isTuningMode = DriverStation.isTest();
 
     public static enum Mode {
         /** Running on a real robot. */
@@ -213,7 +215,7 @@ public class Constants {
         public static final int LedCount = 8; //without any led strips
     }
 
-    public static final class LimelightConstants {
+    public static final class VisionConstants {
 
         //tags whose corresponding IDs are NOT in here will not be used in vision calculations
         //good for when a tag is wobbly or shifts over the course of a comp
@@ -229,7 +231,6 @@ public class Constants {
 
         public static final double throwoutDist = 5.5; // meters, public static final double verticalFOV = 49.7; // degrees obviously
         public static final double rotationTolerance = 15; // maximum degrees that the limelight can be off before we throw out the pose
-        public static final double poseAmbiguityThreshold = 0.4; //It's what Jonah uses
         public static final double zDistThreshold = 0.5; // meters that the limelight can be off the ground
 
         public static final class limelight1 {

@@ -3,7 +3,7 @@ package frc.lib.util.BobcatLib.CANdle;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.StrobeAnimation;
 
-import frc.lib.util.BobcatLib.BobcatUtil;
+import frc.lib.util.BobcatLib.Team254.BobcatUtil;
 import frc.robot.Constants.CANdleConstants;
 
 public class CANdleIOCANdle implements CANdleIO {
