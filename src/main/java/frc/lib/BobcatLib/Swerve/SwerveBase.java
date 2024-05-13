@@ -1,6 +1,7 @@
 package frc.lib.BobcatLib.Swerve;
 
-import static edu.wpi.first.units.Units.Rotation;
+
+import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +42,6 @@ import frc.lib.BobcatLib.Swerve.Interfaces.SysidCompatibleSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
 import frc.lib.BobcatLib.Vision.Vision;
-import frc.lib.util.BobcatLib.Swerve.GyroIOInputsAutoLogged;
 import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 
@@ -559,7 +559,7 @@ public enum AlignmentCheckType{
     @Override
     public void sysidVoltage(Measure<Voltage> volts){
         for (SwerveModule mod : modules){
-            mod.runCharachterization(volts.magnitude());
+            mod.runCharachterization(volts.in(Volts));
         }
     }
     
@@ -589,6 +589,7 @@ public enum AlignmentCheckType{
     }
 
     /*end sysid stuff */
+
 
     /*aim assist stuff */
     @Override

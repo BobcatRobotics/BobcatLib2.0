@@ -17,6 +17,7 @@ public class DynamicTunePID extends PIDController {
      * Should automatically publish pid to nt for tuning purposes,<n> 
      * robot will prob need to be in test mode for this to work
      */
+    @Deprecated
     public DynamicTunePID(double kp, double ki, double kd){
         super(kp, ki, kd);
         p = kp;

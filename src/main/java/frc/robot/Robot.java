@@ -15,7 +15,9 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.BobcatLib.BobcatUtil;
@@ -43,6 +45,7 @@ public class Robot extends LoggedRobot {
         // Running on a real robot, log to a USB stick ("/U/logs")
         Logger.addDataReceiver(new WPILOGWriter());
         Logger.addDataReceiver(new NT4Publisher());
+        new PowerDistribution(0, ModuleType.kCTRE);
         break;
 
       case SIM:
@@ -62,22 +65,22 @@ public class Robot extends LoggedRobot {
  
  
     // Record metadata
-    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-    switch (BuildConstants.DIRTY) {
-      case 0:
-        Logger.recordMetadata("GitDirty", "All changes committed");
-        break;
-      case 1:
-        Logger.recordMetadata("GitDirty", "Uncomitted changes");
-        break;
-      default:
-        Logger.recordMetadata("GitDirty", "Unknown");
-        break;
-    }
+    // Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    // Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    // Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    // Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    // Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    // switch (BuildConstants.DIRTY) {
+    //   case 0:
+    //     Logger.recordMetadata("GitDirty", "All changes committed");
+    //     break;
+    //   case 1:
+    //     Logger.recordMetadata("GitDirty", "Uncomitted changes");
+    //     break;
+    //   default:
+    //     Logger.recordMetadata("GitDirty", "Unknown");
+    //     break;
+    // }
 
  
 

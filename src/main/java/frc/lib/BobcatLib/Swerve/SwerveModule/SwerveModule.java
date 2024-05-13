@@ -13,7 +13,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Gains;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Limits;
-import frc.lib.util.BobcatLib.Swerve.SwerveModule.SwerveModuleIOInputsAutoLogged;
 
 public class SwerveModule {
     private final SwerveModuleIO io;

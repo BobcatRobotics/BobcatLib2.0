@@ -9,9 +9,14 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.VisionConstants;
 import frc.lib.BobcatLib.Gamepads.EightBitDo;
@@ -87,13 +92,13 @@ public class RobotContainer {
                                 cameras = new Vision[]{limelight1};
                                 swerve = new SwerveBase(new GyroIO() {
                                 },
-                                                new SwerveModuleIO() {
+                                                new SwerveModuleIOSim() {
                                                 },
-                                                new SwerveModuleIO() {
+                                                new SwerveModuleIOSim() {
                                                 },
-                                                new SwerveModuleIO() {
+                                                new SwerveModuleIOSim() {
                                                 },
-                                                new SwerveModuleIO() {
+                                                new SwerveModuleIOSim() {
                                                 },
                                                 cameras);
                                 sysid = new Sysid(swerve);
@@ -127,7 +132,7 @@ public class RobotContainer {
                  * Please give descriptive names
                  */
                 autoChooser.addDefaultOption("Do Nothing", Commands.none());
-                
+                autoChooser.addOption("ur mom", new ParallelDeadlineGroup(new WaitCommand(10), new RunCommand(() -> swerve.drive(new Translation2d(1,1), 0, false, false), swerve)));
         }
 
         /**

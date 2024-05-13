@@ -40,15 +40,24 @@ public class Sysid extends SubsystemBase {
         }
 
     private void logMotors(SysIdRoutineLog log){
-        log.motor("drive-left")
-                                .voltage(m_appliedVoltage.mut_replace(swerve.getModuleVoltage(3) * RobotController.getBatteryVoltage(), Volts))
-                                .linearPosition(m_distance.mut_replace(swerve.getModuleDistance(3), Meters))
-                                .linearVelocity(m_velocity.mut_replace(swerve.getModuleSpeed(3), MetersPerSecond));
-        log.motor("drive-right")
-                                .voltage(m_appliedVoltage.mut_replace(swerve.getModuleVoltage(0) * RobotController.getBatteryVoltage(),Volts))
+        log.motor("front-left")
+                                .voltage(m_appliedVoltage.mut_replace(swerve.getModuleVoltage(0) * RobotController.getBatteryVoltage(), Volts))
                                 .linearPosition(m_distance.mut_replace(swerve.getModuleDistance(0), Meters))
-                                .linearVelocity(m_velocity.mut_replace(swerve.getModuleSpeed(0),MetersPerSecond));
-    }
+                                .linearVelocity(m_velocity.mut_replace(swerve.getModuleSpeed(0), MetersPerSecond));
+        log.motor("front-right")
+                                .voltage(m_appliedVoltage.mut_replace(swerve.getModuleVoltage(1) * RobotController.getBatteryVoltage(),Volts))
+                                .linearPosition(m_distance.mut_replace(swerve.getModuleDistance(1), Meters))
+                                .linearVelocity(m_velocity.mut_replace(swerve.getModuleSpeed(1),MetersPerSecond));
+        log.motor("back-left")
+                                .voltage(m_appliedVoltage.mut_replace(swerve.getModuleVoltage(2) * RobotController.getBatteryVoltage(),Volts))
+                                .linearPosition(m_distance.mut_replace(swerve.getModuleDistance(2), Meters))
+                                .linearVelocity(m_velocity.mut_replace(swerve.getModuleSpeed(2),MetersPerSecond));
+        log.motor("back-right")
+                                .voltage(m_appliedVoltage.mut_replace(swerve.getModuleVoltage(3) * RobotController.getBatteryVoltage(),Volts))
+                                .linearPosition(m_distance.mut_replace(swerve.getModuleDistance(3), Meters))
+                                .linearVelocity(m_velocity.mut_replace(swerve.getModuleSpeed(3),MetersPerSecond));
+
+}
 
     /**
      * REMEMBER TO ENSURE ALL MODULES ARE POINTING FORWARD

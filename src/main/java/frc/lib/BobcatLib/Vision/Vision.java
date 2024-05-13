@@ -14,7 +14,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BobcatLib.BobcatUtil;
 import frc.lib.LimeLight.LimelightHelpers;
-import frc.lib.util.BobcatLib.Vision.VisionIOInputsAutoLogged;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 
