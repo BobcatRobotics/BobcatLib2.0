@@ -18,7 +18,19 @@ These are the classes that do all the heavy lifting of pose estimation, do NOT i
 I'm not going to go into too much detail, but this folder contains various classes necessary for creating a swerve drive.
 
 #### SwerveBase
-(wip)
+This is a base swerve drivetrain, with a bunch of general swerve features you should inherit this in your season specific swerve subsystem. Feautres include:
+* Fully configured auto builder with rotation override capability
+* Easy pathfinding command factories
+* Pose estimation with dynamic odometry and vision trust levels
+* Support for any number of Limelights
+* Snap-to-angle autoalign
+* Translational aim assist
+
+#### TeleopSwerve
+This is the command for controlling the robot, it should be applied as the default command for the drivetrain in teleop
+
+#### SwerveConstants
+Make sure to spend time tuning all gains in this class, to ensure maximum performance.
 
 ## Sysid:
 

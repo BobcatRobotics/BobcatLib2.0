@@ -67,7 +67,7 @@ public class PhoenixOdometryThread extends Thread {
   public Queue<Double> registerSignal(ParentDevice device, StatusSignal<Double> signal) {
     Queue<Double> queue = new ArrayDeque<>(100);
     signalsLock.lock();
-    Swerve.odometryLock.lock();
+    SwerveBase.odometryLock.lock();
     try {
       isCANFD = CANBus.isNetworkFD(device.getNetwork());
       BaseStatusSignal[] newSignals = new BaseStatusSignal[signals.length + 1];
@@ -77,18 +77,18 @@ public class PhoenixOdometryThread extends Thread {
       queues.add(queue);
     } finally {
       signalsLock.unlock();
-      Swerve.odometryLock.unlock();
+      SwerveBase.odometryLock.unlock();
     }
     return queue;
   }
 
   public Queue<Double> makeTimestampQueue() {
     Queue<Double> queue = new ArrayDeque<>(100);
-    Swerve.odometryLock.lock();
+    SwerveBase.odometryLock.lock();
     try {
       timestampQueues.add(queue);
     } finally {
-      Swerve.odometryLock.unlock();
+      SwerveBase.odometryLock.unlock();
     }
     return queue;
   }
@@ -116,7 +116,7 @@ public class PhoenixOdometryThread extends Thread {
       }
 
       // Save new data to queues
-      Swerve.odometryLock.lock();
+      SwerveBase.odometryLock.lock();
       try {
         double timestamp = Logger.getRealTimestamp() / 1e6;
         double totalLatency = 0.0;
@@ -133,7 +133,7 @@ public class PhoenixOdometryThread extends Thread {
           timestampQueues.get(i).offer(timestamp);
         }
       } finally {
-        Swerve.odometryLock.unlock();
+        SwerveBase.odometryLock.unlock();
       }
     }
   }

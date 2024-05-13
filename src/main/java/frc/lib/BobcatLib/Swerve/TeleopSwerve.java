@@ -1,6 +1,5 @@
-package frc.robot.Commands.Swerve;
+package frc.lib.BobcatLib.Swerve;
 
-import frc.lib.BobcatLib.Swerve.Swerve;
 import frc.robot.Constants.SwerveConstants;
 
 import java.util.function.BooleanSupplier;
@@ -13,7 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class TeleopSwerve extends Command {
-    private Swerve swerve;
+    private SwerveBase swerve;
     private DoubleSupplier translation;
     private DoubleSupplier fineStrafe;
     private DoubleSupplier strafe;
@@ -44,7 +43,7 @@ public class TeleopSwerve extends Command {
      * @param snapToSpeaker should we automatically align to the speaker
      * @param pass          align to be facing the amp for passing notes
      */
-    public TeleopSwerve(Swerve swerve, DoubleSupplier translation, DoubleSupplier strafe,
+    public TeleopSwerve(SwerveBase swerve, DoubleSupplier translation, DoubleSupplier strafe,
             DoubleSupplier rotation, BooleanSupplier robotCentric, DoubleSupplier fineStrafe, DoubleSupplier fineTrans,
             BooleanSupplier aimAssistSupplier, BooleanSupplier autoAlignSupplier) {
 

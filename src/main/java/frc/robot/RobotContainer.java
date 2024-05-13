@@ -17,7 +17,8 @@ import frc.robot.Constants.VisionConstants;
 import frc.lib.BobcatLib.Gamepads.EightBitDo;
 import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
-import frc.lib.BobcatLib.Swerve.Swerve;
+import frc.lib.BobcatLib.Swerve.SwerveBase;
+import frc.lib.BobcatLib.Swerve.TeleopSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
@@ -26,7 +27,6 @@ import frc.lib.BobcatLib.Sysid.SysidTest;
 import frc.lib.BobcatLib.Vision.Vision;
 import frc.lib.BobcatLib.Vision.VisionIO;
 import frc.lib.BobcatLib.Vision.VisionIOLimelight;
-import frc.robot.Commands.Swerve.TeleopSwerve;
 import frc.robot.Constants.SwerveConstants;
 
 public class RobotContainer {
@@ -38,7 +38,7 @@ public class RobotContainer {
 
 
         /* Subsystems */
-        public final Swerve swerve;
+        public final SwerveBase swerve;
         public final Vision limelight1;
         public final Vision[] cameras;
         
@@ -55,7 +55,7 @@ public class RobotContainer {
                                 limelight1 = new Vision(new VisionIOLimelight(VisionConstants.limelight1.constants));
                                 cameras = new Vision[]{limelight1};
                                 
-                                swerve = new Swerve(new GyroIOPigeon2(),
+                                swerve = new SwerveBase(new GyroIOPigeon2(),
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module0Constants.constants), //fl
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module1Constants.constants), //fr
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module2Constants.constants), //bl
@@ -69,7 +69,7 @@ public class RobotContainer {
                                 limelight1 = new Vision(new VisionIOLimelight(VisionConstants.limelight1.constants));
                                 cameras = new Vision[]{limelight1};
 
-                                swerve = new Swerve(new GyroIO() {
+                                swerve = new SwerveBase(new GyroIO() {
                                 },
                                                 new SwerveModuleIOSim(),
                                                 new SwerveModuleIOSim(),
@@ -85,7 +85,7 @@ public class RobotContainer {
                                 limelight1 = new Vision(new VisionIO() {
                                 });
                                 cameras = new Vision[]{limelight1};
-                                swerve = new Swerve(new GyroIO() {
+                                swerve = new SwerveBase(new GyroIO() {
                                 },
                                                 new SwerveModuleIO() {
                                                 },

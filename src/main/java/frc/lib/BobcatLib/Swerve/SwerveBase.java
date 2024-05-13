@@ -45,7 +45,7 @@ import frc.lib.util.BobcatLib.Swerve.GyroIOInputsAutoLogged;
 import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 
-public class Swerve extends SubsystemBase implements SysidCompatibleSwerve, AutomatedSwerve {
+public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, AutomatedSwerve {
 
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -79,7 +79,7 @@ public class Swerve extends SubsystemBase implements SysidCompatibleSwerve, Auto
         SwerveConstants.Limits.Chassis.maxAngularAccel.getRadians()
         );
 
-    public Swerve(GyroIO gyroIO, SwerveModuleIO flIO, SwerveModuleIO frIO, SwerveModuleIO blIO, SwerveModuleIO brIO,
+    public SwerveBase(GyroIO gyroIO, SwerveModuleIO flIO, SwerveModuleIO frIO, SwerveModuleIO blIO, SwerveModuleIO brIO,
             Vision... cameras) {
         
         this.cameras = Arrays.asList(cameras);
@@ -234,7 +234,7 @@ public class Swerve extends SubsystemBase implements SysidCompatibleSwerve, Auto
         Logger.recordOutput("Swerve/ChassisSpeeds", new Translation2d(ChassisSpeeds.fromRobotRelativeSpeeds(getChassisSpeeds(), getYaw()).vxMetersPerSecond, ChassisSpeeds.fromRobotRelativeSpeeds(getChassisSpeeds(), getYaw()).vyMetersPerSecond));
         
         
-        //stops drivetarin on disable
+        //stops drivetrain on disable
         if (DriverStation.isDisabled()) {
             for (SwerveModule mod : modules) {
                 mod.stop();
