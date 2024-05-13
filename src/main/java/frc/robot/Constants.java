@@ -16,8 +16,8 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.lib.util.BobcatLib.Team254.ModuleConstants;
-import frc.lib.util.BobcatLib.Vision.limelightConstants;
+import frc.lib.BobcatLib.Vision.limelightConstants;
+import frc.lib.Team254.ModuleConstants;
 
 
 public class Constants {

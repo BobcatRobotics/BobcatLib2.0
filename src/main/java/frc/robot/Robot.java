@@ -18,8 +18,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.util.BobcatLib.Team254.BobcatUtil;
-import frc.lib.util.BobcatLib.Vision.CamMode;
+import frc.lib.BobcatLib.BobcatUtil;
+import frc.lib.BobcatLib.Vision.CamMode;
+import frc.lib.Team6328.LocalADStarAK;
 import frc.robot.Constants.VisionConstants;
 
 public class Robot extends LoggedRobot {
@@ -87,7 +88,7 @@ public class Robot extends LoggedRobot {
 
 
     m_robotContainer.limelight1.setCamMode(CamMode.VISION);
-    m_robotContainer.limelight1.setPipeline(LimelightConstants.VisionConstants.apriltagPipelineIndex);
+    m_robotContainer.limelight1.setPipeline(VisionConstants.limelight1.apriltagPipelineIndex);
   }
 
   @Override

@@ -9,20 +9,23 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.lib.util.BobcatLib.Gamepads.EightBitDo;
-import frc.lib.util.BobcatLib.Swerve.GyroIO;
-import frc.lib.util.BobcatLib.Swerve.GyroIOPigeon2;
-import frc.lib.util.BobcatLib.Swerve.Swerve;
-import frc.lib.util.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
-import frc.lib.util.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
-import frc.lib.util.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
-import frc.lib.util.BobcatLib.Vision.Vision;
-import frc.lib.util.BobcatLib.Vision.VisionIO;
-import frc.lib.util.BobcatLib.Vision.VisionIOLimelight;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.VisionConstants;
+import frc.lib.BobcatLib.Gamepads.EightBitDo;
+import frc.lib.BobcatLib.Swerve.GyroIO;
+import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
+import frc.lib.BobcatLib.Swerve.Swerve;
+import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
+import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
+import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
+import frc.lib.BobcatLib.Sysid.Sysid;
+import frc.lib.BobcatLib.Sysid.SysidTest;
+import frc.lib.BobcatLib.Vision.Vision;
+import frc.lib.BobcatLib.Vision.VisionIO;
+import frc.lib.BobcatLib.Vision.VisionIOLimelight;
 import frc.robot.Commands.Swerve.TeleopSwerve;
 import frc.robot.Constants.SwerveConstants;
 
@@ -30,11 +33,16 @@ public class RobotContainer {
 
         /* Joysticks + Gamepad */
         private final EightBitDo gp = new EightBitDo(0);
+        private final CommandJoystick rotate = new CommandJoystick(1);
+        private final CommandJoystick translate = new CommandJoystick(0);
+
 
         /* Subsystems */
         public final Swerve swerve;
         public final Vision limelight1;
         public final Vision[] cameras;
+        
+        public final Sysid sysid;
         /* Commands */
 
         /* Shuffleboard Inputs */
@@ -46,12 +54,14 @@ public class RobotContainer {
                         case REAL:
                                 limelight1 = new Vision(new VisionIOLimelight(VisionConstants.limelight1.constants));
                                 cameras = new Vision[]{limelight1};
+                                
                                 swerve = new Swerve(new GyroIOPigeon2(),
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module0Constants.constants), //fl
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module1Constants.constants), //fr
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module2Constants.constants), //bl
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module3Constants.constants), //br
                                                 cameras);
+                                sysid = new Sysid(swerve);
                                 break;
 
                         // Sim robot, instantiate physics sim IO implementations
@@ -66,7 +76,7 @@ public class RobotContainer {
                                                 new SwerveModuleIOSim(),
                                                 new SwerveModuleIOSim(),
                                                 cameras);
-
+                                sysid = new Sysid(swerve);
                                 break;
 
                         // Replayed robot, disable IO implementations
@@ -86,6 +96,7 @@ public class RobotContainer {
                                                 new SwerveModuleIO() {
                                                 },
                                                 cameras);
+                                sysid = new Sysid(swerve);
                                 break;
 
                 }
@@ -132,17 +143,25 @@ public class RobotContainer {
         public void configureBindings() {
 
                 swerve.setDefaultCommand(
-                        new TeleopSwerve(swerve, null, null, null, null, null, null, null, null, null, null, null)
-                );
-
-
-                
-                //will run when 'a' button is pressed
-                gp.a.onTrue(
-                        new InstantCommand(
-                                () -> {System.out.println("example");}
+                   new TeleopSwerve(
+                        swerve,
+                        () -> -translate.getRawAxis(Joystick.AxisType.kY.value),
+                        () -> -translate.getRawAxis(Joystick.AxisType.kX.value), 
+                        () -> -rotate.getRawAxis(Joystick.AxisType.kX.value), 
+                        () -> false,
+                        () -> -rotate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25, 
+                        () -> -translate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25, 
+                        gp.lb, 
+                        gp.rb
                         )
                 );
+                
+                //sysid routines
+                gp.a.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_FORWARD));
+                gp.b.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_BACKWARD));
+                gp.x.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_FORWARD));
+                gp.y.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_BACKWARD));
+                //TODO button to set all wheels straight
         }
 
         public Command getAutonomousCommand() {
