@@ -58,10 +58,10 @@ public class SwerveConstants {
             public static final PIDConstants rotPidConstants = new PIDConstants(rotKP, rotKI, rotKD);
         }
         public static class Teleop{
-            public static final double rotKP = 0;
+            public static final double rotKP = 10;
             public static final double rotKI = 0;
             public static final double rotKD = 0;
-            public static final double transKP = 0;
+            public static final double transKP = 10;
             public static final double transKI = 0;
             public static final double transKD = 0;
             public static final PIDConstants transPidConstants = new PIDConstants(transKP, transKI, transKD);
@@ -74,13 +74,13 @@ public class SwerveConstants {
             public static final PIDConstants rotPidConstants = new PIDConstants(rotationKP, rotationKI, rotationKD);
         }
         public static class Module{
-            public static final double kS = 0;
-            public static final double kA = 0;
-            public static final double kV = 0;
-            public static final double kDriveP = 0;
+            public static final double kS = 4;
+            public static final double kA = 4;
+            public static final double kV = 4;
+            public static final double kDriveP = 4;
             public static final double kDriveI = 0;
             public static final double kDriveD = 0;
-            public static final double kRotP = 0;
+            public static final double kRotP = 4;
             public static final double kRotI = 0;
             public static final double kRotD = 0;
 

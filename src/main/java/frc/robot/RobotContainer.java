@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -15,7 +14,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -25,7 +23,6 @@ import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
 import frc.lib.BobcatLib.Swerve.SwerveBase;
 import frc.lib.BobcatLib.Swerve.TeleopSwerve;
-import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
 import frc.lib.BobcatLib.Sysid.Sysid;
