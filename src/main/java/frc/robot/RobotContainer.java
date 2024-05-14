@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -81,6 +82,8 @@ public class RobotContainer {
                                                 new SwerveModuleIOSim(),
                                                 new SwerveModuleIOSim(),
                                                 cameras);
+
+
                                 sysid = new Sysid(swerve);
                                 break;
 
@@ -150,12 +153,12 @@ public class RobotContainer {
                 swerve.setDefaultCommand(
                    new TeleopSwerve(
                         swerve,
-                        () -> -translate.getRawAxis(Joystick.AxisType.kY.value),
-                        () -> -translate.getRawAxis(Joystick.AxisType.kX.value), 
-                        () -> -rotate.getRawAxis(Joystick.AxisType.kX.value), 
+                        () -> -translate.getRawAxis(0),
+                        () -> -translate.getRawAxis(1), 
+                        () -> -rotate.getRawAxis(2), 
                         () -> false,
-                        () -> -rotate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25, 
-                        () -> -translate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25, 
+                        () -> -rotate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25 *0, 
+                        () -> -translate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25 *0, 
                         gp.lb, 
                         gp.rb
                         )

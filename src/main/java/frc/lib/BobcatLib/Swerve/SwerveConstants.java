@@ -17,8 +17,8 @@ public class SwerveConstants {
 
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(false, false);
     public static final Rotation2d holoAlignTolerance = Rotation2d.fromDegrees(0);
-    public static final double wheelBase = 0; //meters
-    public static final double trackWidth = 0;
+    public static final double wheelBase = 0.5; //meters
+    public static final double trackWidth = 0.5;
     public static final double wheelCircumference = 4;
 
     public static final Translation2d[] moduleTranslations = new Translation2d[] {
@@ -32,16 +32,16 @@ public class SwerveConstants {
 
     public static class Limits{
         public static class Chassis{
-            public static final double maxSpeed = 0; // meters
-            public static final double maxAccel = 0;
-            public static final Rotation2d maxAngularVelocity = Rotation2d.fromRadians(0);
-            public static final Rotation2d maxAngularAccel = Rotation2d.fromRadians(0);
+            public static final double maxSpeed = 5; // meters
+            public static final double maxAccel = 5;
+            public static final Rotation2d maxAngularVelocity = Rotation2d.fromDegrees(360*2.5);
+            public static final Rotation2d maxAngularAccel = Rotation2d.fromDegrees(360*2);
         }
         public static class Module{
-            public static final double maxSpeed = 0;
-            public static final double maxAccel = 0;
-            public static final double maxAngularVelocity = 0;
-            public static final double maxAngularAccel = 0;
+            public static final double maxSpeed = 5;
+            public static final double maxAccel = 5;
+            public static final double maxAngularVelocity = 5;
+            public static final double maxAngularAccel = 5;
         }
     }
 

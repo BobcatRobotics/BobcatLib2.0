@@ -92,6 +92,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                 new SwerveModule(brIO, 3)
         };
 
+
         PhoenixOdometryThread.getInstance().start();
 
         rotationPID = new PIDController(SwerveConstants.Gains.Teleop.rotKP, SwerveConstants.Gains.Teleop.rotKI, SwerveConstants.Gains.Teleop.rotKD);
@@ -201,6 +202,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
             }
 
             //determine how much to trust odometry based on acceleration 
+            Logger.recordOutput("Swerve/OdometryState", getOdometryState());
             switch (getOdometryState()) {
                 case THROWOUT:
                     break;
@@ -214,6 +216,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                     poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, SwerveConstants.Odometry.trustStdDevs);
                     break;
             }
+            
             
             swerveModulePositions = modulePositions;
         }
