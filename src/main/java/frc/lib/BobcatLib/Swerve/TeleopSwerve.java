@@ -1,7 +1,5 @@
 package frc.lib.BobcatLib.Swerve;
 
-import frc.robot.Constants.SwerveConstants;
-
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -12,6 +10,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.BobcatLib.Swerve.SwerveConstants.Limits;
 
 public class TeleopSwerve extends Command {
     private SwerveBase swerve;
@@ -91,8 +90,8 @@ public class TeleopSwerve extends Command {
 
         /* Drive */
         swerve.drive(
-                new Translation2d(translationVal, strafeVal).times(SwerveConstants.maxSpeed),
-                rotationVal * SwerveConstants.maxAngularVelocity,
+                new Translation2d(translationVal, strafeVal).times(Limits.Chassis.maxSpeed),
+                rotationVal * Limits.Chassis.maxAngularVelocity.getRadians(),
                 !robotCentric.getAsBoolean(),
                 autoAlignSupplier.getAsBoolean());
 

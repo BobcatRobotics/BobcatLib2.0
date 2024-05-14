@@ -94,6 +94,11 @@ public class BobcatSwerveEstimator extends BaseBobcatSwerveEstimator {
     return super.update(gyroAngle, new SwerveDriveWheelPositions(modulePositions));
   }
 
+  public Pose2d update(Rotation2d gyroAngle, SwerveModulePosition[] modulePositions, Matrix<N3, N1> stateStdDevs) {
+    setStateStdDevs(stateStdDevs);
+    return update(gyroAngle, new SwerveDriveWheelPositions(modulePositions));
+  }
+
     /**
    * Updates the pose estimator with wheel encoder and gyro information. This should be called every
    * loop.

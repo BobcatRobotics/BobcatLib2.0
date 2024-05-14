@@ -101,8 +101,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         autoAlignPID.enableContinuousInput(0, 2 * Math.PI);
 
         //std devs will be actually set later, so we dont need to initialize them to actual values here
-        poseEstimator = new BobcatSwerveEstimator(SwerveConstants.kinematics, getYaw(), getModulePositions(),
-                new Pose2d(), VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0));
+        poseEstimator = new BobcatSwerveEstimator(SwerveConstants.kinematics, getYaw(), getModulePositions(), new Pose2d(), VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0));
         
 
         // setpointGenerator =
@@ -167,9 +166,11 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     @Override
     public void periodic() {
         //Priority IDs should be set in your SEASON SPECIFIC swerve subsystem, NOT in this base subsystem
-        
+     
         odometryLock.lock();
         gyroIO.updateInputs(gyroInputs);
+        Logger.processInputs("Swerve/Gyro", gyroInputs);
+
         for (SwerveModule module : modules) {
             module.periodic();
         }
@@ -177,8 +178,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
         Logger.recordOutput("Swerve/YawSetpoint", lastMovingYaw);
         Logger.recordOutput("Swerve/CurrentYaw", getYaw().getRadians());
-        Logger.recordOutput("Swerve/PureOdom", poseEstimator.getPureOdometry());
-        Logger.processInputs("Swerve/Gyro", gyroInputs);
+        Logger.recordOutput("Swerve/Odometry/PureOdom", poseEstimator.getPureOdometry());
+        Logger.recordOutput("Swerve/Odometry/State", getOdometryState());
         
 
         // Update odometry
@@ -200,6 +201,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                         Rotation2d.fromRadians(getChassisSpeeds().omegaRadiansPerSecond * Constants.loopPeriodSecs));
                 lastYaw = yaw;
             }
+     
 
             //determine how much to trust odometry based on acceleration 
             Logger.recordOutput("Swerve/OdometryState", getOdometryState());
@@ -230,7 +232,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         }
 
 
-        Logger.recordOutput("Swerve/Rotation", gyroInputs.yawPosition.getDegrees());
+        Logger.recordOutput("Swerve/Rotation", getYaw().getDegrees());
         Logger.recordOutput("Swerve/DesiredModuleStates", desiredSwerveModuleStates);
         Logger.recordOutput("Swerve/ModuleStates", swerveModuleStates);
         Logger.recordOutput("Swerve/Pose", getPose());
@@ -262,6 +264,27 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         }
     }
 
+    @Override
+    public void simulationPeriodic(){
+        Rotation2d yaw = lastYaw.plus(
+            Rotation2d.fromRadians(getChassisSpeeds().omegaRadiansPerSecond * Constants.loopPeriodSecs));
+        lastYaw = yaw;
+                    switch (getOdometryState()) {
+                case THROWOUT:
+                    break;
+                case DISTRUST:
+                    poseEstimator.update(getYaw(), getModulePositions(), SwerveConstants.Odometry.distrustStdDevs);
+                    break;
+                case TRUST:
+                    poseEstimator.update(getYaw(), getModulePositions(), SwerveConstants.Odometry.trustStdDevs);
+                    break;
+                default:
+                    poseEstimator.update(getYaw(), getModulePositions(), SwerveConstants.Odometry.trustStdDevs);
+                    break;
+            }
+        poseEstimator.update(getYaw(), getModulePositions());
+    }
+
     /**
      * @return the OdometryState representing how much we should trust the odometry based on acceleration
      */
@@ -273,6 +296,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
             }
             avgAccel += module.getDriveAcceleration() / modules.length;
         }
+        Logger.recordOutput("Swerve/Odometry/avgAccel", avgAccel);
         if(avgAccel > 4){
             return OdometryState.DISTRUST;
         }else{

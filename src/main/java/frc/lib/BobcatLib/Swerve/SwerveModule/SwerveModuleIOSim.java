@@ -38,7 +38,6 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
 
         inputs.drivePositionRot += (driveSim.getAngularVelocityRPM() / 60) * Constants.loopPeriodSecs;
         inputs.driveVelocityRotPerSec = driveSim.getAngularVelocityRPM() / 60;
-
         inputs.canCoderPositionRot = angleAbsolutePosRot;
     }
 

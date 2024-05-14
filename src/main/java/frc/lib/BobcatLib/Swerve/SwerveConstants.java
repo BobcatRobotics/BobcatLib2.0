@@ -14,12 +14,12 @@ import edu.wpi.first.math.util.Units;
 
 
 public class SwerveConstants {
-
+    public static final double stickDeadband = 0.005;
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(false, false);
     public static final Rotation2d holoAlignTolerance = Rotation2d.fromDegrees(0);
-    public static final double wheelBase = 0.5; //meters
-    public static final double trackWidth = 0.5;
-    public static final double wheelCircumference = 4;
+    public static final double wheelBase = 0.65; //meters
+    public static final double trackWidth = 0.65;
+    public static final double wheelCircumference = Units.inchesToMeters(4) * Math.PI;
 
     public static final Translation2d[] moduleTranslations = new Translation2d[] {
                 new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
@@ -32,14 +32,14 @@ public class SwerveConstants {
 
     public static class Limits{
         public static class Chassis{
-            public static final double maxSpeed = 5; // meters
-            public static final double maxAccel = 5;
+            public static final double maxSpeed = 10; // meters
+            public static final double maxAccel = 10;
             public static final Rotation2d maxAngularVelocity = Rotation2d.fromDegrees(360*2.5);
             public static final Rotation2d maxAngularAccel = Rotation2d.fromDegrees(360*2);
         }
         public static class Module{
-            public static final double maxSpeed = 5;
-            public static final double maxAccel = 5;
+            public static final double maxSpeed = 10;
+            public static final double maxAccel = 10;
             public static final double maxAngularVelocity = 5;
             public static final double maxAngularAccel = 5;
         }
@@ -74,13 +74,13 @@ public class SwerveConstants {
             public static final PIDConstants rotPidConstants = new PIDConstants(rotationKP, rotationKI, rotationKD);
         }
         public static class Module{
-            public static final double kS = 4;
-            public static final double kA = 4;
-            public static final double kV = 4;
-            public static final double kDriveP = 4;
+            public static final double kS = 0.14267 / 12;
+            public static final double kA = 2.0718 / 12;
+            public static final double kV = 0.42622 / 12;
+            public static final double kDriveP = 0.1;
             public static final double kDriveI = 0;
             public static final double kDriveD = 0;
-            public static final double kRotP = 4;
+            public static final double kRotP = 0.3;
             public static final double kRotI = 0;
             public static final double kRotD = 0;
 

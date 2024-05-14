@@ -150,9 +150,9 @@ public class RobotContainer {
                 swerve.setDefaultCommand(
                    new TeleopSwerve(
                         swerve,
-                        () -> -translate.getRawAxis(0),
+                        () -> translate.getRawAxis(0),
                         () -> -translate.getRawAxis(1), 
-                        () -> -rotate.getRawAxis(2), 
+                        () -> -rotate.getRawAxis(0), 
                         () -> false,
                         () -> -rotate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25 *0, 
                         () -> -translate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25 *0, 
