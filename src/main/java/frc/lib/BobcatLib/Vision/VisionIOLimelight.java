@@ -3,8 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.lib.BobcatLib.Vision;
-
-
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.lib.BobcatLib.BobcatUtil;
+import frc.lib.LimeLight.LimelightHelpers;
 import frc.lib.LimeLight.LimelightHelpersFast;
 
 public class VisionIOLimelight implements VisionIO{
@@ -33,6 +35,12 @@ public class VisionIOLimelight implements VisionIO{
     inputs.fiducialID = LimelightHelpersFast.getFiducialID(name);
     inputs.tClass=LimelightHelpersFast.getNeuralClassID(name);
     inputs.name=name;
+    inputs.botPoseMG2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).pose;
+    inputs.tagCount = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).tagCount;
+    inputs.avgTagDist = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).avgTagDist;
+    inputs.botPose3d = LimelightHelpers.getBotPose3d_wpiBlue(name);
+    inputs.timestamp = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).timestampSeconds;
+
   }
 
 
@@ -75,5 +83,23 @@ public class VisionIOLimelight implements VisionIO{
   @Override
   public void setPipeline(String limelight, int index){    
     LimelightHelpersFast.setPipelineIndex(limelight, index);
+  }
+
+  @Override
+  public void setRobotOrientationMG2(Rotation2d gyro){
+    gyro = BobcatUtil.isBlue()? gyro : gyro.rotateBy(Rotation2d.fromDegrees(180));
+    double gyroval = BobcatUtil.wrapRot2d(gyro).getDegrees();
+    
+    LimelightHelpers.SetRobotOrientation(name, gyroval, 0, 0, 0, 0, 0);
+  }
+
+  @Override
+  public void setPermittedTags(int[] tags){
+    LimelightHelpers.SetFiducialIDFiltersOverride(name, tags);
+  }
+
+  @Override
+  public void setPriorityID(int tagID){
+    NetworkTableInstance.getDefault().getTable(name).getEntry("priorityid").setDouble(tagID);
   }
 }

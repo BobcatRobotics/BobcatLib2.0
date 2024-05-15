@@ -1,22 +1,16 @@
 package frc.lib.BobcatLib.Swerve.SwerveModule;
 
-import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants;
-import frc.robot.Constants.SwerveConstants;
-
+import frc.lib.BobcatLib.Swerve.SwerveConstants;
 public class SwerveModuleIOSim implements SwerveModuleIO {
     private FlywheelSim driveSim;
     private FlywheelSim angleSim;
 
     private double angleAbsolutePosRot = Math.random();
-    private double anglePercentOut = 0.0;
-
-    private double drivePercentOut = 0.0;
-
     public SwerveModuleIOSim() {
         // Using flywheels to simulate motors
         driveSim = new FlywheelSim(DCMotor.getFalcon500(1), SwerveConstants.driveGearRatio, 0.025);
@@ -47,7 +41,6 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
      */
     public void setDrivePercentOut(double percent) {
         double volts = MathUtil.clamp(percent * 12, -12.0, 12.0);
-        drivePercentOut = volts / 12;
         driveSim.setInputVoltage(volts);
     }
 
@@ -56,7 +49,6 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
      */
     public void stopDrive() {
         driveSim.setInputVoltage(0);
-        drivePercentOut = 0;
     }
 
     /**
@@ -65,7 +57,6 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
      */
     public void setAnglePercentOut(double percent) {
         double volts = MathUtil.clamp(percent * 12, -12.0, 12.0);
-        anglePercentOut = volts / 12;
         angleSim.setInputVoltage(volts);
     }
 
@@ -74,6 +65,5 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
      */
     public void stopAngle() {
         angleSim.setInputVoltage(0);
-        anglePercentOut = 0;
     }
 }

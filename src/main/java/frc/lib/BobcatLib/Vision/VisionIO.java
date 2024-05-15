@@ -6,6 +6,10 @@ package frc.lib.BobcatLib.Vision;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
 
 
 /** Vision subsystem hardware interface. */
@@ -17,14 +21,19 @@ public interface VisionIO {
       public LEDMode ledMode = LEDMode.FORCEOFF;
       public double pipelineID = 0;
       public double pipelineLatency = 0;
-      public double ta;
-      public boolean tv;
-      public double tx;
-      public double ty;
-      public double fiducialID;
-      public double tClass;
-      public String name;
+      public double ta = -1;
+      public boolean tv = false;
+      public double tx = -1;
+      public double ty = -1;
+      public double fiducialID = -1;
+      public double tClass = -1;
+      public String name = "something is very wrong if you're seeing this";
       public CamMode camMode = CamMode.VISION;
+      public Pose2d botPoseMG2 = new Pose2d();
+      public int tagCount = -1;
+      public double avgTagDist = -1;
+      public Pose3d botPose3d = new Pose3d();
+      public double timestamp = -1;
     }
       /** Updates the set of loggable inputs. */
     public default void updateInputs(VisionIOInputs inputs) {}
@@ -39,4 +48,8 @@ public interface VisionIO {
     }
 
     public default void setCamMode(CamMode mode){} 
+
+    public default void setRobotOrientationMG2(Rotation2d gyro){}
+    public default void setPermittedTags(int[] tags){}
+    public default void setPriorityID(int tagID){}
 }

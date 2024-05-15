@@ -22,6 +22,7 @@ import frc.lib.BobcatLib.Gamepads.EightBitDo;
 import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
 import frc.lib.BobcatLib.Swerve.SwerveBase;
+import frc.lib.BobcatLib.Swerve.SwerveConstants;
 import frc.lib.BobcatLib.Swerve.TeleopSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
@@ -30,7 +31,6 @@ import frc.lib.BobcatLib.Sysid.SysidTest;
 import frc.lib.BobcatLib.Vision.Vision;
 import frc.lib.BobcatLib.Vision.VisionIO;
 import frc.lib.BobcatLib.Vision.VisionIOLimelight;
-import frc.robot.Constants.SwerveConstants;
 
 public class RobotContainer {
 
@@ -59,10 +59,10 @@ public class RobotContainer {
                                 cameras = new Vision[]{limelight1};
                                 
                                 swerve = new SwerveBase(new GyroIOPigeon2(),
-                                                new SwerveModuleIOFalcon(SwerveConstants.Module0Constants.constants), //fl
-                                                new SwerveModuleIOFalcon(SwerveConstants.Module1Constants.constants), //fr
-                                                new SwerveModuleIOFalcon(SwerveConstants.Module2Constants.constants), //bl
-                                                new SwerveModuleIOFalcon(SwerveConstants.Module3Constants.constants), //br
+                                                new SwerveModuleIOFalcon(SwerveConstants.Module.Module0Constants.constants), //fl
+                                                new SwerveModuleIOFalcon(SwerveConstants.Module.Module1Constants.constants), //fr
+                                                new SwerveModuleIOFalcon(SwerveConstants.Module.Module2Constants.constants), //bl
+                                                new SwerveModuleIOFalcon(SwerveConstants.Module.Module3Constants.constants), //br
                                                 cameras);
                                 sysid = new Sysid(swerve);
                                 break;
@@ -159,7 +159,7 @@ public class RobotContainer {
                         gp.lb, 
                         gp.rb
                         )
-                );
+                );      
                 
                 //sysid routines
                 gp.a.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_FORWARD));
