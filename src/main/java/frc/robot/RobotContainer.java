@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,6 +20,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Subsystems.Swerve;
+import frc.robot.Subsystems.apriltagvision.AprilTagVision;
+import frc.robot.Subsystems.apriltagvision.AprilTagVisionIONorthstar;
+import frc.robot.Subsystems.apriltagvision.AprilTagVisionFieldConstants.AprilTagLayoutType;
 import frc.lib.BobcatLib.Gamepads.EightBitDo;
 import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
@@ -45,9 +49,14 @@ public class RobotContainer {
         public final Swerve swerve;
         public final Vision limelight1;
         public final Vision[] cameras;
+        public final AprilTagVision northstar;
         
         public final Sysid sysid;
         /* Commands */
+
+        public final AprilTagLayoutType getLayout(){
+                return AprilTagLayoutType.OFFICIAL;
+        }
 
         /* Shuffleboard Inputs */
         private final LoggedDashboardChooser<Command> autoChooser = new LoggedDashboardChooser<>("Auto Choices");
@@ -66,10 +75,15 @@ public class RobotContainer {
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module3Constants.constants), //br
                                                 cameras);
                                 sysid = new Sysid(swerve);
+                                northstar =new AprilTagVision(swerve, this::getLayout, new AprilTagVisionIONorthstar(this::getLayout, 0));
+
+
                                 break;
 
                         // Sim robot, instantiate physics sim IO implementations
                         case SIM:
+
+
                                 limelight1 = new Vision(new VisionIOLimelight(VisionConstants.limelight1.constants));
                                 cameras = new Vision[]{limelight1};
 
@@ -83,6 +97,9 @@ public class RobotContainer {
 
 
                                 sysid = new Sysid(swerve);
+                                
+                                northstar =new AprilTagVision(swerve, this::getLayout, new AprilTagVisionIONorthstar(this::getLayout, 0));
+
                                 break;
 
                         // Replayed robot, disable IO implementations
@@ -103,6 +120,9 @@ public class RobotContainer {
                                                 },
                                                 cameras);
                                 sysid = new Sysid(swerve);
+
+                                northstar =new AprilTagVision(swerve, this::getLayout, new AprilTagVisionIONorthstar(this::getLayout, 0));
+
                                 break;
 
                 }

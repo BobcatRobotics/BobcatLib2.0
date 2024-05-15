@@ -3,7 +3,6 @@ package frc.robot.Subsystems.apriltagvision;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.BobcatLib.Swerve.SwerveBase;
 import frc.lib.BobcatLib.Vision.VisionObservation;
 import frc.lib.Team6328.ExtensionMethod;
 import frc.lib.Team6328.GeomUtil;
@@ -27,6 +26,8 @@ import static frc.robot.Subsystems.apriltagvision.AprilTagVisionConstants.xyStdD
 import static frc.robot.Subsystems.apriltagvision.AprilTagVisionConstants.zMargin;
 
 import java.util.*;
+
+import frc.robot.Subsystems.Swerve;
 import frc.robot.Subsystems.apriltagvision.AprilTagVisionFieldConstants.AprilTagLayoutType;
 import frc.robot.Subsystems.apriltagvision.AprilTagVisionIO.AprilTagVisionIOInputs;
 
@@ -48,9 +49,9 @@ public class AprilTagVision extends SubsystemBase {
 
   private final Map<Integer, Double> lastFrameTimes = new HashMap<>();
   private final Map<Integer, Double> lastTagDetectionTimes = new HashMap<>();
-  private final SwerveBase swerve;
+  private final Swerve swerve;
 
-  public AprilTagVision(SwerveBase swerve, Supplier<AprilTagLayoutType> aprilTagTypeSupplier, AprilTagVisionIO... io) {
+  public AprilTagVision(Swerve swerve, Supplier<AprilTagLayoutType> aprilTagTypeSupplier, AprilTagVisionIO... io) {
     this.aprilTagTypeSupplier = aprilTagTypeSupplier;
     this.io = io;
     this.swerve = swerve;
@@ -70,6 +71,7 @@ public class AprilTagVision extends SubsystemBase {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("AprilTagVision/Inst" + i, inputs[i]);
     }
+
 
     // Loop over instances
     List<Pose2d> allRobotPoses = new ArrayList<>();
@@ -142,6 +144,8 @@ public class AprilTagVision extends SubsystemBase {
             }
             break;
         }
+
+        Logger.recordOutput("Northstar", robotPose3d);
 
         // Exit if no data
         if (cameraPose == null || robotPose3d == null) {
