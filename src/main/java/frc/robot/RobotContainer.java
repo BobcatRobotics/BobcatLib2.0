@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Subsystems.Swerve;
 import frc.lib.BobcatLib.Gamepads.EightBitDo;
 import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
@@ -41,7 +42,7 @@ public class RobotContainer {
 
 
         /* Subsystems */
-        public final SwerveBase swerve;
+        public final Swerve swerve;
         public final Vision limelight1;
         public final Vision[] cameras;
         
@@ -58,7 +59,7 @@ public class RobotContainer {
                                 limelight1 = new Vision(new VisionIOLimelight(VisionConstants.limelight1.constants));
                                 cameras = new Vision[]{limelight1};
                                 
-                                swerve = new SwerveBase(new GyroIOPigeon2(),
+                                swerve = new Swerve(new GyroIOPigeon2(),
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module0Constants.constants), //fl
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module1Constants.constants), //fr
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module2Constants.constants), //bl
@@ -72,7 +73,7 @@ public class RobotContainer {
                                 limelight1 = new Vision(new VisionIOLimelight(VisionConstants.limelight1.constants));
                                 cameras = new Vision[]{limelight1};
 
-                                swerve = new SwerveBase(new GyroIO() {
+                                swerve = new Swerve(new GyroIO() {
                                 },
                                                 new SwerveModuleIOSim(),
                                                 new SwerveModuleIOSim(),
@@ -90,7 +91,7 @@ public class RobotContainer {
                                 limelight1 = new Vision(new VisionIO() {
                                 });
                                 cameras = new Vision[]{limelight1};
-                                swerve = new SwerveBase(new GyroIO() {
+                                swerve = new Swerve(new GyroIO() {
                                 },
                                                 new SwerveModuleIOSim() {
                                                 },
