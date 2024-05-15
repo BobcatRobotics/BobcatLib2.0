@@ -18,11 +18,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Subsystems.Swerve;
 import frc.lib.BobcatLib.Gamepads.EightBitDo;
 import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
-import frc.lib.BobcatLib.Swerve.SwerveBase;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 import frc.lib.BobcatLib.Swerve.TeleopSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
@@ -32,6 +30,7 @@ import frc.lib.BobcatLib.Sysid.SysidTest;
 import frc.lib.BobcatLib.Vision.Vision;
 import frc.lib.BobcatLib.Vision.VisionIO;
 import frc.lib.BobcatLib.Vision.VisionIOLimelight;
+import frc.robot.Subsystems.Swerve.Swerve;
 
 public class RobotContainer {
 
@@ -87,7 +86,6 @@ public class RobotContainer {
 
                         // Replayed robot, disable IO implementations
                         default:
-                                //TODO limelight replay capability
                                 limelight1 = new Vision(new VisionIO() {
                                 });
                                 cameras = new Vision[]{limelight1};
@@ -167,7 +165,7 @@ public class RobotContainer {
                 gp.b.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_BACKWARD));
                 gp.x.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_FORWARD));
                 gp.y.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_BACKWARD));
-                //TODO button to set all wheels straight
+                gp.leftPaddle.whileTrue(swerve.zeroModules());
         }
 
         public Command getAutonomousCommand() {
