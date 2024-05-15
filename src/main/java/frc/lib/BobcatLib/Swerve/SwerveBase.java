@@ -41,6 +41,7 @@ import frc.lib.BobcatLib.Swerve.Interfaces.AutomatedSwerve;
 import frc.lib.BobcatLib.Swerve.Interfaces.SysidCompatibleSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
+import frc.lib.BobcatLib.Vision.VisionObservation;
 import frc.lib.BobcatLib.Vision.Vision;
 import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
@@ -563,6 +564,10 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
             // Timer.getFPGATimestamp());
         }
 
+    }
+
+    public void addVisionNorthStar(VisionObservation visionData){
+        poseEstimator.addVisionMeasurement(visionData.getPose(), visionData.getTimestamp(), visionData.getStdDev());
     }
   
 public enum OdometryState{
