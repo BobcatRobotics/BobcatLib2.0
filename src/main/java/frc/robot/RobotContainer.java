@@ -134,7 +134,6 @@ public class RobotContainer {
                  * Please give descriptive names
                  */
                 autoChooser.addDefaultOption("Do Nothing", Commands.none());
-                autoChooser.addOption("ur mom", new ParallelDeadlineGroup(new WaitCommand(10), new RunCommand(() -> swerve.drive(new Translation2d(1,1), 0, false, false), swerve)));
         }
 
         /**
