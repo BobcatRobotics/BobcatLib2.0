@@ -13,6 +13,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -102,6 +104,8 @@ public class Robot extends LoggedRobot {
       autosInitialized = true;
       currAlliance = BobcatUtil.getAlliance();
     }
+    Logger.recordOutput("Tuning", new Pose2d());
+    Logger.recordOutput("components", new Pose3d[]{m_robotContainer.getArmPoseAScope()});
   }
 
   @Override

@@ -9,6 +9,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -172,5 +175,10 @@ public class RobotContainer {
 
         public Command getAutonomousCommand() {
                 return autoChooser.get();
+        }
+
+        public Pose3d getArmPoseAScope(){
+                Rotation2d angle = Rotation2d.fromRotations(rotate.getRawAxis(2));
+                return new Pose3d(0, -0.16, 0.23, new Rotation3d(angle.getRadians(), 0, 0));
         }
 }
