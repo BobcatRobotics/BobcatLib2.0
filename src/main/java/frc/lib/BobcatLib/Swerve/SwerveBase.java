@@ -33,6 +33,7 @@ import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BobcatLib.BobcatUtil;
 import frc.lib.BobcatLib.PoseEstimation.BobcatSwerveEstimator;
@@ -300,6 +301,17 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         }else{
             return OdometryState.TRUST;
         }
+    }
+
+    public void setModulesStraight(){
+        for (SwerveModule mod : modules){
+            mod.setDesiredState(
+                new SwerveModuleState(0, new Rotation2d())
+            );
+        }
+    }
+    public Command zeroModules(){
+        return new RunCommand(() -> setModulesStraight(), this);
     }
 
 

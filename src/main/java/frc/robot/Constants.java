@@ -2,9 +2,13 @@ package frc.robot;
 
 
 
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -77,11 +81,9 @@ public class Constants {
             public static final int detectorPiplineIndex = 0;
             public static final int apriltagPipelineIndex = 0;
             public static final int horPixles = 1280; //ll3
-            public static final double filterTimeConstant = 0.1; // in seconds, inputs occuring over a time period significantly shorter than this will be thrown out
             public static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.1, 0.1,
                     Units.degreesToRadians(10));
 
-            //TODO: boolean isDetector
             public static final limelightConstants constants = new limelightConstants(name, verticalFOV, horizontalFOV,
                     limelightMountHeight, detectorPiplineIndex, apriltagPipelineIndex, horPixles, visionMeasurementStdDevs);
             public static final String ip = "10.1.77.11";
@@ -90,6 +92,27 @@ public class Constants {
     }
     
     public static final class PoseEstimatorConstants{
+    }
+
+
+
+    public static final class ArmConstants{
+        public static final double lengthMeters = 0.5;
+        public static final int encoderID = 1;
+        public static final int motorID = 10;
+        public static final SensorDirectionValue sensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        public static final AbsoluteSensorRangeValue sensorRangeValue = AbsoluteSensorRangeValue.Unsigned_0To1; 
+        public static final Rotation2d magnetOffset = Rotation2d.fromDegrees(0); //TODO 0 degrees must be horizontal! 
+        public static final double kp = 0.275;
+        public static final double ki = 0;
+        public static final double kd = 0;
+        public static final double arbitraryFF = 0;
+    }
+
+    public static final class ElevatorConstants{
+        public static final int motorID = 9;
+        public static final int bottomLimit = 0;
+        public static final int topLimit = -236710; //maybe?
     }
 
 }

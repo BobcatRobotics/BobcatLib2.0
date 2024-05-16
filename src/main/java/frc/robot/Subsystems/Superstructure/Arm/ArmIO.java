@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Arm;
+package frc.robot.Subsystems.Superstructure.Arm;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -8,6 +8,11 @@ public interface ArmIO {
     @AutoLog
     public static class ArmIOInputs{
         public Rotation2d angle;
-
+        public Rotation2d desiredAngle;
     }
+
+    public default void updateInputs(ArmIOInputs inputs){}
+
+    public default void setAngle(Rotation2d angle){}
+
 }
