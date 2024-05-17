@@ -12,15 +12,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import frc.robot.Constants.VisionConstants;
 import frc.lib.BobcatLib.Gamepads.EightBitDo;
 import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
@@ -33,6 +28,7 @@ import frc.lib.BobcatLib.Sysid.SysidTest;
 import frc.lib.BobcatLib.Vision.Vision;
 import frc.lib.BobcatLib.Vision.VisionIO;
 import frc.lib.BobcatLib.Vision.VisionIOLimelight;
+import frc.lib.BobcatLib.Vision.VisionConstants.LimeLightType;
 import frc.robot.Subsystems.Swerve.Swerve;
 
 public class RobotContainer {
@@ -58,7 +54,7 @@ public class RobotContainer {
                 switch (Constants.currentMode) {
                         // Real robot, instantiate hardware IO implementations
                         case REAL:
-                                limelight1 = new Vision(new VisionIOLimelight(VisionConstants.limelight1.constants));
+                                limelight1 = new Vision(new VisionIOLimelight("limelight1", LimeLightType.LL3G_APRILTAG));
                                 cameras = new Vision[]{limelight1};
                                 
                                 swerve = new Swerve(new GyroIOPigeon2(),
@@ -72,7 +68,7 @@ public class RobotContainer {
 
                         // Sim robot, instantiate physics sim IO implementations
                         case SIM:
-                                limelight1 = new Vision(new VisionIOLimelight(VisionConstants.limelight1.constants));
+                                limelight1 = new Vision(new VisionIOLimelight("limelight1", LimeLightType.LL3G_APRILTAG));
                                 cameras = new Vision[]{limelight1};
 
                                 swerve = new Swerve(new GyroIO() {

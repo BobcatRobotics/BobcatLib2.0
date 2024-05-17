@@ -43,8 +43,8 @@ import frc.lib.BobcatLib.Swerve.Interfaces.SysidCompatibleSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
 import frc.lib.BobcatLib.Vision.Vision;
+import frc.lib.BobcatLib.Vision.VisionConstants;
 import frc.robot.Constants;
-import frc.robot.Constants.VisionConstants;
 
 public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, AutomatedSwerve {
 

@@ -6,20 +6,20 @@ package frc.lib.BobcatLib.Vision;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.lib.BobcatLib.BobcatUtil;
-import frc.lib.LimeLight.LimelightHelpers;
-import frc.lib.LimeLight.LimelightHelpersFast;
+import frc.lib.BobcatLib.Vision.VisionConstants.LimeLightType;
+import frc.lib.Limelight.LimelightHelpers;
+import frc.lib.Limelight.LimelightHelpersFast;
 
 public class VisionIOLimelight implements VisionIO{
   /** Creates a new VisionIOLimelight. */
     LEDMode currentLedMode = LEDMode.FORCEOFF;
     CamMode currentCamMode = CamMode.VISION;
-    public final limelightConstants constants;
+    public final LimeLightType type;
     private final String name;
 
-  public VisionIOLimelight(limelightConstants limelightConstants) {
-    constants = limelightConstants;
-    name = constants.name;
-    
+  public VisionIOLimelight(String name, LimeLightType type) {
+    this.name = name;
+    this.type = type;  
   }
 
   @Override
@@ -35,6 +35,7 @@ public class VisionIOLimelight implements VisionIO{
     inputs.fiducialID = LimelightHelpersFast.getFiducialID(name);
     inputs.tClass=LimelightHelpersFast.getNeuralClassID(name);
     inputs.name=name;
+    inputs.type = type;
     inputs.botPoseMG2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).pose;
     inputs.tagCount = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).tagCount;
     inputs.avgTagDist = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).avgTagDist;

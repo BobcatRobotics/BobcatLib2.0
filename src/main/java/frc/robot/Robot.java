@@ -24,8 +24,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.BobcatLib.BobcatUtil;
 import frc.lib.BobcatLib.Vision.CamMode;
+import frc.lib.BobcatLib.Vision.VisionConstants;
 import frc.lib.Team6328.LocalADStarAK;
-import frc.robot.Constants.VisionConstants;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -93,7 +93,7 @@ public class Robot extends LoggedRobot {
 
 
     m_robotContainer.limelight1.setCamMode(CamMode.VISION);
-    m_robotContainer.limelight1.setPipeline(VisionConstants.limelight1.apriltagPipelineIndex);
+    m_robotContainer.limelight1.setPipeline(VisionConstants.apriltagPipelineIndex);
   }
 
   @Override

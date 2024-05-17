@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.AutoLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.lib.BobcatLib.Vision.VisionConstants.LimeLightType;
 
 
 
@@ -27,13 +28,14 @@ public interface VisionIO {
       public double ty = -1;
       public double fiducialID = -1;
       public double tClass = -1;
-      public String name = "something is very wrong if you're seeing this";
+      public String name = "";
       public CamMode camMode = CamMode.VISION;
       public Pose2d botPoseMG2 = new Pose2d();
       public int tagCount = -1;
       public double avgTagDist = -1;
       public Pose3d botPose3d = new Pose3d();
       public double timestamp = -1;
+      public LimeLightType type = LimeLightType.LL3G_APRILTAG;
     }
       /** Updates the set of loggable inputs. */
     public default void updateInputs(VisionIOInputs inputs) {}

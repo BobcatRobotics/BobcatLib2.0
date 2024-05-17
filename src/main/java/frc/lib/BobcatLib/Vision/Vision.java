@@ -11,14 +11,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.BobcatLib.Vision.VisionConstants.LimeLightType;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.VisionConstants;
 
 public class Vision extends SubsystemBase {
   /** Creates a new Vision. */
   private final VisionIO io;
   private final VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
-
   public boolean apriltagPipeline;
 
   public Vision(VisionIO io) {
@@ -170,6 +169,19 @@ public class Vision extends SubsystemBase {
 
   public double tagCount(){
     return inputs.tagCount;
+  }
+
+
+  public static Vision buildLimelight(String name, LimeLightType type){
+    return new Vision(new VisionIOLimelight(name, type));
+  }
+
+  public static Vision buildLimelight3G(String name){
+    return new Vision(
+      new VisionIOLimelight(
+        name, LimeLightType.LL3G_APRILTAG
+      )
+    );
   }
   
 
