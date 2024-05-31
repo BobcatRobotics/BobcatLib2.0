@@ -9,7 +9,9 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.lib.BobcatLib.Annotations.SeasonBase;
 
+@SeasonBase
 public class GyroIOPigeon2 implements GyroIO {
     private final Pigeon2 pigeon;
 

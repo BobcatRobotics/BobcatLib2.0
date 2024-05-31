@@ -5,7 +5,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants;
+import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
+@SeasonBase
 public class SwerveModuleIOSim implements SwerveModuleIO {
     private FlywheelSim driveSim;
     private FlywheelSim angleSim;

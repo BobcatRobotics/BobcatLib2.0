@@ -3,9 +3,10 @@ package frc.lib.BobcatLib.CANdle;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.StrobeAnimation;
 
-import frc.lib.BobcatLib.BobcatUtil;
+import frc.lib.BobcatLib.Annotations.SeasonSpecific;
 import frc.robot.Constants.CANdleConstants;
 
+@SeasonSpecific
 public class CANdleIOCANdle implements CANdleIO {
     
     private CANdle leds;

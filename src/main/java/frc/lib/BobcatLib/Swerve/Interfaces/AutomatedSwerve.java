@@ -2,7 +2,9 @@ package frc.lib.BobcatLib.Swerve.Interfaces;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.lib.BobcatLib.Annotations.SeasonBase;
 
+@SeasonBase
 public interface AutomatedSwerve {
 
     // auto align sets the drivetrain to a specified angle

@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BobcatLib.BobcatUtil;
+import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.PoseEstimation.BobcatSwerveEstimator;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Configs;
 import frc.lib.BobcatLib.Swerve.Interfaces.AutomatedSwerve;
@@ -46,6 +47,7 @@ import frc.lib.BobcatLib.Vision.Vision;
 import frc.lib.BobcatLib.Vision.VisionConstants;
 import frc.robot.Constants;
 
+@SeasonBase
 public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, AutomatedSwerve {
 
     private final GyroIO gyroIO;

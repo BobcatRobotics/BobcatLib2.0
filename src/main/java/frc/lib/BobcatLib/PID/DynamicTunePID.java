@@ -3,7 +3,9 @@ package frc.lib.BobcatLib.PID;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.lib.BobcatLib.Annotations.SeasonBase;
 
+@SeasonBase
 public class DynamicTunePID extends PIDController {
     private double p;
     private double i;

@@ -8,7 +8,9 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.BobcatLib.Annotations.SeasonSpecific;
 
+@SeasonSpecific
 public class CANdle extends SubsystemBase {
   private final CANdleIO io;
   private final CANdleIOInputsAutoLogged inputs = new CANdleIOInputsAutoLogged();
