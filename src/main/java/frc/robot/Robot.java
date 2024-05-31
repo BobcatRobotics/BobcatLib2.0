@@ -13,7 +13,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,7 +21,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.BobcatLib.BobcatUtil;
+import frc.lib.BobcatLib.Util.DSUtil;
 import frc.lib.BobcatLib.Vision.CamMode;
 import frc.lib.BobcatLib.Vision.VisionConstants;
 import frc.lib.Team6328.LocalADStarAK;
@@ -99,10 +98,10 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    if((!autosInitialized && DriverStation.isDSAttached()) || currAlliance != BobcatUtil.getAlliance()){
+    if((!autosInitialized && DriverStation.isDSAttached()) || currAlliance != DSUtil.getAlliance()){
       m_robotContainer.configureAutos();
       autosInitialized = true;
-      currAlliance = BobcatUtil.getAlliance();
+      currAlliance = DSUtil.getAlliance();
     }
 
     if(Constants.currentMode != Constants.Mode.REAL){

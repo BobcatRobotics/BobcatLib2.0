@@ -35,7 +35,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.BobcatLib.BobcatUtil;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.PoseEstimation.BobcatSwerveEstimator;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Configs;
@@ -43,6 +42,8 @@ import frc.lib.BobcatLib.Swerve.Interfaces.AutomatedSwerve;
 import frc.lib.BobcatLib.Swerve.Interfaces.SysidCompatibleSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
+import frc.lib.BobcatLib.Util.DSUtil;
+import frc.lib.BobcatLib.Util.RotationUtil;
 import frc.lib.BobcatLib.Vision.Vision;
 import frc.lib.BobcatLib.Vision.VisionConstants;
 import frc.robot.Constants;
@@ -128,7 +129,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                     // alliance
                     // This will flip the path being followed to the red side of the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-                    return BobcatUtil.isRed();
+                    return DSUtil.isRed();
                 },
                 this);
 
@@ -332,7 +333,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         }
     }
     public Rotation2d getWrappedYaw(){
-        return BobcatUtil.wrapRot2d(getYaw());
+        return RotationUtil.wrapRot2d(getYaw());
     }
 
     /**
@@ -348,7 +349,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
      */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean autoAlign) {
         boolean rotationOverriden = Math.abs(rotation) < 0.02; //add a little bit of tolerance for if the stick gets bumped or smth  
-        autoAlignAngle = BobcatUtil.wrapRot2d(autoAlignAngle());
+        autoAlignAngle = RotationUtil.wrapRot2d(autoAlignAngle());
 
         ChassisSpeeds desiredSpeeds = fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(),
@@ -369,8 +370,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                     rotating = false;
                     lastMovingYaw = getYaw().getRadians();
                 }
-                desiredSpeeds.omegaRadiansPerSecond = rotationPID.calculate(BobcatUtil.get0to2Pi(getYaw().getRadians()),
-                BobcatUtil.get0to2Pi(lastMovingYaw));
+                desiredSpeeds.omegaRadiansPerSecond = rotationPID.calculate(RotationUtil.get0to2Pi(getYaw()),
+                RotationUtil.get0to2Pi(lastMovingYaw));
             } else {
                 rotating = true;
             }
@@ -516,7 +517,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     }
     
     public Translation2d getTranslationToPose(Translation2d bluePose, Translation2d redPose) {
-        return BobcatUtil.getAlliance() == Alliance.Blue
+        return DSUtil.isBlue()
                 ? bluePose.minus(getPose().getTranslation())
                 : redPose.minus(getPose().getTranslation());
 
@@ -532,11 +533,11 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
             case BASE_ROTATION:
                 return Math.abs(rotationPID.getPositionError()) <= tolerance;
             case PATHPLANNER:
-                if (BobcatUtil.getAlliance() == Alliance.Blue) {
+                if (DSUtil.isBlue()) {
                     return Math.abs(ppRotationOverride.getRadians() - getYaw().getRadians()) <= tolerance;
                 } else {
                     return Math.abs(ppRotationOverride.getRadians()
-                            - BobcatUtil.get0to2Pi(getYaw().rotateBy(Rotation2d.fromDegrees(180)).getRadians())) <= tolerance;
+                            - RotationUtil.get0to2Pi(getYaw().rotateBy(Rotation2d.fromDegrees(180)))) <= tolerance;
                 }
             default:
                 return false;
@@ -544,8 +545,9 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     }
     
 
+    //TODO: fix alliance color swapping
     public boolean aligned(Rotation2d angle) {
-        if (BobcatUtil.getAlliance() == Alliance.Blue) {
+        if (DSUtil.isBlue()) {
             return Math.abs(angle.getRadians() - getYaw().getRadians()) <= SwerveConstants.holoAlignTolerance.getRadians();
         } else {
             return Math.abs(angle.getRadians() - getYaw().getRadians()) <= SwerveConstants.holoAlignTolerance.getRadians();
@@ -556,7 +558,6 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
 
     public void addVisionMG2(Vision vision) {
-
         Matrix<N3, N1> stdDev;
         Matrix<N3, N1> truststdDev = DriverStation.isAutonomous() ? VisionConstants.trustautostdDev
                 : VisionConstants.trusttelestdDev;
