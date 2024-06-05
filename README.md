@@ -1,4 +1,7 @@
-# Welcome to BobcatLib 2.0!
+
+![BobcatLib Banner (2)](https://github.com/BobcatRobotics/BobcatLib2.0/assets/92986733/6bf82790-9683-4c4f-a983-df60c922052b)
+
+# Welcome to BobcatLib!
 
 #### This repo contains several utilities and code templates, allowing for quick creation of a robot's codbase at the beginning of a season. This readme won't necessarily cover every single file in BobcatLib, but it will cover all the important ones 
 
