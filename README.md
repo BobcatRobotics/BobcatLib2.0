@@ -1,9 +1,10 @@
-# Welcome to BobcatLib 2.0!
+![alt text](Assets/1.png)
 
+# Welcome to BobcatLib 2.0!
 #### This repo contains several utilities and code templates, allowing for quick creation of a robot's codbase at the beginning of a season. This readme won't necessarily cover every single file in BobcatLib, but it will cover all the important ones 
 
 
-## Annotations:
+## Annotations: 
 This class contains some basic markers to help determine how a class in BobcatLib should be used.
 Classes marked with @SeasonBase should NOT be modified to fit your season-specific needs, but should be instantiated, inherited or are static. @SeasonSpecific classes SHOULD be modified, these classes are either constants that need to be updated, or are subsystem templates that you can copy-paste into your project's Subsystems folder. This does NOT mean that you shouldn't make changes to @SeasonBase classes throughout the season! if you have improvements, don't hesitate to add them, however, whatever you add should be helpful every season. 
 
