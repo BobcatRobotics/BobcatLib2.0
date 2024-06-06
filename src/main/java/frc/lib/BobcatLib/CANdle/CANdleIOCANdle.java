@@ -26,32 +26,8 @@ public class CANdleIOCANdle implements CANdleIO {
         }
         currState = state;
         
-        switch (state) {
-            case INTAKESTALL: //red strobe animation
-                leds.animate(new StrobeAnimation(255, 0, 0,  0, 0.25, CANdleConstants.LedCount));
-                break;
-            case RESETPOSE: //strobe gold
-                leds.animate(new StrobeAnimation(255, 170, 0,  0, 0.25, CANdleConstants.LedCount));
-                break;
-            case RESETGYRO: //strobe gold
-                leds.animate(new StrobeAnimation(255, 170, 0, 0, 0.25, CANdleConstants.LedCount));
-                break;
-            case OUTAKE: //strobe red
-                leds.animate(new StrobeAnimation(255, 0, 0, 0, 0.75, CANdleConstants.LedCount));
-                break;
-            case ALIGNING: // strobe white
-                leds.animate(new StrobeAnimation(255, 255, 255, 255, 0.75, CANdleConstants.LedCount));
-                break;
-            case ALIGNED: // solid blue
-                leds.animate(new StrobeAnimation(0, 0, 255, 0, 1, CANdleConstants.LedCount));
-                break;
-            case OFF:
-                leds.animate(null);
-                break;
-            default:
-                leds.animate(null);
-                break;
-        }
+
+        leds.animate(state.getAnimation());
     }
 
 

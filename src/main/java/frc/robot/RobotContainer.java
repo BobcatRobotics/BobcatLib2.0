@@ -24,7 +24,7 @@ import frc.lib.BobcatLib.Swerve.TeleopSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
 import frc.lib.BobcatLib.Sysid.Sysid;
-import frc.lib.BobcatLib.Sysid.SysidTest;
+import frc.lib.BobcatLib.Sysid.Sysid.SysidTest;
 import frc.lib.BobcatLib.Vision.Vision;
 import frc.lib.BobcatLib.Vision.VisionIO;
 import frc.lib.BobcatLib.Vision.VisionIOLimelight;

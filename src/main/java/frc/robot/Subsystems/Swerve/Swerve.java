@@ -16,5 +16,13 @@ public class Swerve extends SwerveBase{
         super(gyroIO, flIO, frIO, blIO, brIO, cameras);
     }
 
+    /*  add season specific methods here
+     *  for example, Devin's shoot-on-the-fly
+     *  logic would go here, since it only applies
+     *  to Crescendo. The autoalign and aim assist
+     *  functionality, however, would go in the
+     *  SwerveBase class, since you use it in 
+     *  nearly every game.
+     */
     
 }
