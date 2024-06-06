@@ -1,6 +1,5 @@
 package frc.robot.Subsystems.Superstructure;
 
-import frc.robot.Subsystems.Superstructure.Arm.Arm;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -29,11 +28,6 @@ public class Superstructure {
     }
 
     @Getter @Setter private SuperstructureGoal currentGoal = SuperstructureGoal.STOW; 
-    private final Arm arm;
-
-    public Superstructure(Arm arm){
-        this.arm = arm;
-    }
 
     public void setState(SuperstructureGoal goal){
         switch (goal) {

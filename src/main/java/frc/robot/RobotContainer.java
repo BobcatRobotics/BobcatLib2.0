@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -21,6 +22,8 @@ import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 import frc.lib.BobcatLib.Swerve.TeleopSwerve;
+import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
+import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
 import frc.lib.BobcatLib.Sysid.Sysid;
@@ -143,7 +146,8 @@ public class RobotContainer {
          * () -> buttonOrAxisValue
          */
         public void configureBindings() {
-
+                TranslationAssist transAssist = new TranslationAssist(() -> new Translation2d(),() -> swerve.getPose().getTranslation(), () -> false, () -> false);
+                RotationalAssist rotAssist = new RotationalAssist(() -> new Rotation2d(), () -> swerve.getYaw(), () -> false, () -> false);
                 swerve.setDefaultCommand(
                    new TeleopSwerve(
                         swerve,
@@ -151,12 +155,12 @@ public class RobotContainer {
                         () -> -translate.getRawAxis(1), 
                         () -> -rotate.getRawAxis(0), 
                         () -> false,
-                        () -> -rotate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25 *0, 
-                        () -> -translate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25 *0, 
-                        gp.lb, 
-                        gp.rb
-                        )
-                );      
+                        () -> -rotate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25 , 
+                        () -> -translate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25, 
+                        transAssist, 
+                        rotAssist
+                        ));
+                
                 
                 //sysid routines
                 gp.a.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_FORWARD));

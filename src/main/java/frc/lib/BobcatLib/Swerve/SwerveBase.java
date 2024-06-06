@@ -31,13 +31,14 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.PoseEstimation.BobcatSwerveEstimator;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Configs;
+import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
+import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
 import frc.lib.BobcatLib.Swerve.Interfaces.AutomatedSwerve;
 import frc.lib.BobcatLib.Swerve.Interfaces.SysidCompatibleSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule;
@@ -339,15 +340,12 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     /**
      * Makes the swerve drive move
      * 
-     * @param translation    desired x and y speeds of the swerve drive in meters
-     *                       per
-     *                       second
-     * @param rotation       desired rotation speed of the swerve drive in radians
-     *                       per second
+     * @param translation    desired x and y speeds of the swerve drive in meters per second
+     * @param rotation       desired rotation speed of the swerve drive in radians per second
      * @param fieldRelative  whether the values should be field relative or not
-     * @param angleToSpeaker in radians
+     * @param transAssist 
      */
-    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean autoAlign) {
+    public void drive(Translation2d translation, double rotation, boolean fieldRelative, TranslationAssist transAssist, RotationalAssist rotAssist) {
         boolean rotationOverriden = Math.abs(rotation) < 0.02; //add a little bit of tolerance for if the stick gets bumped or smth  
         autoAlignAngle = RotationUtil.wrapRot2d(autoAlignAngle());
 
@@ -360,11 +358,16 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                         translation.getX(),
                         translation.getY(),
                         rotation);
+        
+        if(transAssist.shouldAssist()){
+            desiredSpeeds.vxMetersPerSecond += transAssist.xError();
+            desiredSpeeds.vyMetersPerSecond += transAssist.yError();
+        }
 
-        if (autoAlign && !rotationOverriden) {
-            desiredSpeeds.omegaRadiansPerSecond = autoAlignPID.calculate(getWrappedYaw().getRadians(), autoAlignAngle.getRadians());
+        if (rotAssist.shouldAssist()) {
+            desiredSpeeds.omegaRadiansPerSecond = autoAlignPID.calculate(getWrappedYaw().getRadians(), rotAssist.getErrorRad());
             lastMovingYaw = getYaw().getRadians();
-        } else {
+        } else { //TODO rotational velocity threshold
             if (rotation == 0) {
                 if (rotating) {
                     rotating = false;
@@ -631,24 +634,6 @@ public enum AlignmentCheckType{
     /*end sysid stuff */
 
 
-    /*aim assist stuff */
-    @Override
-    public Rotation2d autoAlignAngle(){
-        return autoAlignAngle;
-    }
-    @Override
-    public void setAutoAlignAngle(Rotation2d angle){
-        autoAlignAngle = angle;
-    }
-    @Override
-    public Translation2d aimAssistTranslation(){
-        return aimAssistTranslation;
-    }
-    @Override
-    public void setAimAssistTranslation(Translation2d translation){
-        aimAssistTranslation = translation;
-    }
-    /*end aim assist stuff*/
 }
 
 

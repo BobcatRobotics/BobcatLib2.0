@@ -1,5 +1,4 @@
-![Really sick banner](<Assets/BobcatLib Banner (4).png>)
-
+![alt text](<Assets/BobcatLib Banner (6).png>)
 # Welcome to BobcatLib!
 #### This repo contains several utilities and code templates, allowing for quick creation of a robot's codbase at the beginning of a season. 
 #### If you're looking to get started coding a robot see our [quick start guide](QUICKSTART.md)
@@ -36,7 +35,7 @@ This folder contains various classes necessary for creating a swerve drive.
 
 #### SwerveBase
 This is a base swerve drivetrain, with a bunch of general swerve features you should inherit this in your season specific swerve subsystem. Feautres include:
-* Fully configured auto builder with rotation override capability
+* Fully configured PathPlanner auto builder with rotation override capability
 * Easy pathfinding command factories
 * Pose estimation with dynamic odometry and vision trust levels
 * Support for any number of Limelights
