@@ -2,38 +2,31 @@ package frc.lib.BobcatLib.Swerve.Assists;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.Constants.AimAssistConstants;
+import lombok.Getter;
+import lombok.Setter;
 
 public class RotationalAssist {
-    private Supplier<Rotation2d> rotationalSupplier;
+    @Setter @Getter private Rotation2d desiredRotation;
     private BooleanSupplier shouldRun;
     private Supplier<Rotation2d> currRot;
-    private BooleanSupplier override;
 
 
     /**
      * 
      * @param pose the pose to guide the drivetrain to
      */
-    public RotationalAssist(Supplier<Rotation2d> assistRotationSupplier, Supplier<Rotation2d> rotationSupplier, BooleanSupplier shouldAssist, BooleanSupplier override){
-        rotationSupplier = assistRotationSupplier;
-        currRot = assistRotationSupplier;
+    public RotationalAssist(Rotation2d assistRotationSupplier, Supplier<Rotation2d> rotationSupplier, BooleanSupplier shouldAssist){
+        desiredRotation = assistRotationSupplier;
+        currRot = rotationSupplier;
         shouldRun = shouldAssist;
-        this.override = override;
     }
 
     public boolean shouldAssist(){
-        return shouldRun.getAsBoolean() && !override.getAsBoolean();
-    }
-    public Rotation2d getDesiredRot(){
-        return rotationalSupplier.get();
+        return shouldRun.getAsBoolean();
     }
     public Rotation2d getDistanceToTarget(){
-        return getDesiredRot().minus(currRot.get());
+        return getDesiredRotation().minus(currRot.get());
     }
     public double getErrorRad(){
         return getDistanceToTarget().getRadians();

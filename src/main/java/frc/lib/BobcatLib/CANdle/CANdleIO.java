@@ -2,7 +2,6 @@ package frc.lib.BobcatLib.CANdle;
 
 import org.littletonrobotics.junction.AutoLog;
 
-import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Annotations.SeasonSpecific;
 
 
@@ -15,6 +14,4 @@ public interface CANdleIO{
 
     public default void setLEDs(CANdleState state){}
     public default void updateInputs(CANdleIOInputs inputs){}
-    
-
 }

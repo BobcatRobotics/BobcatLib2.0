@@ -16,6 +16,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.lib.BobcatLib.Gamepads.EightBitDo;
 import frc.lib.BobcatLib.Swerve.GyroIO;
@@ -23,11 +25,10 @@ import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 import frc.lib.BobcatLib.Swerve.TeleopSwerve;
 import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
-import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
+import frc.lib.BobcatLib.Swerve.Assists.TranslationalAssist;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
 import frc.lib.BobcatLib.Sysid.Sysid;
-import frc.lib.BobcatLib.Sysid.Sysid.SysidTest;
 import frc.lib.BobcatLib.Vision.Vision;
 import frc.lib.BobcatLib.Vision.VisionIO;
 import frc.lib.BobcatLib.Vision.VisionIOLimelight;
@@ -48,9 +49,13 @@ public class RobotContainer {
         public final Vision[] cameras;
         
         public final Sysid sysid;
-        /* Commands */
+        
+        /* Driver Assists */
+        TranslationalAssist transAssist;
+        RotationalAssist rotAssist;
+        
 
-        /* Shuffleboard Inputs */
+        /* NetworkTable Inputs */
         private final LoggedDashboardChooser<Command> autoChooser = new LoggedDashboardChooser<>("Auto Choices");
 
         public RobotContainer() {
@@ -125,15 +130,44 @@ public class RobotContainer {
                  * Please give descriptive names
                  */
                 NamedCommands.registerCommand("PathfindingCommand", swerve.driveToPose(new Pose2d()));
-
+                NamedCommands.registerCommand("Cool example command", new InstantCommand(() -> swerve.resetPose(new Pose2d())));
+                
                 /*
                  * Auto Chooser
                  * 
                  * Names must match what is in PathPlanner
                  * Please give descriptive names
                  */
+                autoChooser.addOption("cool example auto", new SequentialCommandGroup());
                 autoChooser.addDefaultOption("Do Nothing", Commands.none());
         }
+
+        /**
+         * Translational assist moves the xy position of the robot,
+         * Rotational assist rotates it 
+         */
+        public void configureDriverAssists(){
+                transAssist = new TranslationalAssist(
+                        new Translation2d(), //where do we want to go to when the assist is active
+                        () -> swerve.getPose().getTranslation(),  //where are we rn
+                        () -> false // when this is true, the assist is active
+                        );
+                rotAssist = new RotationalAssist(
+                        new Rotation2d(),
+                        swerve::getYaw, 
+                        () -> false
+                        );
+        }
+
+        public void setAimAssists(Rotation2d rot, Translation2d trans){
+                if(rot != null){
+                        rotAssist.setDesiredRotation(rot);
+                }
+                if(trans != null){
+                        transAssist.setDesiredTranslation(trans);
+                }
+        }
+
 
         /**
          * IMPORTANT NOTE:
@@ -144,10 +178,15 @@ public class RobotContainer {
          * the values, use an anonymous/lambda function like this:
          * 
          * () -> buttonOrAxisValue
+         * 
+         * Triggers wrap suppliers, and can be passed into the constructors,
+         * just dont pass in the entire gamepad.
+         * 
+         * gp.button(1)
+         * or
+         * gp.x
          */
         public void configureBindings() {
-                TranslationAssist transAssist = new TranslationAssist(() -> new Translation2d(),() -> swerve.getPose().getTranslation(), () -> false, () -> false);
-                RotationalAssist rotAssist = new RotationalAssist(() -> new Rotation2d(), () -> swerve.getYaw(), () -> false, () -> false);
                 swerve.setDefaultCommand(
                    new TeleopSwerve(
                         swerve,
@@ -163,11 +202,11 @@ public class RobotContainer {
                 
                 
                 //sysid routines
-                gp.a.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_FORWARD));
-                gp.b.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_BACKWARD));
-                gp.x.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_FORWARD));
-                gp.y.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_BACKWARD));
-                gp.leftPaddle.whileTrue(swerve.zeroModules());
+                // gp.a.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_FORWARD));
+                // gp.b.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_BACKWARD));
+                // gp.x.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_FORWARD));
+                // gp.y.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_BACKWARD));
+                // gp.leftPaddle.whileTrue(swerve.zeroModules());
         }
 
         public Command getAutonomousCommand() {

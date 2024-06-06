@@ -37,8 +37,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.PoseEstimation.BobcatSwerveEstimator;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Configs;
+import frc.lib.BobcatLib.Swerve.SwerveConstants.OdometryConstants;
 import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
-import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
+import frc.lib.BobcatLib.Swerve.Assists.TranslationalAssist;
 import frc.lib.BobcatLib.Swerve.Interfaces.AutomatedSwerve;
 import frc.lib.BobcatLib.Swerve.Interfaces.SysidCompatibleSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule;
@@ -72,9 +73,6 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
     private Rotation2d lastYaw = new Rotation2d();
 
-    //aim assist
-    private Rotation2d autoAlignAngle = new Rotation2d();
-    private Translation2d aimAssistTranslation = new Translation2d();
 
     private final PathConstraints pathfindingConstraints = new PathConstraints(
         SwerveConstants.Limits.Chassis.maxSpeed,
@@ -213,13 +211,13 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                 case THROWOUT:
                     break;
                 case DISTRUST:
-                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, SwerveConstants.Odometry.distrustStdDevs);
+                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, OdometryConstants.distrustStdDevs);
                     break;
                 case TRUST:
-                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, SwerveConstants.Odometry.trustStdDevs);
+                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, OdometryConstants.trustStdDevs);
                     break;
                 default:
-                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, SwerveConstants.Odometry.trustStdDevs);
+                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, OdometryConstants.trustStdDevs);
                     break;
             }
             
@@ -276,13 +274,13 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                 case THROWOUT:
                     break;
                 case DISTRUST:
-                    poseEstimator.update(getYaw(), getModulePositions(), SwerveConstants.Odometry.distrustStdDevs);
+                    poseEstimator.update(getYaw(), getModulePositions(), OdometryConstants.distrustStdDevs);
                     break;
                 case TRUST:
-                    poseEstimator.update(getYaw(), getModulePositions(), SwerveConstants.Odometry.trustStdDevs);
+                    poseEstimator.update(getYaw(), getModulePositions(), OdometryConstants.trustStdDevs);
                     break;
                 default:
-                    poseEstimator.update(getYaw(), getModulePositions(), SwerveConstants.Odometry.trustStdDevs);
+                    poseEstimator.update(getYaw(), getModulePositions(), OdometryConstants.trustStdDevs);
                     break;
             }
         poseEstimator.update(getYaw(), getModulePositions());
@@ -294,13 +292,13 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     public OdometryState getOdometryState(){
         double avgAccel = 0;
         for(SwerveModule module : modules){
-            if(module.getDriveAcceleration() > 5){
+            if(module.getDriveAcceleration() > OdometryConstants.odometryThrowoutAccel){
                 return OdometryState.THROWOUT;
             }
             avgAccel += module.getDriveAcceleration() / modules.length;
         }
         Logger.recordOutput("Swerve/Odometry/avgAccel", avgAccel);
-        if(avgAccel > 4){
+        if(avgAccel > OdometryConstants.odometryDistrustAccel){
             return OdometryState.DISTRUST;
         }else{
             return OdometryState.TRUST;
@@ -345,9 +343,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
      * @param fieldRelative  whether the values should be field relative or not
      * @param transAssist 
      */
-    public void drive(Translation2d translation, double rotation, boolean fieldRelative, TranslationAssist transAssist, RotationalAssist rotAssist) {
-        boolean rotationOverriden = Math.abs(rotation) < 0.02; //add a little bit of tolerance for if the stick gets bumped or smth  
-        autoAlignAngle = RotationUtil.wrapRot2d(autoAlignAngle());
+    public void drive(Translation2d translation, double rotation, boolean fieldRelative, TranslationalAssist transAssist, RotationalAssist rotAssist) {
 
         ChassisSpeeds desiredSpeeds = fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(),

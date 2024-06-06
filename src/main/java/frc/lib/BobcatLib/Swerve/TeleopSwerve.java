@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
-import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
+import frc.lib.BobcatLib.Swerve.Assists.TranslationalAssist;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Limits;
 import frc.robot.Constants.AimAssistConstants;
 
@@ -24,7 +24,7 @@ public class TeleopSwerve extends Command {
     private BooleanSupplier robotCentric;
     private DoubleSupplier fineTrans;
    
-    private TranslationAssist aimAssist;
+    private TranslationalAssist aimAssist;
     private RotationalAssist rotAssist;
     /**
      * 
@@ -43,7 +43,7 @@ public class TeleopSwerve extends Command {
      */
     public TeleopSwerve(SwerveBase swerve, DoubleSupplier translation, DoubleSupplier strafe,
             DoubleSupplier rotation, BooleanSupplier robotCentric, DoubleSupplier fineStrafe, DoubleSupplier fineTrans,
-            TranslationAssist translationAssist, RotationalAssist rotationalAssist) {
+            TranslationalAssist translationAssist, RotationalAssist rotationalAssist) {
         
         aimAssist = translationAssist;
         rotAssist = rotationalAssist;

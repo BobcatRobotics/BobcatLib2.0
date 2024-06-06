@@ -137,7 +137,7 @@ public class SwerveConstants {
         }
     }
 
-    public static class Odometry {
+    public static class OdometryConstants {
         // odometry stuff only, vision stuff is in LimelightConstants
 
         public static final Matrix<N3, N1> trustStdDevs = VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(1));
