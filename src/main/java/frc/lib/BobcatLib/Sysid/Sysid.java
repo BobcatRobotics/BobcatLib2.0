@@ -19,6 +19,12 @@ import static edu.wpi.first.units.Units.Volts;
 
 
 public class Sysid extends SubsystemBase {
+        public enum SysidTest {
+            QUASISTATIC_FORWARD,
+            QUASISTATIC_BACKWARD,
+            DYNAMIC_FORWARD,
+            DYNAMIC_BACKWARD
+        }
         private SysidCompatibleSwerve swerve;
         private SysIdRoutine routine;
         // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.

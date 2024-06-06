@@ -5,7 +5,9 @@ import org.littletonrobotics.junction.AutoLog;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.lib.BobcatLib.Annotations.SeasonBase;
 
+@SeasonBase
 public interface SwerveModuleIO {
     @AutoLog
     public static class SwerveModuleIOInputs {

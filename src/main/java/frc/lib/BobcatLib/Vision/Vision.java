@@ -10,18 +10,14 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.BobcatLib.BobcatUtil;
-import frc.lib.LimeLight.LimelightHelpers;
+import frc.lib.BobcatLib.Vision.VisionConstants.LimeLightType;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.VisionConstants;
 
 public class Vision extends SubsystemBase {
   /** Creates a new Vision. */
   private final VisionIO io;
   private final VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
-
   public boolean apriltagPipeline;
 
   public Vision(VisionIO io) {
@@ -65,25 +61,14 @@ public class Vision extends SubsystemBase {
 
 
   public Pose2d getBotPoseMG2(){
-    return LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(inputs.name).pose;
-  }
-
-  public Pose2d getPoseMG2(){
-    return LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(inputs.name).pose;
-  }
-
-  public LimelightHelpers.PoseEstimate getPoseEstimateMG2(){
-    return LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(inputs.name);
+    return inputs.botPoseMG2;
   }
 
   /**
    * tells the limelight what the rotation of the gyro is, for determining pose ambiguity stuff
    */
   public void SetRobotOrientation(Rotation2d gyro){
-    gyro = BobcatUtil.isBlue()? gyro : gyro.rotateBy(Rotation2d.fromDegrees(180));
-    double gyroval = Math.toDegrees(BobcatUtil.get0to2Pi(gyro.getRadians()));
-    
-    LimelightHelpers.SetRobotOrientation(inputs.name, gyroval, 0, 0, 0, 0, 0);
+    io.setRobotOrientationMG2(gyro);
   }
 
   /**
@@ -91,7 +76,7 @@ public class Vision extends SubsystemBase {
    * @param tags anything NOT in here will be thrownOut
    */
   public void setPermittedTags(int[] tags){
-      LimelightHelpers.SetFiducialIDFiltersOverride(inputs.name, tags);
+      io.setPermittedTags(tags);
   }
 
   /**
@@ -102,7 +87,7 @@ public class Vision extends SubsystemBase {
   public boolean getPoseValidMG2(Rotation2d gyro){
     
     //get raw data from limelight pose estimator
-    Pose2d botpose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(inputs.name).pose;
+    Pose2d botpose = inputs.botPoseMG2;
     double diff = 0;
 
     double gyroval=gyro.getDegrees();
@@ -111,12 +96,11 @@ public class Vision extends SubsystemBase {
     double x = botpose.getX();
     double y = botpose.getY();
 
-    LimelightHelpers.PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(inputs.name);
-    double tagDist = poseEstimate.avgTagDist;
+    double tagDist = inputs.avgTagDist;
 
     //debugging purposes only
     Logger.recordOutput("LLDebug/"+inputs.name+" avgTagDist", tagDist);
-    Logger.recordOutput("LLDebug/"+inputs.name+" tagCount", poseEstimate.tagCount);
+    Logger.recordOutput("LLDebug/"+inputs.name+" tagCount", inputs.tagCount);
     Logger.recordOutput("LLDebug/"+inputs.name+" x val", x);
     Logger.recordOutput("LLDebug/"+inputs.name+" y val", y);
     Logger.recordOutput("LLDebug/"+inputs.name+" rdiff", diff);
@@ -148,7 +132,7 @@ public class Vision extends SubsystemBase {
   }
 
   public Pose3d getBotPose3d() {
-    Pose3d pose = LimelightHelpers.getBotPose3d_wpiBlue(inputs.name);
+    Pose3d pose = inputs.botPose3d;
     Logger.recordOutput("Limelight" + inputs.name + "/Pose3d", pose);
     return pose;
 
@@ -163,13 +147,8 @@ public class Vision extends SubsystemBase {
 
 
   public double getPoseTimestampMG2() {
-    return LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(inputs.name).timestampSeconds;
+    return inputs.timestamp;
   }
-
-  public LimelightHelpers.PoseEstimate getPoseEstimate() {
-    return LimelightHelpers.getBotPoseEstimate_wpiBlue(inputs.name);
-  }
-
 
    public String getLimelightName(){
     return inputs.name;
@@ -184,8 +163,26 @@ public class Vision extends SubsystemBase {
     return inputs.ta;
   }
 
-  public void setPriorityID(int tagID, String limelightID) {
-    NetworkTableInstance.getDefault().getTable(limelightID).getEntry("priorityid").setDouble(tagID);
+  public void setPriorityID(int tagID) {
+    io.setPriorityID(tagID);
   }
+
+  public double tagCount(){
+    return inputs.tagCount;
+  }
+
+
+  public static Vision buildLimelight(String name, LimeLightType type){
+    return new Vision(new VisionIOLimelight(name, type));
+  }
+
+  public static Vision buildLimelight3G(String name){
+    return new Vision(
+      new VisionIOLimelight(
+        name, LimeLightType.LL3G_APRILTAG
+      )
+    );
+  }
+  
 
 }

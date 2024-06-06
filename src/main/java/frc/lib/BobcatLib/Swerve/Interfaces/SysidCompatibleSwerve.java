@@ -3,7 +3,9 @@ package frc.lib.BobcatLib.Swerve.Interfaces;
 
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
+import frc.lib.BobcatLib.Annotations.SeasonBase;
 
+@SeasonBase
 public interface SysidCompatibleSwerve {
     //TODO: better documentation
     /**

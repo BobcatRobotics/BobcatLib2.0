@@ -15,10 +15,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.PhoenixOdometryThread;
 import frc.lib.Team254.ModuleConstants;
-import frc.robot.Constants.SwerveConstants;
-
+import frc.lib.BobcatLib.Swerve.SwerveConstants;
+@SeasonBase
 public class SwerveModuleIOFalcon implements SwerveModuleIO {
     private final TalonFX driveMotor;
     private final TalonFX angleMotor;
@@ -181,25 +182,25 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         TalonFXConfiguration config = new TalonFXConfiguration();
         driveMotor.getConfigurator().apply(new TalonFXConfiguration());
 
-        config.CurrentLimits.SupplyCurrentLimitEnable = SwerveConstants.driveSupplyCurrentLimitEnable;
-        config.CurrentLimits.SupplyCurrentLimit = SwerveConstants.driveSupplyCurrentLimit;
-        config.CurrentLimits.SupplyCurrentThreshold = SwerveConstants.driveSupplyCurrentThreshold;
-        config.CurrentLimits.SupplyTimeThreshold = SwerveConstants.driveSupplyTimeThreshold;
+        config.CurrentLimits.SupplyCurrentLimitEnable = SwerveConstants.Configs.Module.Drive.driveSupplyCurrentLimitEnable;
+        config.CurrentLimits.SupplyCurrentLimit = SwerveConstants.Configs.Module.Drive.driveSupplyCurrentLimit;
+        config.CurrentLimits.SupplyCurrentThreshold = SwerveConstants.Configs.Module.Drive.driveSupplyCurrentThreshold;
+        config.CurrentLimits.SupplyTimeThreshold = SwerveConstants.Configs.Module.Drive.driveSupplyTimeThreshold;
 
-        config.CurrentLimits.StatorCurrentLimitEnable = SwerveConstants.driveStatorCurrentLimitEnable;
-        config.CurrentLimits.StatorCurrentLimit = SwerveConstants.driveStatorCurrentLimit;
+        config.CurrentLimits.StatorCurrentLimitEnable = SwerveConstants.Configs.Module.Drive.driveStatorCurrentLimitEnable;
+        config.CurrentLimits.StatorCurrentLimit = SwerveConstants.Configs.Module.Drive.driveStatorCurrentLimit;
 
-        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = SwerveConstants.openLoopRamp;
-        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = SwerveConstants.openLoopRamp;
-        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = SwerveConstants.openLoopRamp;
-        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = SwerveConstants.closedLoopRamp;
-        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = SwerveConstants.closedLoopRamp;
-        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = SwerveConstants.closedLoopRamp;
+        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = SwerveConstants.Configs.Module.Drive.openLoopRamp;
+        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = SwerveConstants.Configs.Module.Drive.openLoopRamp;
+        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = SwerveConstants.Configs.Module.Drive.openLoopRamp;
+        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = SwerveConstants.Configs.Module.Drive.closedLoopRamp;
+        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = SwerveConstants.Configs.Module.Drive.closedLoopRamp;
+        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = SwerveConstants.Configs.Module.Drive.closedLoopRamp;
 
         
 
-        config.MotorOutput.Inverted = SwerveConstants.driveMotorInvert;
-        config.MotorOutput.NeutralMode = SwerveConstants.driveNeutralMode;
+        config.MotorOutput.Inverted = SwerveConstants.Configs.Module.Drive.driveMotorInvert;
+        config.MotorOutput.NeutralMode = SwerveConstants.Configs.Module.Drive.driveNeutralMode;
 
         driveMotor.getConfigurator().apply(config);
 
@@ -213,17 +214,16 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         TalonFXConfiguration config = new TalonFXConfiguration();
         angleMotor.getConfigurator().apply(new TalonFXConfiguration());
 
-        config.CurrentLimits.SupplyCurrentLimitEnable = SwerveConstants.angleSupplyCurrentLimitEnable;
-        config.CurrentLimits.SupplyCurrentLimit = SwerveConstants.angleSupplyCurrentLimit;
-        config.CurrentLimits.SupplyCurrentThreshold = SwerveConstants.angleSupplyCurrentThreshold;
-        config.CurrentLimits.SupplyTimeThreshold = SwerveConstants.angleSupplyTimeThreshold;
+        config.CurrentLimits.SupplyCurrentLimitEnable = SwerveConstants.Configs.Module.Angle.angleSupplyCurrentLimitEnable;
+        config.CurrentLimits.SupplyCurrentThreshold = SwerveConstants.Configs.Module.Angle.angleSupplyCurrentThreshold;
+        config.CurrentLimits.SupplyTimeThreshold = SwerveConstants.Configs.Module.Angle.angleSupplyTimeThreshold;
 
-        config.CurrentLimits.StatorCurrentLimitEnable = SwerveConstants.angleStatorCurrentLimitEnable;
-        config.CurrentLimits.StatorCurrentLimit = SwerveConstants.angleStatorCurrentLimit;
+        config.CurrentLimits.StatorCurrentLimitEnable = SwerveConstants.Configs.Module.Angle.angleStatorCurrentLimitEnable;
+        config.CurrentLimits.StatorCurrentLimit = SwerveConstants.Configs.Module.Angle.angleStatorCurrentLimit;
         
 
-        config.MotorOutput.Inverted = SwerveConstants.angleMotorInvert;
-        config.MotorOutput.NeutralMode = SwerveConstants.angleNeutralMode;
+        config.MotorOutput.Inverted = SwerveConstants.Configs.Module.Angle.angleMotorInvert;
+        config.MotorOutput.NeutralMode = SwerveConstants.Configs.Module.Angle.angleNeutralMode;
 
         angleMotor.getConfigurator().apply(config);
     }
@@ -236,8 +236,8 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         CANcoderConfiguration config = new CANcoderConfiguration();
         angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
 
-        config.MagnetSensor.AbsoluteSensorRange = SwerveConstants.sensorRange;
-        config.MagnetSensor.SensorDirection = SwerveConstants.sensorDirection;
+        config.MagnetSensor.AbsoluteSensorRange = SwerveConstants.Configs.Module.CANCoder.sensorRange;
+        config.MagnetSensor.SensorDirection = SwerveConstants.Configs.Module.CANCoder.sensorDirection;
 
         angleEncoder.getConfigurator().apply(config);
     }

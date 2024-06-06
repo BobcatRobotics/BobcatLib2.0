@@ -3,21 +3,24 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.lib.BobcatLib.Vision;
-
-
-import frc.lib.LimeLight.LimelightHelpersFast;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.lib.BobcatLib.Util.DSUtil;
+import frc.lib.BobcatLib.Util.RotationUtil;
+import frc.lib.BobcatLib.Vision.VisionConstants.LimeLightType;
+import frc.lib.Limelight.LimelightHelpers;
+import frc.lib.Limelight.LimelightHelpersFast;
 
 public class VisionIOLimelight implements VisionIO{
   /** Creates a new VisionIOLimelight. */
     LEDMode currentLedMode = LEDMode.FORCEOFF;
     CamMode currentCamMode = CamMode.VISION;
-    public final limelightConstants constants;
+    public final LimeLightType type;
     private final String name;
 
-  public VisionIOLimelight(limelightConstants limelightConstants) {
-    constants = limelightConstants;
-    name = constants.name;
-    
+  public VisionIOLimelight(String name, LimeLightType type) {
+    this.name = name;
+    this.type = type;  
   }
 
   @Override
@@ -33,6 +36,13 @@ public class VisionIOLimelight implements VisionIO{
     inputs.fiducialID = LimelightHelpersFast.getFiducialID(name);
     inputs.tClass=LimelightHelpersFast.getNeuralClassID(name);
     inputs.name=name;
+    inputs.type = type;
+    inputs.botPoseMG2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).pose;
+    inputs.tagCount = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).tagCount;
+    inputs.avgTagDist = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).avgTagDist;
+    inputs.botPose3d = LimelightHelpers.getBotPose3d_wpiBlue(name);
+    inputs.timestamp = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name).timestampSeconds;
+
   }
 
 
@@ -75,5 +85,23 @@ public class VisionIOLimelight implements VisionIO{
   @Override
   public void setPipeline(String limelight, int index){    
     LimelightHelpersFast.setPipelineIndex(limelight, index);
+  }
+
+  @Override
+  public void setRobotOrientationMG2(Rotation2d gyro){
+    gyro = DSUtil.isBlue()? gyro : gyro.rotateBy(Rotation2d.fromDegrees(180));
+    double gyroval = RotationUtil.wrapRot2d(gyro).getDegrees();
+    
+    LimelightHelpers.SetRobotOrientation(name, gyroval, 0, 0, 0, 0, 0);
+  }
+
+  @Override
+  public void setPermittedTags(int[] tags){
+    LimelightHelpers.SetFiducialIDFiltersOverride(name, tags);
+  }
+
+  @Override
+  public void setPriorityID(int tagID){
+    NetworkTableInstance.getDefault().getTable(name).getEntry("priorityid").setDouble(tagID);
   }
 }

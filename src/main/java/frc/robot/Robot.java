@@ -13,6 +13,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -20,10 +21,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.BobcatLib.BobcatUtil;
+import frc.lib.BobcatLib.Util.DSUtil;
 import frc.lib.BobcatLib.Vision.CamMode;
+import frc.lib.BobcatLib.Vision.VisionConstants;
 import frc.lib.Team6328.LocalADStarAK;
-import frc.robot.Constants.VisionConstants;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -65,22 +66,22 @@ public class Robot extends LoggedRobot {
  
  
     // Record metadata
-    // Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-    // Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-    // Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-    // Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    // Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-    // switch (BuildConstants.DIRTY) {
-    //   case 0:
-    //     Logger.recordMetadata("GitDirty", "All changes committed");
-    //     break;
-    //   case 1:
-    //     Logger.recordMetadata("GitDirty", "Uncomitted changes");
-    //     break;
-    //   default:
-    //     Logger.recordMetadata("GitDirty", "Unknown");
-    //     break;
-    // }
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    switch (BuildConstants.DIRTY) {
+      case 0:
+        Logger.recordMetadata("GitDirty", "All changes committed");
+        break;
+      case 1:
+        Logger.recordMetadata("GitDirty", "Uncomitted changes");
+        break;
+      default:
+        Logger.recordMetadata("GitDirty", "Unknown");
+        break;
+    }
 
  
 
@@ -91,18 +92,22 @@ public class Robot extends LoggedRobot {
 
 
     m_robotContainer.limelight1.setCamMode(CamMode.VISION);
-    m_robotContainer.limelight1.setPipeline(VisionConstants.limelight1.apriltagPipelineIndex);
+    m_robotContainer.limelight1.setPipeline(VisionConstants.apriltagPipelineIndex);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    if((!autosInitialized && DriverStation.isDSAttached()) || currAlliance != BobcatUtil.getAlliance()){
+    if((!autosInitialized && DriverStation.isDSAttached()) || currAlliance != DSUtil.getAlliance()){
       m_robotContainer.configureAutos();
       autosInitialized = true;
-      currAlliance = BobcatUtil.getAlliance();
+      currAlliance = DSUtil.getAlliance();
     }
-  }
+
+    if(Constants.currentMode != Constants.Mode.REAL){
+      Logger.recordOutput("components", new Pose3d[]{m_robotContainer.getArmPoseAScope()});
+    }
+}
 
   @Override
   public void disabledInit() {

@@ -2,7 +2,11 @@ package frc.lib.BobcatLib.CANdle;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import frc.lib.BobcatLib.Annotations.SeasonBase;
+import frc.lib.BobcatLib.Annotations.SeasonSpecific;
 
+
+@SeasonSpecific
 public interface CANdleIO{
     @AutoLog
     public static class CANdleIOInputs {

@@ -10,22 +10,24 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
-import frc.lib.BobcatLib.Swerve.SwerveConstants.Gains;
+import frc.lib.BobcatLib.Swerve.SwerveConstants.Configs;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Limits;
 
+@SeasonBase
 public class SwerveModule {
     private final SwerveModuleIO io;
     private final SwerveModuleIOInputsAutoLogged inputs = new SwerveModuleIOInputsAutoLogged();
 
     public final int index;
 
-    private SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(Gains.Module.kS,
-    Gains.Module.kV, Gains.Module.kA);
-    private PIDController driveController = new PIDController(Gains.Module.kDriveP, Gains.Module.kDriveI,
-    Gains.Module.kDriveD);
-    private PIDController angleController = new PIDController(Gains.Module.kRotP, Gains.Module.kRotI,
-    Gains.Module.kRotD);
+    private SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(Configs.Module.Drive.kS,
+    Configs.Module.Drive.kV, Configs.Module.Drive.kA);
+    private PIDController driveController = new PIDController(Configs.Module.Drive.kP, Configs.Module.Drive.kI,
+    Configs.Module.Drive.kD);
+    private PIDController angleController = new PIDController(Configs.Module.Angle.kP, Configs.Module.Angle.kI,
+    Configs.Module.Angle.kD);
 
     private SwerveModuleState desiredState = new SwerveModuleState();
 
@@ -50,7 +52,7 @@ public class SwerveModule {
         int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together
         odometryPositions = new SwerveModulePosition[sampleCount];
         for (int i = 0; i < sampleCount; i++) {
-            double positionMeters = inputs.odometryDrivePositionsRad[i] * (SwerveConstants.wheelCircumference / (2 * Math.PI));
+            double positionMeters = inputs.odometryDrivePositionsRad[i] * (SwerveConstants.Kinematics.wheelCircumference / (2 * Math.PI));
             Rotation2d angle =
                 inputs.odometryAnglePositions[i].minus(
                     inputs.offset != null ? inputs.offset : new Rotation2d());
@@ -79,7 +81,7 @@ public class SwerveModule {
         // Update velocity based on turn error
         optimizedState.speedMetersPerSecond *= Math.cos(angleController.getPositionError());
 
-        double velocity = optimizedState.speedMetersPerSecond / SwerveConstants.wheelCircumference;
+        double velocity = optimizedState.speedMetersPerSecond / SwerveConstants.Kinematics.wheelCircumference;
         double velocityOut = MathUtil.clamp(
                 driveController.calculate(inputs.driveVelocityRotPerSec, velocity)
                         + driveFeedforward.calculate(velocity),
@@ -131,7 +133,7 @@ public class SwerveModule {
      * @return drive motor position, in meters
      */
     public double getPositionMeters() {
-        return inputs.drivePositionRot * SwerveConstants.wheelCircumference;
+        return inputs.drivePositionRot * SwerveConstants.Kinematics.wheelCircumference;
     }
 
     /**
@@ -139,7 +141,7 @@ public class SwerveModule {
      * @return velocity, in meter per second
      */
     public double getVelocityMetersPerSec() {
-        return inputs.driveVelocityRotPerSec * SwerveConstants.wheelCircumference;
+        return inputs.driveVelocityRotPerSec * SwerveConstants.Kinematics.wheelCircumference;
     }
 
     /**

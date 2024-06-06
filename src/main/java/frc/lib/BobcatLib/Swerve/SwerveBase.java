@@ -31,20 +31,25 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.BobcatLib.BobcatUtil;
+import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.PoseEstimation.BobcatSwerveEstimator;
-import frc.lib.BobcatLib.Swerve.SwerveConstants.Gains;
+import frc.lib.BobcatLib.Swerve.SwerveConstants.Configs;
+import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
+import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
 import frc.lib.BobcatLib.Swerve.Interfaces.AutomatedSwerve;
 import frc.lib.BobcatLib.Swerve.Interfaces.SysidCompatibleSwerve;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
+import frc.lib.BobcatLib.Util.DSUtil;
+import frc.lib.BobcatLib.Util.RotationUtil;
 import frc.lib.BobcatLib.Vision.Vision;
+import frc.lib.BobcatLib.Vision.VisionConstants;
 import frc.robot.Constants;
-import frc.robot.Constants.VisionConstants;
 
+@SeasonBase
 public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, AutomatedSwerve {
 
     private final GyroIO gyroIO;
@@ -56,7 +61,6 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     private final double[] swerveModuleStates = new double[8];
     private final double[] desiredSwerveModuleStates = new double[8];
 
-    private SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[4];
     private Rotation2d ppRotationOverride;
 
     private final PIDController rotationPID;
@@ -95,13 +99,13 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
         PhoenixOdometryThread.getInstance().start();
 
-        rotationPID = new PIDController(SwerveConstants.Gains.Teleop.rotKP, SwerveConstants.Gains.Teleop.rotKI, SwerveConstants.Gains.Teleop.rotKD);
+        rotationPID = new PIDController(SwerveConstants.Configs.Teleop.rotKP, SwerveConstants.Configs.Teleop.rotKI, SwerveConstants.Configs.Teleop.rotKD);
         rotationPID.enableContinuousInput(0, 2 * Math.PI);
-        autoAlignPID = new PIDController(SwerveConstants.Gains.AutoAlign.rotationKP, SwerveConstants.Gains.AutoAlign.rotationKI, SwerveConstants.Gains.AutoAlign.rotationKI);
+        autoAlignPID = new PIDController(SwerveConstants.Configs.AutoAlign.rotationKP, SwerveConstants.Configs.AutoAlign.rotationKI, SwerveConstants.Configs.AutoAlign.rotationKI);
         autoAlignPID.enableContinuousInput(0, 2 * Math.PI);
 
         //std devs will be actually set later, so we dont need to initialize them to actual values here
-        poseEstimator = new BobcatSwerveEstimator(SwerveConstants.kinematics, getYaw(), getModulePositions(), new Pose2d(), VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0));
+        poseEstimator = new BobcatSwerveEstimator(SwerveConstants.Kinematics.kinematics, getYaw(), getModulePositions(), new Pose2d(), VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0));
         
 
         // setpointGenerator =
@@ -116,17 +120,17 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                 this::getChassisSpeeds,
                 this::drive,
                 new HolonomicPathFollowerConfig(
-                        Gains.Auto.transPidConstants,
-                        Gains.Auto.rotPidConstants,
+                        Configs.Auto.transPidConstants,
+                        Configs.Auto.rotPidConstants,
                         SwerveConstants.Limits.Module.maxSpeed,
-                        SwerveConstants.wheelBase,
+                        SwerveConstants.Kinematics.wheelBase,
                         SwerveConstants.replanningConfig),
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
                     // alliance
                     // This will flip the path being followed to the red side of the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-                    return BobcatUtil.isRed();
+                    return DSUtil.isRed();
                 },
                 this);
 
@@ -220,7 +224,6 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
             }
             
             
-            swerveModulePositions = modulePositions;
         }
 
         //updates desired and current swerve module states
@@ -304,6 +307,17 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         }
     }
 
+    public void setModulesStraight(){
+        for (SwerveModule mod : modules){
+            mod.setDesiredState(
+                new SwerveModuleState(0, new Rotation2d())
+            );
+        }
+    }
+    public Command zeroModules(){
+        return new RunCommand(() -> setModulesStraight(), this);
+    }
+
 
 
     /**
@@ -320,23 +334,20 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         }
     }
     public Rotation2d getWrappedYaw(){
-        return BobcatUtil.wrapRot2d(getYaw());
+        return RotationUtil.wrapRot2d(getYaw());
     }
 
     /**
      * Makes the swerve drive move
      * 
-     * @param translation    desired x and y speeds of the swerve drive in meters
-     *                       per
-     *                       second
-     * @param rotation       desired rotation speed of the swerve drive in radians
-     *                       per second
+     * @param translation    desired x and y speeds of the swerve drive in meters per second
+     * @param rotation       desired rotation speed of the swerve drive in radians per second
      * @param fieldRelative  whether the values should be field relative or not
-     * @param angleToSpeaker in radians
+     * @param transAssist 
      */
-    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean autoAlign) {
+    public void drive(Translation2d translation, double rotation, boolean fieldRelative, TranslationAssist transAssist, RotationalAssist rotAssist) {
         boolean rotationOverriden = Math.abs(rotation) < 0.02; //add a little bit of tolerance for if the stick gets bumped or smth  
-        autoAlignAngle = BobcatUtil.wrapRot2d(autoAlignAngle());
+        autoAlignAngle = RotationUtil.wrapRot2d(autoAlignAngle());
 
         ChassisSpeeds desiredSpeeds = fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(),
@@ -347,18 +358,23 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                         translation.getX(),
                         translation.getY(),
                         rotation);
+        
+        if(transAssist.shouldAssist()){
+            desiredSpeeds.vxMetersPerSecond += transAssist.xError();
+            desiredSpeeds.vyMetersPerSecond += transAssist.yError();
+        }
 
-        if (autoAlign && !rotationOverriden) {
-            desiredSpeeds.omegaRadiansPerSecond = autoAlignPID.calculate(getWrappedYaw().getRadians(), autoAlignAngle.getRadians());
+        if (rotAssist.shouldAssist()) {
+            desiredSpeeds.omegaRadiansPerSecond = autoAlignPID.calculate(getWrappedYaw().getRadians(), rotAssist.getErrorRad());
             lastMovingYaw = getYaw().getRadians();
-        } else {
+        } else { //TODO rotational velocity threshold
             if (rotation == 0) {
                 if (rotating) {
                     rotating = false;
                     lastMovingYaw = getYaw().getRadians();
                 }
-                desiredSpeeds.omegaRadiansPerSecond = rotationPID.calculate(BobcatUtil.get0to2Pi(getYaw().getRadians()),
-                BobcatUtil.get0to2Pi(lastMovingYaw));
+                desiredSpeeds.omegaRadiansPerSecond = rotationPID.calculate(RotationUtil.get0to2Pi(getYaw()),
+                RotationUtil.get0to2Pi(lastMovingYaw));
             } else {
                 rotating = true;
             }
@@ -370,7 +386,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         // setpointGenerator.generateSetpoint(SwerveConstants.moduleLimits,
         // currentSetpoint, desiredSpeeds, Constants.loopPeriodSecs);
 
-        SwerveModuleState[] swerveModuleStates = SwerveConstants.kinematics.toSwerveModuleStates(desiredSpeeds);
+        SwerveModuleState[] swerveModuleStates = SwerveConstants.Kinematics.kinematics.toSwerveModuleStates(desiredSpeeds);
         // SwerveModuleState[] swerveModuleStates = currentSetpoint.moduleStates();
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.Limits.Module.maxSpeed);
 
@@ -390,7 +406,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
         lastMovingYaw = getYaw().getRadians();
 
-        SwerveModuleState[] swerveModuleStates = SwerveConstants.kinematics.toSwerveModuleStates(targetSpeeds);
+        SwerveModuleState[] swerveModuleStates = SwerveConstants.Kinematics.kinematics.toSwerveModuleStates(targetSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.Limits.Module.maxSpeed);
 
         for (SwerveModule mod : modules) {
@@ -443,7 +459,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
      * @return current chassis speeds
      */
     public ChassisSpeeds getChassisSpeeds() {
-        return SwerveConstants.kinematics.toChassisSpeeds(getModuleStates());
+        return SwerveConstants.Kinematics.kinematics.toChassisSpeeds(getModuleStates());
     }
 
     /**
@@ -504,7 +520,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     }
     
     public Translation2d getTranslationToPose(Translation2d bluePose, Translation2d redPose) {
-        return BobcatUtil.getAlliance() == Alliance.Blue
+        return DSUtil.isBlue()
                 ? bluePose.minus(getPose().getTranslation())
                 : redPose.minus(getPose().getTranslation());
 
@@ -520,11 +536,11 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
             case BASE_ROTATION:
                 return Math.abs(rotationPID.getPositionError()) <= tolerance;
             case PATHPLANNER:
-                if (BobcatUtil.getAlliance() == Alliance.Blue) {
+                if (DSUtil.isBlue()) {
                     return Math.abs(ppRotationOverride.getRadians() - getYaw().getRadians()) <= tolerance;
                 } else {
                     return Math.abs(ppRotationOverride.getRadians()
-                            - BobcatUtil.get0to2Pi(getYaw().rotateBy(Rotation2d.fromDegrees(180)).getRadians())) <= tolerance;
+                            - RotationUtil.get0to2Pi(getYaw().rotateBy(Rotation2d.fromDegrees(180)))) <= tolerance;
                 }
             default:
                 return false;
@@ -532,9 +548,10 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     }
     
 
+    //TODO: fix alliance color swapping
     public boolean aligned(Rotation2d angle) {
-        if (BobcatUtil.getAlliance() == Alliance.Blue) {
-            return Math.abs(angle.getRadians() - getYaw().getRadians()) <= SwerveConstants.holoAlignTolerance.getRadians(); // TODO Formerly 1 radian -_-
+        if (DSUtil.isBlue()) {
+            return Math.abs(angle.getRadians() - getYaw().getRadians()) <= SwerveConstants.holoAlignTolerance.getRadians();
         } else {
             return Math.abs(angle.getRadians() - getYaw().getRadians()) <= SwerveConstants.holoAlignTolerance.getRadians();
         }
@@ -544,7 +561,6 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
 
     public void addVisionMG2(Vision vision) {
-
         Matrix<N3, N1> stdDev;
         Matrix<N3, N1> truststdDev = DriverStation.isAutonomous() ? VisionConstants.trustautostdDev
                 : VisionConstants.trusttelestdDev;
@@ -553,7 +569,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         Logger.recordOutput("Pose/" + vision.getLimelightName(), vision.getBotPoseMG2());
 
         // stdDev = regstdDev;
-        if (vision.getPoseEstimateMG2().tagCount >= 2) {
+        if (vision.tagCount() >= 2) {
             stdDev = truststdDev;
         } else {
             stdDev = regstdDev;
@@ -618,24 +634,6 @@ public enum AlignmentCheckType{
     /*end sysid stuff */
 
 
-    /*aim assist stuff */
-    @Override
-    public Rotation2d autoAlignAngle(){
-        return autoAlignAngle;
-    }
-    @Override
-    public void setAutoAlignAngle(Rotation2d angle){
-        autoAlignAngle = angle;
-    }
-    @Override
-    public Translation2d aimAssistTranslation(){
-        return aimAssistTranslation;
-    }
-    @Override
-    public void setAimAssistTranslation(Translation2d translation){
-        aimAssistTranslation = translation;
-    }
-    /*end aim assist stuff*/
 }
 
 

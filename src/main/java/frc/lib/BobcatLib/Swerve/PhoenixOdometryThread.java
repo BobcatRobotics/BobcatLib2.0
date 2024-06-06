@@ -18,6 +18,8 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
 
+import frc.lib.BobcatLib.Annotations.SeasonBase;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ import org.littletonrobotics.junction.Logger;
  * This also allows Phoenix Pro users to benefit from lower latency between devices using CANivore
  * time synchronization.
  */
+@SeasonBase
 public class PhoenixOdometryThread extends Thread {
   private final Lock signalsLock =
       new ReentrantLock(); // Prevents conflicts when registering signals
