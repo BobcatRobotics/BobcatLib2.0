@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 
 @SeasonBase
-public class EightBitDo{
+public class Logitech{
     private final CommandJoystick gp;
     public Trigger a;
     public Trigger b;
@@ -15,42 +15,42 @@ public class EightBitDo{
     public Trigger y;
     public Trigger lb;
     public Trigger rb;
-    public Trigger select;
+    public Trigger back;
     public Trigger start;
-    public Trigger leftPaddle;
-    public Trigger rightPaddle;
+    public Trigger leftStick;
+    public Trigger rightStick;
     public DoubleSupplier leftXAxis;
     public DoubleSupplier leftYAxis;
     public DoubleSupplier rightXAxis;
     public DoubleSupplier rightYAxis;
 
-    //TODO wip
+    //TODO test
     /**
-     * 8bitdo controller <p>
+     * Logitech controller <p>
      * 
      * Buttons
-     * 1 -b
-     * 2 -a
-     * 3- y
-     * 4 -x
-     * 5 -lb
+     * 1 - x
+     * 2 - a
+     * 3-  b
+     * 4 - y
+     * 5 - lb
      * 6 - rb
-     * 7 - select
-     * 8 - start
-     * 9 - bl
-     * 10 - br <p>
+     * 7 - lt
+     * 8 - rt
+     * 9 - back
+     * 10 - start 
+     * 11 - lstick
+     * 12 - rstick <p>
      * 
      * Axes
-     * 0 -
-     * 1 -
-     * 2 - LT
-     * 3 - RT
-     * 4 -
-     * 5 - <p>
+     * 0 - lstick x
+     * 1 - lstick y
+     * 2 - rstick x
+     * 3 - rstick y <p>
      * 
      * Axis indices start at 0, button indices start at one -_-
      */
-    public EightBitDo(int port) {
+    public Logitech(int port) {
         gp = new CommandJoystick(port);
         configureTriggers();
         configureAxes();
@@ -58,23 +58,22 @@ public class EightBitDo{
 
     private void configureTriggers(){
         a = gp.button(2);
-        b = gp.button(1);
-        x = gp.button(4);
-        y = gp.button(3);
+        b = gp.button(3);
+        x = gp.button(1);
+        y = gp.button(4);
         lb = gp.button(5);
         rb = gp.button(6);
-        select = gp.button(7);
-        start = gp.button(8);
-        leftPaddle = gp.button(9);
-        rightPaddle = gp.button(10);
+        back = gp.button(9);
+        start = gp.button(10);
+        leftStick = gp.button(11);
+        rightStick = gp.button(12);
     }
 
-    //TODO figure these out
     private void configureAxes(){
         leftXAxis = () -> gp.getRawAxis(0);
-        leftYAxis = () -> gp.getRawAxis(0);
-        rightXAxis = () -> gp.getRawAxis(0);
-        rightYAxis = () -> gp.getRawAxis(0);
+        leftYAxis = () -> gp.getRawAxis(1);
+        rightXAxis = () -> gp.getRawAxis(2);
+        rightYAxis = () -> gp.getRawAxis(3);
     }
 
 

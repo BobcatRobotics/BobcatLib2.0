@@ -46,7 +46,7 @@ public class Robot extends LoggedRobot {
         // Running on a real robot, log to a USB stick ("/U/logs")
         Logger.addDataReceiver(new WPILOGWriter());
         Logger.addDataReceiver(new NT4Publisher());
-        new PowerDistribution(0, ModuleType.kCTRE);
+        new PowerDistribution(1, ModuleType.kRev);
         break;
 
       case SIM:
@@ -86,13 +86,12 @@ public class Robot extends LoggedRobot {
  
 
     // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
-    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+    //Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
     m_robotContainer = new RobotContainer();
 
 
-    m_robotContainer.limelight1.setCamMode(CamMode.VISION);
-    m_robotContainer.limelight1.setPipeline(VisionConstants.apriltagPipelineIndex);
+    
   }
 
   @Override
@@ -104,9 +103,9 @@ public class Robot extends LoggedRobot {
       currAlliance = DSUtil.getAlliance();
     }
 
-    if(Constants.currentMode != Constants.Mode.REAL){
-      Logger.recordOutput("components", new Pose3d[]{m_robotContainer.getArmPoseAScope()});
-    }
+    // if(Constants.currentMode != Constants.Mode.REAL){
+    //   Logger.recordOutput("components", new Pose3d[]{m_robotContainer.getArmPoseAScope()});
+    // }
 }
 
   @Override

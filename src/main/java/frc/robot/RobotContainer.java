@@ -18,12 +18,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.lib.BobcatLib.Gamepads.EightBitDo;
+import frc.lib.BobcatLib.Gamepads.Logitech;
 import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 import frc.lib.BobcatLib.Swerve.TeleopSwerve;
 import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
 import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
+import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
 import frc.lib.BobcatLib.Sysid.Sysid;
@@ -37,17 +39,17 @@ import frc.robot.Subsystems.Swerve.Swerve;
 public class RobotContainer {
 
         /* Joysticks + Gamepad */
-        private final EightBitDo gp = new EightBitDo(0);
-        private final CommandJoystick rotate = new CommandJoystick(1);
-        private final CommandJoystick translate = new CommandJoystick(0);
+        private final Logitech gp = new Logitech(0);
+        
 
 
         /* Subsystems */
         public final Swerve swerve;
-        public final Vision limelight1;
-        public final Vision[] cameras;
+        //SwerveModule mod = new SwerveModule(new SwerveModuleIOFalcon(SwerveConstants.Module.Module0Constants.constants), 0);
+        //public Vision limelight1;
+        //public Vision[] cameras;
         
-        public final Sysid sysid;
+        //public final Sysid sysid;
         /* Commands */
 
         /* Shuffleboard Inputs */
@@ -57,40 +59,40 @@ public class RobotContainer {
                 switch (Constants.currentMode) {
                         // Real robot, instantiate hardware IO implementations
                         case REAL:
-                                limelight1 = new Vision(new VisionIOLimelight("limelight1", LimeLightType.LL3G_APRILTAG));
-                                cameras = new Vision[]{limelight1};
+                                //limelight1 = new Vision(new VisionIOLimelight("limelight1", LimeLightType.LL3G_APRILTAG));
+                               // cameras = new Vision[]{limelight1};
                                 
                                 swerve = new Swerve(new GyroIOPigeon2(),
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module0Constants.constants), //fl
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module1Constants.constants), //fr
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module2Constants.constants), //bl
-                                                new SwerveModuleIOFalcon(SwerveConstants.Module.Module3Constants.constants), //br
-                                                cameras);
-                                sysid = new Sysid(swerve);
+                                                new SwerveModuleIOFalcon(SwerveConstants.Module.Module3Constants.constants) //br
+                                                );
+                                //sysid = new Sysid(swerve);
                                 break;
 
                         // Sim robot, instantiate physics sim IO implementations
                         case SIM:
-                                limelight1 = new Vision(new VisionIOLimelight("limelight1", LimeLightType.LL3G_APRILTAG));
-                                cameras = new Vision[]{limelight1};
+                                //limelight1 = new Vision(new VisionIOLimelight("limelight1", LimeLightType.LL3G_APRILTAG));
+                                //cameras = new Vision[]{limelight1};
 
                                 swerve = new Swerve(new GyroIO() {
                                 },
                                                 new SwerveModuleIOSim(),
                                                 new SwerveModuleIOSim(),
                                                 new SwerveModuleIOSim(),
-                                                new SwerveModuleIOSim(),
-                                                cameras);
+                                                new SwerveModuleIOSim()
+                                                );
 
 
-                                sysid = new Sysid(swerve);
+                                //sysid = new Sysid(swerve);
                                 break;
 
                         // Replayed robot, disable IO implementations
                         default:
-                                limelight1 = new Vision(new VisionIO() {
-                                });
-                                cameras = new Vision[]{limelight1};
+                                //limelight1 = new Vision(new VisionIO() {
+                                //});
+                                //cameras = new Vision[]{limelight1};
                                 swerve = new Swerve(new GyroIO() {
                                 },
                                                 new SwerveModuleIOSim() {
@@ -100,9 +102,8 @@ public class RobotContainer {
                                                 new SwerveModuleIOSim() {
                                                 },
                                                 new SwerveModuleIOSim() {
-                                                },
-                                                cameras);
-                                sysid = new Sysid(swerve);
+                                                });
+                                //sysid = new Sysid(swerve);
                                 break;
 
                 }
@@ -124,7 +125,7 @@ public class RobotContainer {
                  * Names must match what is in PathPlanner
                  * Please give descriptive names
                  */
-                NamedCommands.registerCommand("PathfindingCommand", swerve.driveToPose(new Pose2d()));
+                //NamedCommands.registerCommand("PathfindingCommand", swerve.driveToPose(new Pose2d()));
 
                 /*
                  * Auto Chooser
@@ -151,31 +152,31 @@ public class RobotContainer {
                 swerve.setDefaultCommand(
                    new TeleopSwerve(
                         swerve,
-                        () -> translate.getRawAxis(0),
-                        () -> -translate.getRawAxis(1), 
-                        () -> -rotate.getRawAxis(0), 
-                        () -> false,
-                        () -> -rotate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25 , 
-                        () -> -translate.getRawAxis(Joystick.AxisType.kZ.value) * 0.25, 
+                        gp.leftXAxis,
+                        gp.leftYAxis, 
+                        gp.rightXAxis, 
+                        gp.rb,
+                        () -> 0 , 
+                        () -> 0, 
                         transAssist, 
                         rotAssist
                         ));
                 
                 
-                //sysid routines
-                gp.a.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_FORWARD));
-                gp.b.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_BACKWARD));
-                gp.x.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_FORWARD));
-                gp.y.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_BACKWARD));
-                gp.leftPaddle.whileTrue(swerve.zeroModules());
+                // //sysid routines
+                // gp.a.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_FORWARD));
+                // gp.b.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_BACKWARD));
+                // gp.x.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_FORWARD));
+                // gp.y.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_BACKWARD));
+                // gp.lb.whileTrue(swerve.zeroModules());
         }
 
         public Command getAutonomousCommand() {
                 return autoChooser.get();
         }
 
-        public Pose3d getArmPoseAScope(){
-                Rotation2d angle = Rotation2d.fromRotations(rotate.getRawAxis(2));
-                return new Pose3d(0, -0.16, 0.23, new Rotation3d(angle.getRadians(), 0, 0));
-        }
+        // public Pose3d getArmPoseAScope(){
+        //         Rotation2d angle = Rotation2d.fromRotations(rotate.getRawAxis(2));
+        //         return new Pose3d(0, -0.16, 0.23, new Rotation3d(angle.getRadians(), 0, 0));
+        // }
 }

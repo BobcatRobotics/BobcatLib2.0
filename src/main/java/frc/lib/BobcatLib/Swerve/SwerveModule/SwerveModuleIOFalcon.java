@@ -18,6 +18,7 @@ import edu.wpi.first.math.util.Units;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.PhoenixOdometryThread;
 import frc.lib.Team254.ModuleConstants;
+import frc.robot.Constants;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 @SeasonBase
 public class SwerveModuleIOFalcon implements SwerveModuleIO {
@@ -51,11 +52,11 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
     public SwerveModuleIOFalcon(ModuleConstants moduleConstants) {
         encoderOffset = moduleConstants.angleOffset;
 
-        angleEncoder = new CANcoder(moduleConstants.cancoderID);
+        angleEncoder = new CANcoder(moduleConstants.cancoderID, Constants.canivore);
         configAngleEncoder();
-        angleMotor = new TalonFX(moduleConstants.angleMotorID);
+        angleMotor = new TalonFX(moduleConstants.angleMotorID, Constants.canivore);
         configAngleMotor();
-        driveMotor = new TalonFX(moduleConstants.driveMotorID);
+        driveMotor = new TalonFX(moduleConstants.driveMotorID, Constants.canivore);
         configDriveMotor();
 
         driveRequest = new DutyCycleOut(0.0).withEnableFOC(SwerveConstants.useFOC);

@@ -23,7 +23,7 @@ public class SwerveConstants {
     public static final double stickDeadband = 0.01;
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(false, false);
     public static final Rotation2d holoAlignTolerance = Rotation2d.fromDegrees(0);
-    public static final int pigeonID = 0;
+    public static final int pigeonID = 1;
     public static final boolean useFOC = true;
     public static final double angleGearRatio = ((150.0 / 7.0) / 1.0);
     public static final double driveGearRatio = (5.36 / 1.0);

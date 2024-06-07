@@ -71,11 +71,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     static final public Lock odometryLock = new ReentrantLock();
 
     private Rotation2d lastYaw = new Rotation2d();
-
-    //aim assist
-    private Rotation2d autoAlignAngle = new Rotation2d();
-    private Translation2d aimAssistTranslation = new Translation2d();
-
+    SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+    
     private final PathConstraints pathfindingConstraints = new PathConstraints(
         SwerveConstants.Limits.Chassis.maxSpeed,
         SwerveConstants.Limits.Chassis.maxAccel,
@@ -137,7 +134,9 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTarget);
 
     }
-
+    public SwerveBase(GyroIO gyroIO, SwerveModuleIO flIO, SwerveModuleIO frIO, SwerveModuleIO blIO, SwerveModuleIO brIO){
+        this(gyroIO, flIO, frIO, blIO, brIO, new Vision[]{});
+    }
     public void setLastMovingYaw(double value){
         lastMovingYaw = value;
     }
@@ -192,7 +191,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         for (int i = 0; i < sampleCount; i++) {
 
             // Read wheel positions from each module
-            SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+            
             for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++) {
                 modulePositions[moduleIndex] = modules[moduleIndex].getOdometryPositions()[i];
             }
@@ -346,8 +345,6 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
      * @param transAssist 
      */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, TranslationAssist transAssist, RotationalAssist rotAssist) {
-        boolean rotationOverriden = Math.abs(rotation) < 0.02; //add a little bit of tolerance for if the stick gets bumped or smth  
-        autoAlignAngle = RotationUtil.wrapRot2d(autoAlignAngle());
 
         ChassisSpeeds desiredSpeeds = fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(),

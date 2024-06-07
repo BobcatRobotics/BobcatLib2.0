@@ -61,3 +61,8 @@ NOTE: Drivetrains passed into this class must implement the SysidCompatibleSwerv
 #### Vision
 
 
+ISSUES
+firmware out of date
+vendordeps out of date
+can ids and can bus incorrectly configured
+- falcons, cancoder, and pdp
