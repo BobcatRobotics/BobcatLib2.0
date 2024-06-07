@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.lib.BobcatLib.Gamepads.EightBitDo;
 import frc.lib.BobcatLib.Gamepads.Logitech;
@@ -162,12 +163,13 @@ public class RobotContainer {
                         ));
                 
                 
-                // //sysid routines
-                // gp.a.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_FORWARD));
-                // gp.b.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_BACKWARD));
-                // gp.x.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_FORWARD));
-                // gp.y.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_BACKWARD));
-                // gp.lb.whileTrue(swerve.zeroModules());
+                //sysid routines
+                gp.a.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_FORWARD));
+                gp.b.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_BACKWARD));
+                gp.x.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_FORWARD));
+                gp.y.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_BACKWARD));
+                gp.lb.whileTrue(swerve.zeroModules());
+                gp.back.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
         }
 
         public Command getAutonomousCommand() {
