@@ -15,6 +15,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.PhoenixOdometryThread;
 import frc.lib.Team254.ModuleConstants;
@@ -32,9 +33,7 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
     private final DutyCycleOut angleRequest;
 
     private final StatusSignal<Double> internalTempDrive;
-    private final StatusSignal<Double> processorTempDrive;
     private final StatusSignal<Double> internalTempAngle;
-    private final StatusSignal<Double> processorTempAngle;
     private final StatusSignal<Double> driveAppliedVolts;
 
     private final Queue<Double> timestampQueue;
@@ -74,15 +73,13 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
             PhoenixOdometryThread.getInstance().registerSignal(angleEncoder, angleEncoder.getPosition());
 
         internalTempDrive = driveMotor.getDeviceTemp();
-        processorTempDrive = driveMotor.getProcessorTemp();
         internalTempAngle = angleMotor.getDeviceTemp();
-        processorTempAngle = angleMotor.getProcessorTemp();
         driveAppliedVolts = driveMotor.getMotorVoltage();
         
 
         BaseStatusSignal.setUpdateFrequencyForAll(
             50.0, drivePosition, driveVelocity, angleAbsolutePosition, driveAppliedVolts);
-        BaseStatusSignal.setUpdateFrequencyForAll(5, internalTempAngle, internalTempDrive, processorTempAngle, processorTempDrive);
+        BaseStatusSignal.setUpdateFrequencyForAll(5, internalTempAngle, internalTempDrive);
         driveMotor.optimizeBusUtilization();
         angleMotor.optimizeBusUtilization();
     }
@@ -95,8 +92,6 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         angleAbsolutePosition,
         internalTempAngle,
         internalTempDrive,
-        processorTempAngle,
-        processorTempDrive,
         driveAcceleration,
         driveAppliedVolts);
 
@@ -125,8 +120,6 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
 
         inputs.internalTempAngle = internalTempAngle.getValueAsDouble();
         inputs.internalTempDrive = internalTempDrive.getValueAsDouble();
-        inputs.processorTempAngle = processorTempAngle.getValueAsDouble();
-        inputs.processorTempDrive = processorTempDrive.getValueAsDouble();
         inputs.appliedDriveVoltage = driveAppliedVolts.getValueAsDouble();
     }
 

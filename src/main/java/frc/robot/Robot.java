@@ -44,7 +44,7 @@ public class Robot extends LoggedRobot {
     switch (Constants.currentMode) {
       case REAL:
         // Running on a real robot, log to a USB stick ("/U/logs")
-        Logger.addDataReceiver(new WPILOGWriter());
+        //Logger.addDataReceiver(new WPILOGWriter()); //TODO add usb stick!
         Logger.addDataReceiver(new NT4Publisher());
         new PowerDistribution(1, ModuleType.kRev);
         break;
@@ -86,7 +86,7 @@ public class Robot extends LoggedRobot {
  
 
     // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
-    //Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
     m_robotContainer = new RobotContainer();
 

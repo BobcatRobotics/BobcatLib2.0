@@ -45,11 +45,10 @@ public class RobotContainer {
 
         /* Subsystems */
         public final Swerve swerve;
-        //SwerveModule mod = new SwerveModule(new SwerveModuleIOFalcon(SwerveConstants.Module.Module0Constants.constants), 0);
         //public Vision limelight1;
         //public Vision[] cameras;
         
-        //public final Sysid sysid;
+        public final Sysid sysid;
         /* Commands */
 
         /* Shuffleboard Inputs */
@@ -68,7 +67,7 @@ public class RobotContainer {
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module2Constants.constants), //bl
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module3Constants.constants) //br
                                                 );
-                                //sysid = new Sysid(swerve);
+                                sysid = new Sysid(swerve);
                                 break;
 
                         // Sim robot, instantiate physics sim IO implementations
@@ -85,7 +84,7 @@ public class RobotContainer {
                                                 );
 
 
-                                //sysid = new Sysid(swerve);
+                                sysid = new Sysid(swerve);
                                 break;
 
                         // Replayed robot, disable IO implementations
@@ -103,7 +102,7 @@ public class RobotContainer {
                                                 },
                                                 new SwerveModuleIOSim() {
                                                 });
-                                //sysid = new Sysid(swerve);
+                                sysid = new Sysid(swerve);
                                 break;
 
                 }

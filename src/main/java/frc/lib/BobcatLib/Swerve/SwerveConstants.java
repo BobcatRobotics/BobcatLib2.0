@@ -156,7 +156,7 @@ public class SwerveConstants {
             public static final int angleMotorID = 2;
             public static final int driveMotorID = 1;
 
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(285.46875);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(147.8); //round to tenths
 
             public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
                     angleOffset);
@@ -168,7 +168,7 @@ public class SwerveConstants {
             public static final int angleMotorID = 4;
             public static final int driveMotorID = 3;
 
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(27.861328125); 
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(187.0); 
             public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
                     angleOffset);
         }
@@ -178,7 +178,7 @@ public class SwerveConstants {
             public static final int cancoderID = 3;
             public static final int angleMotorID = 6;
             public static final int driveMotorID = 5;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(176.30859375); 
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(53.8); 
 
             public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
                     angleOffset);
@@ -189,7 +189,7 @@ public class SwerveConstants {
             public static final int cancoderID = 4;
             public static final int angleMotorID = 8;
             public static final int driveMotorID = 7;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(321.153);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(106.3);
 
             public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
                     angleOffset);
