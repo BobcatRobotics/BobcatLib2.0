@@ -17,6 +17,8 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
+import org.littletonrobotics.junction.Logger;
+
 
 public class Sysid extends SubsystemBase {
         public enum SysidTest {
@@ -40,9 +42,9 @@ public class Sysid extends SubsystemBase {
                 this.swerve = swerve;
                 routine = new SysIdRoutine(new SysIdRoutine.Config(),
                                 new SysIdRoutine.Mechanism(
-                                                (swerve::sysidVoltage),
+                                                (swerve::charachterizeModules),
                                                 this::logMotors,
-                                                this));
+                                                swerve));
         }
 
     private void logMotors(SysIdRoutineLog log){

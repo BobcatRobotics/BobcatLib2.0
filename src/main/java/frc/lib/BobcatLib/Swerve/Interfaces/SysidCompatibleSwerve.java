@@ -3,15 +3,16 @@ package frc.lib.BobcatLib.Swerve.Interfaces;
 
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 
 @SeasonBase
-public interface SysidCompatibleSwerve {
+public interface SysidCompatibleSwerve extends Subsystem {
     //TODO: better documentation
     /**
      * set all modules to supplied voltage
      */
-    public default void sysidVoltage(Measure<Voltage> volts){}
+    public default void charachterizeModules(Measure<Voltage> volts){}
     
     /**
      * volts

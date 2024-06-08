@@ -15,12 +15,17 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.PhoenixOdometryThread;
 import frc.lib.Team254.ModuleConstants;
 import frc.robot.Constants;
+import frc.robot.Subsystems.Swerve.Swerve;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
+import static edu.wpi.first.units.Units.Volts;
+
 @SeasonBase
 public class SwerveModuleIOFalcon implements SwerveModuleIO {
     private final TalonFX driveMotor;
@@ -45,10 +50,10 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
 
     private final Queue<Double> anglePositionQueue;
     private final StatusSignal<Double> angleAbsolutePosition;
-    private VoltageOut sysidControl = new VoltageOut(0); 
-
+    private final String name;
 
     public SwerveModuleIOFalcon(ModuleConstants moduleConstants) {
+        name = moduleConstants.moduleName;
         encoderOffset = moduleConstants.angleOffset;
 
         angleEncoder = new CANcoder(moduleConstants.cancoderID, Constants.canivore);
@@ -96,9 +101,9 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         driveAppliedVolts);
 
 
-        inputs.drivePositionRot = drivePosition.getValueAsDouble() / SwerveConstants.driveGearRatio;
-        inputs.driveVelocityRotPerSec = driveVelocity.getValueAsDouble() / SwerveConstants.driveGearRatio;
-
+        inputs.wheelPositionRot = drivePosition.getValueAsDouble() / SwerveConstants.driveGearRatio;
+        inputs.wheelVelocityRotPerSec = driveVelocity.getValueAsDouble() / SwerveConstants.driveGearRatio;
+        inputs.wheelAcceleration = driveAcceleration.getValueAsDouble() / SwerveConstants.driveGearRatio;
         inputs.canCoderPositionRot = Rotation2d.fromRadians(MathUtil.angleModulus(Rotation2d.fromRotations(angleAbsolutePosition.getValueAsDouble()).minus(encoderOffset).getRadians())).getRotations();
         inputs.rawCanCoderPositionDeg = Rotation2d.fromRotations(angleAbsolutePosition.getValueAsDouble()).getDegrees(); // Used only for shuffleboard to display values to get offsets
 
@@ -122,6 +127,12 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         inputs.internalTempDrive = internalTempDrive.getValueAsDouble();
         inputs.appliedDriveVoltage = driveAppliedVolts.getValueAsDouble();
     }
+    
+    @Override
+    public String getModule(){
+        return name;
+    }
+    
 
     /**
      * Sets the percent out of the drive motor
@@ -236,10 +247,5 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         angleEncoder.getConfigurator().apply(config);
     }
 
-    @Override
-    public void runCharachterization(double volts){
-        sysidControl.withOutput(volts);
-        angleMotor.setPosition(0);
-        driveMotor.setControl(sysidControl);
-    }
+
 }

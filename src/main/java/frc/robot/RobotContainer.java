@@ -176,6 +176,7 @@ public class RobotContainer {
                 return autoChooser.get();
         }
 
+
         // public Pose3d getArmPoseAScope(){
         //         Rotation2d angle = Rotation2d.fromRotations(rotate.getRawAxis(2));
         //         return new Pose3d(0, -0.16, 0.23, new Rotation3d(angle.getRadians(), 0, 0));

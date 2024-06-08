@@ -10,10 +10,23 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Configs;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Limits;
+import static edu.wpi.first.units.MutableMeasure.mutable;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 @SeasonBase
 public class SwerveModule {
@@ -23,11 +36,11 @@ public class SwerveModule {
     public final int index;
 
     private SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(Configs.Module.Drive.kS,
-    Configs.Module.Drive.kV, Configs.Module.Drive.kA);
+            Configs.Module.Drive.kV, Configs.Module.Drive.kA);
     private PIDController driveController = new PIDController(Configs.Module.Drive.kP, Configs.Module.Drive.kI,
-    Configs.Module.Drive.kD);
+            Configs.Module.Drive.kD);
     private PIDController angleController = new PIDController(Configs.Module.Angle.kP, Configs.Module.Angle.kI,
-    Configs.Module.Angle.kD);
+            Configs.Module.Angle.kD);
 
     private SwerveModuleState desiredState = new SwerveModuleState();
 
@@ -35,13 +48,43 @@ public class SwerveModule {
 
     private SwerveModulePosition[] odometryPositions = new SwerveModulePosition[] {};
 
+    // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+    private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
+    // Mutable holder for unit-safe linear distance values, persisted to avoid
+    // reallocation.
+    private final MutableMeasure<Distance> m_distance = mutable(Meters.of(0));
+    // Mutable holder for unit-safe linear velocity values, persisted to avoid
+    // reallocation.
+    private final MutableMeasure<Velocity<Distance>> m_velocity = mutable(MetersPerSecond.of(0));
+
+    private SysIdRoutine sysIdRoutine;
+
     public SwerveModule(SwerveModuleIO io, int index) {
+        
         this.io = io;
         this.index = index;
 
         angleController.enableContinuousInput(0, 2 * Math.PI);
 
         lastAngle = getState().angle;
+        
+        sysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(),
+            new SysIdRoutine.Mechanism(this::charachterize, this::sysidLog, null)
+            );
+    }
+
+    public void sysidLog(SysIdRoutineLog log){
+        sysIdRoutine.motor(io.getModule())
+        .linearPosition(m_distance.mut_replace(getPositionMeters(), Meters))
+        .linearVelocity(m_velocity.mut_replace(getVelocityMetersPerSec(), MetersPerSecond))
+        .voltage(m_appliedVoltage.mut_replace(getVoltage(), Volts));
+            
+    }
+
+    public void charachterize(Measure<Voltage> volts){
+        setDesiredAngle(new Rotation2d());
+        io.charachterize(volts);
     }
 
     public void periodic() {
@@ -52,9 +95,9 @@ public class SwerveModule {
         int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together
         odometryPositions = new SwerveModulePosition[sampleCount];
         for (int i = 0; i < sampleCount; i++) {
-            double positionMeters = inputs.odometryDrivePositionsRad[i] * (SwerveConstants.Kinematics.wheelCircumference / (2 * Math.PI));
-            Rotation2d angle =
-                inputs.odometryAnglePositions[i].minus(
+            double positionMeters = inputs.odometryDrivePositionsRad[i]
+                    * (SwerveConstants.Kinematics.wheelCircumference / (2 * Math.PI));
+            Rotation2d angle = inputs.odometryAnglePositions[i].minus(
                     inputs.offset != null ? inputs.offset : new Rotation2d());
             odometryPositions[i] = new SwerveModulePosition(positionMeters, angle);
         }
@@ -62,12 +105,15 @@ public class SwerveModule {
 
     /**
      * Sets the swerve module to the desired state
+     * 
      * @param state the desired state of the swerve module
      * @return the optimized swerve module state that it was set to
      */
     public SwerveModuleState setDesiredState(SwerveModuleState state) {
         SwerveModuleState optimizedState = SwerveModuleState.optimize(state, getAngle());
 
+        // if we are running at under 1% of max speed, dont change the angle, minimizes
+        // module jitter
         Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Limits.Module.maxSpeed * 0.01))
                 ? lastAngle
                 : optimizedState.angle;
@@ -83,7 +129,7 @@ public class SwerveModule {
 
         double velocity = optimizedState.speedMetersPerSecond / SwerveConstants.Kinematics.wheelCircumference;
         double velocityOut = MathUtil.clamp(
-                driveController.calculate(inputs.driveVelocityRotPerSec, velocity)
+                driveController.calculate(inputs.wheelVelocityRotPerSec, velocity)
                         + driveFeedforward.calculate(velocity),
                 -1.0, 1.0);
         if (velocity == 0) {
@@ -96,6 +142,22 @@ public class SwerveModule {
         return optimizedState;
     }
 
+    public void setDesiredAngle(Rotation2d ang) {
+
+        SwerveModuleState optimizedState = SwerveModuleState.optimize(new SwerveModuleState(0, ang), getAngle());
+
+        Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Limits.Module.maxSpeed * 0.01))
+                ? lastAngle
+                : optimizedState.angle;
+
+        // It is important that we use radians for the PID
+        // so we can update the drive speed as shown below
+        double output = MathUtil.clamp(
+                angleController.calculate(getAngle().getRadians(), optimizedState.angle.getRadians()), -1.0, 1.0);
+        io.setAnglePercentOut(output);
+        lastAngle = angle;
+    }
+
     /**
      * Stops the drive and angle motors
      */
@@ -106,6 +168,7 @@ public class SwerveModule {
 
     /**
      * Sets the neutral mode of the angle motor
+     * 
      * @param mode the mode to set it to
      */
     public void setAngleNeutralMode(NeutralModeValue mode) {
@@ -114,6 +177,7 @@ public class SwerveModule {
 
     /**
      * Sets the neutral mode of the drive motor
+     * 
      * @param mode the mode to set it to
      */
     public void setDriveNeutralMode(NeutralModeValue mode) {
@@ -122,6 +186,7 @@ public class SwerveModule {
 
     /**
      * Gets the current angle of the swerve module from the CANcoder
+     * 
      * @return the angle of the module
      */
     public Rotation2d getAngle() {
@@ -130,22 +195,25 @@ public class SwerveModule {
 
     /**
      * Gets the current position of the drive motor in meters
+     * 
      * @return drive motor position, in meters
      */
     public double getPositionMeters() {
-        return inputs.drivePositionRot * SwerveConstants.Kinematics.wheelCircumference;
+        return inputs.wheelPositionRot * SwerveConstants.Kinematics.wheelCircumference;
     }
 
     /**
      * Gets the current velocity of the drive motor in meters per second
+     * 
      * @return velocity, in meter per second
      */
     public double getVelocityMetersPerSec() {
-        return inputs.driveVelocityRotPerSec * SwerveConstants.Kinematics.wheelCircumference;
+        return inputs.wheelVelocityRotPerSec * SwerveConstants.Kinematics.wheelCircumference;
     }
 
     /**
      * Gets the current position of the swerve module
+     * 
      * @return the swerve module position
      */
     public SwerveModulePosition getPosition() {
@@ -154,6 +222,7 @@ public class SwerveModule {
 
     /**
      * Gets the current state of the swerve module
+     * 
      * @return the swerve module state
      */
     public SwerveModuleState getState() {
@@ -162,6 +231,7 @@ public class SwerveModule {
 
     /**
      * Gets the current desired state that the swerve module has been set to
+     * 
      * @return the desired state
      */
     public SwerveModuleState getDesiredState() {
@@ -169,7 +239,9 @@ public class SwerveModule {
     }
 
     /**
-     * Gets the raw value of the CANcoder, before the offset is applied. Used only for SmartDashboard
+     * Gets the raw value of the CANcoder, before the offset is applied. Used only
+     * for SmartDashboard
+     * 
      * @return CANcoder position, in degrees
      */
     public double getRawCanCoder() {
@@ -186,15 +258,13 @@ public class SwerveModule {
         return inputs.odometryTimestamps;
     }
 
-    public double getDriveAcceleration(){
-        return inputs.driveAcceleration;
+    public double getDriveAcceleration() {
+        return inputs.wheelAcceleration * SwerveConstants.Kinematics.wheelCircumference;
     }
 
-    public void runCharachterization(double volts){
-        io.runCharachterization(volts);
-    }
 
-    public double getVoltage(){
+
+    public double getVoltage() {
         return inputs.appliedDriveVoltage;
     }
 }

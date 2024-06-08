@@ -5,7 +5,10 @@ import org.littletonrobotics.junction.AutoLog;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
+import static edu.wpi.first.units.Units.Volts;
 
 @SeasonBase
 public interface SwerveModuleIO {
@@ -13,9 +16,9 @@ public interface SwerveModuleIO {
     public static class SwerveModuleIOInputs {
         public Rotation2d offset = new Rotation2d();
 
-        public double drivePositionRot = 0.0;
-        public double driveVelocityRotPerSec = 0.0;
-        public double driveAcceleration = 0.0;
+        public double wheelPositionRot = 0.0;
+        public double wheelVelocityRotPerSec = 0.0;
+        public double wheelAcceleration = 0.0;
                 
         public double canCoderPositionRot = 0.0;
         public double rawCanCoderPositionDeg = 0.0;
@@ -68,5 +71,7 @@ public interface SwerveModuleIO {
      */
     public default void setAngleNeutralMode(NeutralModeValue mode) {}
 
-    public default void runCharachterization(double volts){}
+    public default void charachterize(Measure<Voltage> volts){}
+
+    public default String getModule(){return "back-left - EXAMPLE";}
 }

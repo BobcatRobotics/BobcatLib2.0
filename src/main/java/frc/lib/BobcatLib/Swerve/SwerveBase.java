@@ -32,6 +32,8 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
@@ -308,14 +310,15 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
     public void setModulesStraight(){
         for (SwerveModule mod : modules){
-            mod.setDesiredState(
-                new SwerveModuleState(0, new Rotation2d())
+            mod.setDesiredAngle(
+                 new Rotation2d()
             );
         }
     }
     public Command zeroModules(){
         return new RunCommand(() -> setModulesStraight(), this);
     }
+    
 
 
 
@@ -593,16 +596,7 @@ public enum AlignmentCheckType{
 
 /* sysid stuff */
 
-     /**
-     * set all modules to supplied voltage
-     */
-    @Override
-    public void sysidVoltage(Measure<Voltage> volts){
-        for (SwerveModule mod : modules){
-            mod.runCharachterization(volts.in(Volts));
-        }
-    }
-    
+ 
     /**
      * volts
      * 
