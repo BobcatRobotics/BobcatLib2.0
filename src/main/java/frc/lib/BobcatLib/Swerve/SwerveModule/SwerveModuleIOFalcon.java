@@ -24,6 +24,8 @@ import frc.lib.Team254.ModuleConstants;
 import frc.robot.Constants;
 import frc.robot.Subsystems.Swerve.Swerve;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
+
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Volts;
 
 @SeasonBase
@@ -36,6 +38,7 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
 
     private final DutyCycleOut driveRequest;
     private final DutyCycleOut angleRequest;
+    private final VoltageOut driveVoltageRequest;
 
     private final StatusSignal<Double> internalTempDrive;
     private final StatusSignal<Double> internalTempAngle;
@@ -65,6 +68,7 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
 
         driveRequest = new DutyCycleOut(0.0).withEnableFOC(SwerveConstants.useFOC);
         angleRequest = new DutyCycleOut(0.0).withEnableFOC(SwerveConstants.useFOC);
+        driveVoltageRequest = new VoltageOut(0).withEnableFOC(SwerveConstants.useFOC);
 
         timestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
 
@@ -148,7 +152,11 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
     public void stopDrive() {
         driveMotor.stopMotor();
     }
-
+    
+    @Override
+    public void setVolts(Measure<Voltage> volts){
+        driveMotor.setControl(driveVoltageRequest.withOutput(volts.magnitude()));
+    }
     /**
      * Sets the neutral mode of the drive motor
      * @param mode mode to set it to

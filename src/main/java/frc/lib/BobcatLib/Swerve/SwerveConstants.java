@@ -112,10 +112,12 @@ public class SwerveConstants {
             }
 
             public static class Drive {
-                public static final double kS = 0.14267 / 12;
-                public static final double kA = 2.0718 / 12;
-                public static final double kV = 0.42622 / 12;
-                public static final double kP = 0.05;
+                //sysid bases its calculations off of voltage, so we convert to percent. 
+                //gain in volts * (1.00 (100%) / 12 volts per battery) = gain  
+                public static final double kS = 0.088235 /12;
+                public static final double kA = 0.041076 /12;
+                public static final double kV = 2.2301 /12;
+                public static final double kP = 0;
                 public static final double kI = 0;
                 public static final double kD = 0;
                 public static final InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;

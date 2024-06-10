@@ -71,7 +71,7 @@ public interface SwerveModuleIO {
      */
     public default void setAngleNeutralMode(NeutralModeValue mode) {}
 
-    public default void charachterize(Measure<Voltage> volts){}
+    public default void setVolts(Measure<Voltage> volts){}
 
     public default String getModule(){return "back-left - EXAMPLE";}
 }

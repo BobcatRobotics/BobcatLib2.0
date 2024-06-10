@@ -6,19 +6,12 @@ package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import frc.lib.BobcatLib.Gamepads.EightBitDo;
 import frc.lib.BobcatLib.Gamepads.Logitech;
 import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
@@ -26,15 +19,9 @@ import frc.lib.BobcatLib.Swerve.SwerveConstants;
 import frc.lib.BobcatLib.Swerve.TeleopSwerve;
 import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
 import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
-import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
-import frc.lib.BobcatLib.Sysid.Sysid;
-import frc.lib.BobcatLib.Sysid.Sysid.SysidTest;
-import frc.lib.BobcatLib.Vision.Vision;
-import frc.lib.BobcatLib.Vision.VisionIO;
-import frc.lib.BobcatLib.Vision.VisionIOLimelight;
-import frc.lib.BobcatLib.Vision.VisionConstants.LimeLightType;
+import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule.SysidTest;
 import frc.robot.Subsystems.Swerve.Swerve;
 
 public class RobotContainer {
@@ -49,7 +36,6 @@ public class RobotContainer {
         //public Vision limelight1;
         //public Vision[] cameras;
         
-        public final Sysid sysid;
         /* Commands */
 
         /* Shuffleboard Inputs */
@@ -68,7 +54,6 @@ public class RobotContainer {
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module2Constants.constants), //bl
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module3Constants.constants) //br
                                                 );
-                                sysid = new Sysid(swerve);
                                 break;
 
                         // Sim robot, instantiate physics sim IO implementations
@@ -85,7 +70,6 @@ public class RobotContainer {
                                                 );
 
 
-                                sysid = new Sysid(swerve);
                                 break;
 
                         // Replayed robot, disable IO implementations
@@ -103,7 +87,6 @@ public class RobotContainer {
                                                 },
                                                 new SwerveModuleIOSim() {
                                                 });
-                                sysid = new Sysid(swerve);
                                 break;
 
                 }
@@ -164,10 +147,10 @@ public class RobotContainer {
                 
                 
                 //sysid routines
-                gp.a.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_FORWARD));
-                gp.b.whileTrue(sysid.getSysidTest(SysidTest.QUASISTATIC_BACKWARD));
-                gp.x.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_FORWARD));
-                gp.y.whileTrue(sysid.getSysidTest(SysidTest.DYNAMIC_BACKWARD));
+                gp.a.whileTrue(swerve.charachterizeModules(SysidTest.QUASISTATIC_FORWARD));
+                gp.b.whileTrue(swerve.charachterizeModules(SysidTest.QUASISTATIC_BACKWARD));
+                gp.x.whileTrue(swerve.charachterizeModules(SysidTest.DYNAMIC_FORWARD));
+                gp.y.whileTrue(swerve.charachterizeModules(SysidTest.DYNAMIC_BACKWARD));
                 gp.lb.whileTrue(swerve.zeroModules());
                 gp.back.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
         }

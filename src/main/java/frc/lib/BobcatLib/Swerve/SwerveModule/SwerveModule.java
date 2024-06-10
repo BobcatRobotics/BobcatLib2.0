@@ -16,13 +16,12 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Configs;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Limits;
+
 import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -30,6 +29,12 @@ import static edu.wpi.first.units.Units.Volts;
 
 @SeasonBase
 public class SwerveModule {
+    public enum SysidTest {
+        QUASISTATIC_FORWARD,
+        QUASISTATIC_BACKWARD,
+        DYNAMIC_FORWARD,
+        DYNAMIC_BACKWARD
+    }
     private final SwerveModuleIO io;
     private final SwerveModuleIOInputsAutoLogged inputs = new SwerveModuleIOInputsAutoLogged();
 
@@ -57,7 +62,6 @@ public class SwerveModule {
     // reallocation.
     private final MutableMeasure<Velocity<Distance>> m_velocity = mutable(MetersPerSecond.of(0));
 
-    private SysIdRoutine sysIdRoutine;
 
     public SwerveModule(SwerveModuleIO io, int index) {
         
@@ -68,24 +72,23 @@ public class SwerveModule {
 
         lastAngle = getState().angle;
         
-        sysIdRoutine = new SysIdRoutine(
-            new SysIdRoutine.Config(),
-            new SysIdRoutine.Mechanism(this::charachterize, this::sysidLog, null)
-            );
+      
     }
 
     public void sysidLog(SysIdRoutineLog log){
-        sysIdRoutine.motor(io.getModule())
+        log.motor(io.getModule())
         .linearPosition(m_distance.mut_replace(getPositionMeters(), Meters))
         .linearVelocity(m_velocity.mut_replace(getVelocityMetersPerSec(), MetersPerSecond))
         .voltage(m_appliedVoltage.mut_replace(getVoltage(), Volts));
             
     }
 
-    public void charachterize(Measure<Voltage> volts){
+    public void setVoltage(Measure<Voltage> volts){
         setDesiredAngle(new Rotation2d());
-        io.charachterize(volts);
+        io.setVolts(volts);
     }
+
+ 
 
     public void periodic() {
         io.updateInputs(inputs);
