@@ -17,16 +17,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.PhoenixOdometryThread;
 import frc.lib.Team254.ModuleConstants;
 import frc.robot.Constants;
-import frc.robot.Subsystems.Swerve.Swerve;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Volts;
 
 @SeasonBase
 public class SwerveModuleIOFalcon implements SwerveModuleIO {

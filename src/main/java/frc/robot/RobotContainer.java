@@ -21,7 +21,6 @@ import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
 import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
-import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModule.SysidTest;
 import frc.robot.Subsystems.Swerve.Swerve;
 
 public class RobotContainer {

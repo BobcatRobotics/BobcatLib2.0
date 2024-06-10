@@ -1,6 +1,5 @@
 package frc.lib.BobcatLib.Swerve;
 
-import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,11 +61,11 @@ public class SwerveBase extends SubsystemBase{
     private final double[] swerveModuleStates = new double[8];
     private final double[] desiredSwerveModuleStates = new double[8];
 
-    private Rotation2d ppRotationOverride;
+    @Getter @Setter private Rotation2d pPRotationOverride;
 
     private final PIDController rotationPID;
     private final PIDController autoAlignPID;
-    private double lastMovingYaw = 0.0;
+    @Setter private double lastMovingYaw = 0.0;
     private boolean rotating = false;
 
     static final public Lock odometryLock = new ReentrantLock();
@@ -74,8 +73,8 @@ public class SwerveBase extends SubsystemBase{
     private Rotation2d lastYaw = new Rotation2d();
     SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
 
-    @Getter @Setter private Translation2d aimAssistTranslation = new Translation2d();
-    @Getter @Setter private Rotation2d aimAssistRotation = new Rotation2d();
+    @Getter private Translation2d aimAssistTranslation = new Translation2d();
+    @Getter private Rotation2d aimAssistRotation = new Rotation2d();
 
     private final PathConstraints pathfindingConstraints = new PathConstraints(
             SwerveConstants.Limits.Chassis.maxSpeed,
@@ -145,8 +144,14 @@ public class SwerveBase extends SubsystemBase{
         this(gyroIO, flIO, frIO, blIO, brIO, new Vision[] {});
     }
 
-    public void setLastMovingYaw(double value) {
-        lastMovingYaw = value;
+
+    public void setAimAssistTranslation(Translation2d translation){
+        Logger.recordOutput("AimAssist/Translation", translation);
+        aimAssistTranslation = translation;
+    }
+    public void setAimAssistRotation(Rotation2d rotation){
+        Logger.recordOutput("AimAssist/Rotation", rotation);
+        aimAssistRotation = rotation;
     }
 
     /**
@@ -154,24 +159,14 @@ public class SwerveBase extends SubsystemBase{
      * empty optional
      */
     public Optional<Rotation2d> getRotationTarget() {
-        if (getRotationTarget() != null) {
-            return Optional.of(getRotationTargetOverride());
+        if (getPPRotationOverride() != null) {
+            return Optional.of(getPPRotationOverride());
         } else {
             return Optional.empty();
         }
     }
 
-    /**
-     * the rotation2d this returns will override the one in pathplanner, if
-     * null, the default pathplanner rotation will be used
-     */
-    public Rotation2d getRotationTargetOverride() {
-        return ppRotationOverride;
-    }
 
-    public void setRotationTarget(Rotation2d target) {
-        ppRotationOverride = target;
-    }
 
     @Override
     public void periodic() {
@@ -543,9 +538,9 @@ public class SwerveBase extends SubsystemBase{
                 return Math.abs(rotationPID.getPositionError()) <= tolerance;
             case PATHPLANNER:
                 if (DSUtil.isBlue()) {
-                    return Math.abs(ppRotationOverride.getRadians() - getYaw().getRadians()) <= tolerance;
+                    return Math.abs(pPRotationOverride.getRadians() - getYaw().getRadians()) <= tolerance;
                 } else {
-                    return Math.abs(ppRotationOverride.getRadians()
+                    return Math.abs(pPRotationOverride.getRadians()
                             - RotationUtil.get0to2Pi(getYaw().rotateBy(Rotation2d.fromDegrees(180)))) <= tolerance;
                 }
             default:

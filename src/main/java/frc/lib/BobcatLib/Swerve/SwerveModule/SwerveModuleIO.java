@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
-import static edu.wpi.first.units.Units.Volts;
 
 @SeasonBase
 public interface SwerveModuleIO {
