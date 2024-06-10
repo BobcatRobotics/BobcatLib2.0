@@ -130,7 +130,8 @@ public class RobotContainer {
          * () -> buttonOrAxisValue
          */
         public void configureBindings() {
-                TranslationAssist transAssist = new TranslationAssist(() -> new Translation2d(),() -> swerve.getPose().getTranslation(), () -> false, () -> false);
+                swerve.setAimAssistTranslation(new Translation2d(5,5));
+                TranslationAssist transAssist = new TranslationAssist(() -> swerve.getAimAssistTranslation(),() -> swerve.getPose().getTranslation(), gp.a, () -> false);
                 RotationalAssist rotAssist = new RotationalAssist(() -> new Rotation2d(), () -> swerve.getYaw(), () -> false, () -> false);
                 swerve.setDefaultCommand(
                    new TeleopSwerve(
@@ -149,6 +150,7 @@ public class RobotContainer {
                 //sysid routines
                 gp.start.onTrue(new InstantCommand(() -> swerve.resetPose(new Pose2d())));
                 gp.back.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
+               
         }
 
         public Command getAutonomousCommand() {

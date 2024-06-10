@@ -47,6 +47,8 @@ import frc.lib.BobcatLib.Util.RotationUtil;
 import frc.lib.BobcatLib.Vision.Vision;
 import frc.lib.BobcatLib.Vision.VisionConstants;
 import frc.robot.Constants;
+import lombok.Getter;
+import lombok.Setter;
 
 @SeasonBase
 public class SwerveBase extends SubsystemBase{
@@ -71,6 +73,9 @@ public class SwerveBase extends SubsystemBase{
 
     private Rotation2d lastYaw = new Rotation2d();
     SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+
+    @Getter @Setter private Translation2d aimAssistTranslation = new Translation2d();
+    @Getter @Setter private Rotation2d aimAssistRotation = new Rotation2d();
 
     private final PathConstraints pathfindingConstraints = new PathConstraints(
             SwerveConstants.Limits.Chassis.maxSpeed,
