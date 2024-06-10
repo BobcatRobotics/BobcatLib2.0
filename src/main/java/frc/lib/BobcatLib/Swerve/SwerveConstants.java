@@ -117,7 +117,7 @@ public class SwerveConstants {
                 public static final double kS = 0.088235 /12;
                 public static final double kA = 0.041076 /12;
                 public static final double kV = 2.2301 /12;
-                public static final double kP = 0;
+                public static final double kP = 0.02;
                 public static final double kI = 0;
                 public static final double kD = 0;
                 public static final InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;

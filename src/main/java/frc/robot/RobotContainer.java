@@ -6,7 +6,7 @@ package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -135,8 +135,8 @@ public class RobotContainer {
                 swerve.setDefaultCommand(
                    new TeleopSwerve(
                         swerve,
-                        gp.leftXAxis,
-                        gp.leftYAxis, 
+                        gp.leftYAxis,
+                        gp.leftXAxis, 
                         gp.rightXAxis, 
                         gp.rb,
                         () -> 0 , 
@@ -147,11 +147,7 @@ public class RobotContainer {
                 
                 
                 //sysid routines
-                gp.a.whileTrue(swerve.charachterizeModules(SysidTest.QUASISTATIC_FORWARD));
-                gp.b.whileTrue(swerve.charachterizeModules(SysidTest.QUASISTATIC_BACKWARD));
-                gp.x.whileTrue(swerve.charachterizeModules(SysidTest.DYNAMIC_FORWARD));
-                gp.y.whileTrue(swerve.charachterizeModules(SysidTest.DYNAMIC_BACKWARD));
-                gp.lb.whileTrue(swerve.zeroModules());
+                gp.start.onTrue(new InstantCommand(() -> swerve.resetPose(new Pose2d())));
                 gp.back.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
         }
 

@@ -141,5 +141,11 @@ public class BobcatSwerveEstimator extends BaseBobcatSwerveEstimator {
   public Pose2d getPureOdometry(){
     return odometryTracker.getEstimatedPosition();
   }
-
+  
+  @Override
+  public void resetPosition(
+      Rotation2d gyroAngle, SwerveModulePosition[] modulePositions, Pose2d poseMeters) {
+    odometryTracker.resetPosition(gyroAngle, modulePositions, poseMeters);
+    super.resetPosition(gyroAngle, modulePositions, poseMeters);;
+  }
 }
