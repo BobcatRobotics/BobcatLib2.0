@@ -1,4 +1,4 @@
-![alt text](<docs/Assets/BobcatLib Banner (6).png>)
+![wicked cool banner](<docs\Assets\banner_gradient.png>)
 # Welcome to BobcatLib!
 #### This repo contains several utilities and code templates, allowing for quick creation of a robot's codbase at the beginning of a season. 
 #### To get started coding a robot see the [quick start guide](QUICKSTART.md)

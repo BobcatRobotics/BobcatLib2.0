@@ -15,10 +15,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import frc.lib.BobcatLib.Annotations.SeasonSpecific;
 import frc.lib.Team254.ModuleConstants;
 
-@SeasonSpecific
+
 public class SwerveConstants {
     public static final double stickDeadband = 0.01;
     public static final String CANbus = "CANt_open_file"; // if using canivore, put its name here (177 names it's canivores 'CANt_open_file'),

@@ -17,7 +17,6 @@ import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 
-import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Configs;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Limits;
@@ -27,7 +26,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
-@SeasonBase
+
 public class SwerveModule {
     public enum SysidTest {
         QUASISTATIC_FORWARD,

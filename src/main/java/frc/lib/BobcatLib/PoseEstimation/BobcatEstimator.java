@@ -18,7 +18,6 @@ import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.WheelPositions;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.lib.BobcatLib.Annotations.SeasonBase;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -39,7 +38,6 @@ import java.util.Objects;
  *
  * @param <T> Wheel positions type.
  */
-@SeasonBase
 public class BobcatEstimator<T extends WheelPositions<T>> {
   private final Kinematics<?, T> m_kinematics;
   private final Odometry<T> m_odometry;

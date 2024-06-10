@@ -17,13 +17,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
-import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.PhoenixOdometryThread;
 import frc.lib.Team254.ModuleConstants;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 
 
-@SeasonBase
+
 public class SwerveModuleIOFalcon implements SwerveModuleIO {
     private final TalonFX driveMotor;
     private final TalonFX angleMotor;

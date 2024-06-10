@@ -3,7 +3,6 @@ package frc.lib.BobcatLib.CANdle;
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.StrobeAnimation;
 
-import frc.lib.BobcatLib.Annotations.SeasonSpecific;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,7 +11,6 @@ import lombok.Getter;
 /**
  * add season-specific states here
  */
-@SeasonSpecific
 @AllArgsConstructor
 public enum CANdleState {
     OFF(null),

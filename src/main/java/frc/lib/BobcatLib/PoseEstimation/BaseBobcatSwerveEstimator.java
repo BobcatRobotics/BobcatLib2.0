@@ -14,7 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.lib.BobcatLib.Annotations.SeasonBase;
+
 
 /**
  * This class wraps {@link SwerveDriveOdometry Swerve Drive Odometry} to fuse latency-compensated
@@ -26,7 +26,6 @@ import frc.lib.BobcatLib.Annotations.SeasonBase;
  * <p>{@link SwerveDrivePoseEstimator#addVisionMeasurement} can be called as infrequently as you
  * want; if you never call it, then this class will behave as regular encoder odometry.
  */
-@SeasonBase
 public class BaseBobcatSwerveEstimator extends BobcatEstimator<SwerveDriveWheelPositions> {
   private final int m_numModules;
 

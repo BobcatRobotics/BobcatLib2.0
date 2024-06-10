@@ -3,8 +3,7 @@ package frc.lib.BobcatLib.Swerve;
 import org.littletonrobotics.junction.AutoLog;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.lib.BobcatLib.Annotations.SeasonBase;
-@SeasonBase
+
 public interface GyroIO {
     @AutoLog
     public static class GyroIOInputs {

@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.PoseEstimation.BobcatSwerveEstimator;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Configs;
 import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
@@ -48,7 +47,7 @@ import frc.lib.BobcatLib.Vision.VisionConstants;
 import lombok.Getter;
 import lombok.Setter;
 
-@SeasonBase
+
 public class SwerveBase extends SubsystemBase{
 
     private final GyroIO gyroIO;

@@ -6,12 +6,10 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.BobcatLib.Annotations.SeasonBase;
 import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
 import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
 import frc.lib.BobcatLib.Swerve.SwerveConstants.Limits;
 
-@SeasonBase
 public class TeleopSwerve extends Command {
     private SwerveBase swerve;
     private DoubleSupplier translation;

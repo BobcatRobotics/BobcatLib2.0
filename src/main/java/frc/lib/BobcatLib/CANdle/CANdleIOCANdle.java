@@ -2,9 +2,7 @@ package frc.lib.BobcatLib.CANdle;
 
 import com.ctre.phoenix.led.CANdle;
 
-import frc.lib.BobcatLib.Annotations.SeasonSpecific;
 
-@SeasonSpecific
 public class CANdleIOCANdle implements CANdleIO {
     
     private CANdle leds;
