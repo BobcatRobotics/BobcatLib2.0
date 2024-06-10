@@ -7,24 +7,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
 
 @SeasonBase
-public class Logitech{
+public class Ruffy{
     private final CommandJoystick gp;
-    public Trigger a;
-    public Trigger b;
-    public Trigger x;
-    public Trigger y;
-    public Trigger lb;
-    public Trigger rb;
-    public Trigger back;
-    public Trigger start;
-    public Trigger leftStick;
-    public Trigger rightStick;
-    public DoubleSupplier leftXAxis;
-    public DoubleSupplier leftYAxis;
-    public DoubleSupplier rightXAxis;
-    public DoubleSupplier rightYAxis;
+    public Trigger button;
+    public DoubleSupplier xAxis;
+    public DoubleSupplier yAxis;
+    public DoubleSupplier zAxis;
 
-    //TODO test
     /**
      * Logitech controller <p>
      * 
@@ -50,32 +39,23 @@ public class Logitech{
      * 
      * Axis indices start at 0, button indices start at one -_-
      */
-    public Logitech(int port) {
+    public Ruffy(int port) {
         gp = new CommandJoystick(port);
         configureTriggers();
         configureAxes();
     }
 
     private void configureTriggers(){
-        a = gp.button(2);
-        b = gp.button(3);
-        x = gp.button(1);
-        y = gp.button(4);
-        lb = gp.button(5);
-        rb = gp.button(6);
-        back = gp.button(9);
-        start = gp.button(10);
-        leftStick = gp.button(11);
-        rightStick = gp.button(12);
+        button = gp.button(1);
     }
 
     private void configureAxes(){
         //y is up/down
         //x is left/right
-        leftXAxis = () -> -gp.getRawAxis(0);
-        leftYAxis = () -> -gp.getRawAxis(1);
-        rightXAxis = () -> -gp.getRawAxis(2);
-        rightYAxis = () -> -gp.getRawAxis(3);
+        //z is twist
+        xAxis = () -> -gp.getRawAxis(0);
+        yAxis = () -> -gp.getRawAxis(1);
+        zAxis = () -> -gp.getRawAxis(2);
     }
 
 

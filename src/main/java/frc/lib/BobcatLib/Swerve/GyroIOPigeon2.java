@@ -10,7 +10,6 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.BobcatLib.Annotations.SeasonBase;
-import frc.robot.Constants;
 
 @SeasonBase
 public class GyroIOPigeon2 implements GyroIO {
@@ -22,7 +21,7 @@ public class GyroIOPigeon2 implements GyroIO {
     private final StatusSignal<Double> yawVelocity;
 
     public GyroIOPigeon2() {
-        pigeon = new Pigeon2(SwerveConstants.pigeonID, Constants.canivore);
+        pigeon = new Pigeon2(SwerveConstants.pigeonID, SwerveConstants.CANbus);
         Pigeon2Configuration config = new Pigeon2Configuration();
         pigeon.getConfigurator().apply(config);
         // config.MountPose.MountPoseYaw = 180;

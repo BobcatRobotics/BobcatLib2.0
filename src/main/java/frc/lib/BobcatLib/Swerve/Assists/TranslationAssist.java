@@ -4,7 +4,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.Constants.AimAssistConstants;
+import frc.lib.BobcatLib.Swerve.SwerveConstants.AimAssistConstants;
 
 public class TranslationAssist {
     private Supplier<Translation2d> translationalSupplier;

@@ -38,4 +38,7 @@ public class VisionConstants {
         public static final double horizontalFOV = 62.5;
     }
 
+    public static final double fieldLength=0;
+    public static final double fieldWidth=0;
+
 }

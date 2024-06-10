@@ -8,12 +8,13 @@ import frc.lib.BobcatLib.Swerve.GyroIO;
 import frc.lib.BobcatLib.Swerve.SwerveBase;
 import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
 import frc.lib.BobcatLib.Vision.Vision;
+import frc.robot.Constants;
 
 /** Add your docs here. */
 public class Swerve extends SwerveBase{
     
     public Swerve(GyroIO gyroIO, SwerveModuleIO flIO, SwerveModuleIO frIO, SwerveModuleIO blIO, SwerveModuleIO brIO, Vision... cameras){
-        super(gyroIO, flIO, frIO, blIO, brIO, cameras);
+        super(gyroIO, flIO, frIO, blIO, brIO, Constants.loopPeriodSecs, cameras);
     }
     
 

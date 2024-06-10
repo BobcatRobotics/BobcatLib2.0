@@ -62,10 +62,10 @@ public class RobotContainer {
 
                                 swerve = new Swerve(new GyroIO() {
                                 },
-                                                new SwerveModuleIOSim(),
-                                                new SwerveModuleIOSim(),
-                                                new SwerveModuleIOSim(),
-                                                new SwerveModuleIOSim()
+                                                new SwerveModuleIOSim(Constants.loopPeriodSecs),
+                                                new SwerveModuleIOSim(Constants.loopPeriodSecs),
+                                                new SwerveModuleIOSim(Constants.loopPeriodSecs),
+                                                new SwerveModuleIOSim(Constants.loopPeriodSecs)
                                                 );
 
 
@@ -78,13 +78,13 @@ public class RobotContainer {
                                 //cameras = new Vision[]{limelight1};
                                 swerve = new Swerve(new GyroIO() {
                                 },
-                                                new SwerveModuleIOSim() {
+                                                new SwerveModuleIOSim(Constants.loopPeriodSecs) {
                                                 },
-                                                new SwerveModuleIOSim() {
+                                                new SwerveModuleIOSim(Constants.loopPeriodSecs) {
                                                 },
-                                                new SwerveModuleIOSim() {
+                                                new SwerveModuleIOSim(Constants.loopPeriodSecs) {
                                                 },
-                                                new SwerveModuleIOSim() {
+                                                new SwerveModuleIOSim(Constants.loopPeriodSecs) {
                                                 });
                                 break;
 

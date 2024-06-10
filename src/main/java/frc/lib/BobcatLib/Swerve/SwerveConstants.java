@@ -21,6 +21,8 @@ import frc.lib.Team254.ModuleConstants;
 @SeasonSpecific
 public class SwerveConstants {
     public static final double stickDeadband = 0.01;
+    public static final String CANbus = "CANt_open_file"; // if using canivore, put its name here (177 names it's canivores 'CANt_open_file'),
+                                                          // otherwise, put an empty string (""), and the default rio canbus will be used
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(false, false);
     public static final Rotation2d holoAlignTolerance = Rotation2d.fromDegrees(0);
     public static final int pigeonID = 1;
@@ -203,4 +205,9 @@ public class SwerveConstants {
         }
     }
 
+    public static class AimAssistConstants{
+        public static final double kP_X = 0.2; //   these will be the same value in most cases
+        public static final double kP_Y = 0.2;
+        public static final double kP_Theta = 1;
+    }
 }

@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BobcatLib.Vision.VisionConstants.LimeLightType;
-import frc.robot.Constants.FieldConstants;
 
 public class Vision extends SubsystemBase {
   /** Creates a new Vision. */
@@ -119,9 +118,9 @@ public class Vision extends SubsystemBase {
         (diff<VisionConstants.rotationTolerance) && 
         (tagDist<VisionConstants.throwoutDist) &&
         (botpose.getTranslation().getX() > 0) &&
-        (botpose.getTranslation().getX() < FieldConstants.fieldLength) &&
+        (botpose.getTranslation().getX() < VisionConstants.fieldLength) &&
         (botpose.getTranslation().getY() > 0) &&
-        (botpose.getTranslation().getY() < FieldConstants.fieldWidth)) {
+        (botpose.getTranslation().getY() < VisionConstants.fieldWidth)) {
           
           return true;
       } else{

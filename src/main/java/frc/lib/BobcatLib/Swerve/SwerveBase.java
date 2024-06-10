@@ -45,7 +45,6 @@ import frc.lib.BobcatLib.Util.DSUtil;
 import frc.lib.BobcatLib.Util.RotationUtil;
 import frc.lib.BobcatLib.Vision.Vision;
 import frc.lib.BobcatLib.Vision.VisionConstants;
-import frc.robot.Constants;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -75,6 +74,7 @@ public class SwerveBase extends SubsystemBase{
 
     @Getter private Translation2d aimAssistTranslation = new Translation2d();
     @Getter private Rotation2d aimAssistRotation = new Rotation2d();
+    private final double loopPeriodSecs;
 
     private final PathConstraints pathfindingConstraints = new PathConstraints(
             SwerveConstants.Limits.Chassis.maxSpeed,
@@ -83,8 +83,9 @@ public class SwerveBase extends SubsystemBase{
             SwerveConstants.Limits.Chassis.maxAngularAccel.getRadians());
 
     public SwerveBase(GyroIO gyroIO, SwerveModuleIO flIO, SwerveModuleIO frIO, SwerveModuleIO blIO, SwerveModuleIO brIO,
-            Vision... cameras) {
-
+            double loopPeriodSecs, Vision... cameras) {
+        
+        this.loopPeriodSecs = loopPeriodSecs;
         this.cameras = Arrays.asList(cameras);
 
         this.gyroIO = gyroIO;
@@ -140,8 +141,8 @@ public class SwerveBase extends SubsystemBase{
     }
 
     public SwerveBase(GyroIO gyroIO, SwerveModuleIO flIO, SwerveModuleIO frIO, SwerveModuleIO blIO,
-            SwerveModuleIO brIO) {
-        this(gyroIO, flIO, frIO, blIO, brIO, new Vision[] {});
+            SwerveModuleIO brIO, double loopPeriodSecs) {
+        this(gyroIO, flIO, frIO, blIO, brIO, loopPeriodSecs, new Vision[] {});
     }
 
 
@@ -205,7 +206,7 @@ public class SwerveBase extends SubsystemBase{
                 lastYaw = yaw;
             } else { // If disconnected or sim, use angular velocity
                 Rotation2d yaw = lastYaw.plus(
-                        Rotation2d.fromRadians(getChassisSpeeds().omegaRadiansPerSecond * Constants.loopPeriodSecs));
+                        Rotation2d.fromRadians(getChassisSpeeds().omegaRadiansPerSecond * loopPeriodSecs));
                 lastYaw = yaw;
             }
 
@@ -274,7 +275,7 @@ public class SwerveBase extends SubsystemBase{
     @Override
     public void simulationPeriodic() {
         Rotation2d yaw = lastYaw.plus(
-                Rotation2d.fromRadians(getChassisSpeeds().omegaRadiansPerSecond * Constants.loopPeriodSecs));
+                Rotation2d.fromRadians(getChassisSpeeds().omegaRadiansPerSecond * loopPeriodSecs));
         lastYaw = yaw;
         switch (getOdometryState()) {
             case THROWOUT:
@@ -386,7 +387,7 @@ public class SwerveBase extends SubsystemBase{
             }
         }
 
-        desiredSpeeds = ChassisSpeeds.discretize(desiredSpeeds, Constants.loopPeriodSecs);
+        desiredSpeeds = ChassisSpeeds.discretize(desiredSpeeds, loopPeriodSecs);
 
         // currentSetpoint =
         // setpointGenerator.generateSetpoint(SwerveConstants.moduleLimits,
@@ -409,7 +410,7 @@ public class SwerveBase extends SubsystemBase{
      * @param targetSpeeds the desired chassis speeds
      */
     public void drive(ChassisSpeeds targetSpeeds) {
-        targetSpeeds = ChassisSpeeds.discretize(targetSpeeds, Constants.loopPeriodSecs);
+        targetSpeeds = ChassisSpeeds.discretize(targetSpeeds, loopPeriodSecs);
 
         lastMovingYaw = getYaw().getRadians();
 

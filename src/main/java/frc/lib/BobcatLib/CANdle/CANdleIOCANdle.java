@@ -3,7 +3,6 @@ package frc.lib.BobcatLib.CANdle;
 import com.ctre.phoenix.led.CANdle;
 
 import frc.lib.BobcatLib.Annotations.SeasonSpecific;
-import frc.robot.Constants.CANdleConstants;
 
 @SeasonSpecific
 public class CANdleIOCANdle implements CANdleIO {
@@ -11,7 +10,7 @@ public class CANdleIOCANdle implements CANdleIO {
     private CANdle leds;
     private CANdleState currState = CANdleState.OFF;
     public CANdleIOCANdle(){
-        leds = new CANdle(CANdleConstants.CANdleID);
+        leds = new CANdle(CANdleConstants.ID);
     }
 
     public void updateInputs(CANdleIOInputs inputs){
