@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 public class Constants {
     public static final Mode currentMode = RobotBase.isSimulation() ? Mode.SIM
             : (RobotBase.isReal() ? Mode.REAL : Mode.REPLAY);
-    public static final boolean isTuningMode = DriverStation.isTest();
+    public static final boolean isTuningMode = !DriverStation.isFMSAttached();
 
     public static enum Mode {
         /** Running on a real robot. */

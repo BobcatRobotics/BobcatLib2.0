@@ -64,7 +64,6 @@ public class SwerveModule {
 
 
     public SwerveModule(SwerveModuleIO io, int index) {
-        
         this.io = io;
         this.index = index;
 
