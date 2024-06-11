@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swerve Drive Configurator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Swerve Drive Configurator</h1>
+    <form id="configForm">
+        <label for="wheelbase">Wheelbase:</label>
+        <input type="number" id="wheelbase" name="wheelbase" required>
+        <label for="motorConstant">Motor Constant:</label>
+        <input type="number" id="motorConstant" name="motorConstant" required>
+        <!-- Add more input fields as needed -->
+        <button type="submit">Save Configuration</button>
+    </form>
+    <form id="downloadForm" style="text-align: center;">
+        <button type="submit">Download Configuration</button>
+    </form>
+    <div id="output"></div>
+    <script src="script.js"></script>
+</body>
+</html>

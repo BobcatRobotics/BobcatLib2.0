@@ -15,7 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import frc.lib.Team254.ModuleConstants;
+import frc.lib.BobcatLib.Team254.ModuleConstants;
 
 
 public class SwerveConstants {

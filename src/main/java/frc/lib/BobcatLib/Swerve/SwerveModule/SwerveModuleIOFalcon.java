@@ -18,7 +18,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import frc.lib.BobcatLib.Swerve.PhoenixOdometryThread;
-import frc.lib.Team254.ModuleConstants;
+import frc.lib.BobcatLib.Team254.ModuleConstants;
 import frc.lib.BobcatLib.Swerve.SwerveConstants;
 
 

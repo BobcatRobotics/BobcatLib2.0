@@ -1,4 +1,4 @@
-package frc.lib.Team6328;
+package frc.lib.BobcatLib.Team6328;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;

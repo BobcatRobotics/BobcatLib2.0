@@ -1,4 +1,4 @@
-package frc.lib.Team6328;
+package frc.lib.BobcatLib.Team6328;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 

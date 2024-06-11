@@ -6,6 +6,8 @@ package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -116,6 +118,7 @@ public class RobotContainer {
                  * Please give descriptive names
                  */
                 autoChooser.addDefaultOption("Do Nothing", Commands.none());
+                autoChooser.addOption("test", new PathPlannerAuto("New Auto"));
         }
 
         /**

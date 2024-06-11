@@ -1,4 +1,4 @@
-package frc.lib.Team6328;
+package frc.lib.BobcatLib.Team6328;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Translation2d;

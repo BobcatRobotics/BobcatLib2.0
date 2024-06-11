@@ -1,4 +1,4 @@
-package frc.lib.Team254;
+package frc.lib.BobcatLib.Team254;
 
 public class Quartic {
     private static boolean IsZero(double d) {
