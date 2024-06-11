@@ -9,16 +9,7 @@ h1 {
     text-align: center;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    max-width: 300px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+
 
 label {
     margin-top: 10px;
@@ -52,7 +43,65 @@ button:hover {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+
+
+form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
+    grid-gap: 20px; /* Gap between fieldsets */
+    max-width: 800px; /* Set maximum width */
+    margin: 0 auto; /* Center the form horizontally */
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
+    grid-gap: 10px; /* Add space between grid items */
+}
+#configForm {
+    grid-column: 1 / span 2; /* Span both columns */
+    display: flex;
+    justify-content: center;
+    margin-top: 10px; /* Adjust margin as needed */
+}
+#moduleForm {
+    margin-top: 20px; /* Add space between the forms */
+}
+#downloadForm button {
+    margin-top: 0; /* Reset margin-top for the button */
+}
 #downloadForm {
+    text-align: center;
     margin-top: 20px; /* Adjust margin as needed */
+    margin-bottom: 20px;
 }
 
+fieldset {
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-right: 15px;
+    min-width: 100px;
+}
+
+legend {
+    font-weight: bold;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: calc(100% - 22px); /* Adjust width to leave space for label */
+    padding: 5px;
+    margin-bottom: 5px;
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+fieldset:nth-child(even) {
+    background-color: #9c00005e; /* Alternate background color for even numbered fieldsets */
+}
+fieldset:nth-child(odd) {
+    background-color: #e2b13c5e; /* Alternate background color for even numbered fieldsets */
+}

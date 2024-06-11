@@ -8,13 +8,66 @@
 </head>
 <body>
     <h1>Swerve Drive Configurator</h1>
+    <form id="moduleForm">
+        <fieldset>
+            <legend>Front Left Module</legend>
+            <label for="mod0_angle_id">Angle Motor CAN ID:</label>
+            <input type="number" id="mod0_angle_id" name="mod0_angle_id" required>
+            <label for="mod0_drive_id">Drive Motor CAN ID:</label>
+            <input type="number" id="mod0_drive_id" name="mod0_drive_id" required>
+            <label for="mod0_cancoder_id">CANCoder CAN ID:</label>
+            <input type="number" id="mod0_cancoder_id" name="mod0_cancoder_id" required>
+        </fieldset>
+    
+        <fieldset>
+            <legend>Front Right Module</legend>
+            <label for="mod1_angle_id">Angle Motor CAN ID:</label>
+            <input type="number" id="mod1_angle_id" name="mod1_angle_id" required>
+            <label for="mod1_drive_id">Drive Motor CAN ID:</label>
+            <input type="number" id="mod1_drive_id" name="mod1_drive_id" required>
+            <label for="mod1_cancoder_id">CANCoder CAN ID:</label>
+            <input type="number" id="mod1_cancoder_id" name="mod1_cancoder_id" required>
+        </fieldset>
+
+        <fieldset>
+            <legend>Back Left Module</legend>
+            <label for="mod2_angle_id">Angle Motor CAN ID:</label>
+            <input type="number" id="mod2_angle_id" name="mod2_angle_id" required>
+            <label for="mod0_drive_id">Drive Motor CAN ID:</label>
+            <input type="number" id="mod2_drive_id" name="mod2_drive_id" required>
+            <label for="mod2_cancoder_id">CANCoder CAN ID:</label>
+            <input type="number" id="mod2_cancoder_id" name="mod2_cancoder_id" required>
+        </fieldset>
+    
+        <fieldset>
+            <legend>Back Right Module</legend>
+            <label for="mod3_angle_id">Angle Motor CAN ID:</label>
+            <input type="number" id="mod3_angle_id" name="mod3_angle_id" required>
+            <label for="mod0_drive_id">Drive Motor CAN ID:</label>
+            <input type="number" id="mod3_drive_id" name="mod3_drive_id" required>
+            <label for="mod3_cancoder_id">CANCoder CAN ID:</label>
+            <input type="number" id="mod3_cancoder_id" name="mod3_cancoder_id" required>
+        </fieldset>
+    </form>
     <form id="configForm">
-        <label for="wheelbase">Wheelbase:</label>
-        <input type="number" id="wheelbase" name="wheelbase" required>
-        <label for="motorConstant">Motor Constant:</label>
-        <input type="number" id="motorConstant" name="motorConstant" required>
-        <!-- Add more input fields as needed -->
-        <button type="submit">Save Configuration</button>
+        <fieldset>
+            <legend>Other Configs</legend>
+            <div class="grid-container">
+                <div>
+                    <label for="pigeon_id">Pigeon CAN ID:</label>
+                    <input type="text" id="pigeon_id" name="pigeon_id" required>
+                </div>
+                <div>
+                    <label for="CANbus">CAN Bus:</label>
+                    <input type="text" id="CANbus" name="CANbus" required>
+                </div>
+                <div>
+                    <label for="CANbus">CAN Bus:</label>
+                    <input type="text" id="CANbus" name="CANbus" required>
+                </div>
+                <!-- Add more input fields as needed -->
+            </div>
+        </fieldset>
     </form>
     <form id="downloadForm" style="text-align: center;">
         <button type="submit">Download Configuration</button>
