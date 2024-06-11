@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Swerve Drive Configurator</h1>
+    <h1>Bobactlib Swerve Drive Configurator 🦀</h1>
     <form id="moduleForm">
         <fieldset>
             <legend>Front Left Module</legend>
@@ -17,6 +17,8 @@
             <input type="number" id="mod0_drive_id" name="mod0_drive_id" required>
             <label for="mod0_cancoder_id">CANCoder CAN ID:</label>
             <input type="number" id="mod0_cancoder_id" name="mod0_cancoder_id" required>
+            <label for="mod0_offset_deg">Encoder offset (deg):</label>
+            <input type="number" id="mod0_offset_deg" name="mod0_offset_deg" required>
         </fieldset>
     
         <fieldset>
@@ -27,6 +29,8 @@
             <input type="number" id="mod1_drive_id" name="mod1_drive_id" required>
             <label for="mod1_cancoder_id">CANCoder CAN ID:</label>
             <input type="number" id="mod1_cancoder_id" name="mod1_cancoder_id" required>
+            <label for="mod1_offset_deg">Encoder offset (deg):</label>
+            <input type="number" id="mod1_offset_deg" name="mod1_offset_deg" required>
         </fieldset>
 
         <fieldset>
@@ -37,6 +41,8 @@
             <input type="number" id="mod2_drive_id" name="mod2_drive_id" required>
             <label for="mod2_cancoder_id">CANCoder CAN ID:</label>
             <input type="number" id="mod2_cancoder_id" name="mod2_cancoder_id" required>
+            <label for="mod2_offset_deg">Encoder offset (deg):</label>
+            <input type="number" id="mod2_offset_deg" name="mod2_offset_deg" required>
         </fieldset>
     
         <fieldset>
@@ -47,6 +53,8 @@
             <input type="number" id="mod3_drive_id" name="mod3_drive_id" required>
             <label for="mod3_cancoder_id">CANCoder CAN ID:</label>
             <input type="number" id="mod3_cancoder_id" name="mod3_cancoder_id" required>
+            <label for="mod3_offset_deg">Encoder offset (deg):</label>
+            <input type="number" id="mod3_offset_deg" name="mod3_offset_deg" required>
         </fieldset>
     </form>
     <form id="configForm">
@@ -55,24 +63,60 @@
             <div class="grid-container">
                 <div>
                     <label for="pigeon_id">Pigeon CAN ID:</label>
-                    <input type="text" id="pigeon_id" name="pigeon_id" required>
+                    <input type="number" id="pigeon_id" name="pigeon_id" required>
                 </div>
                 <div>
-                    <label for="CANbus">CAN Bus:</label>
+                    <label for="CANbus">CANivore name (Blank for rio):</label>
                     <input type="text" id="CANbus" name="CANbus" required>
                 </div>
                 <div>
-                    <label for="CANbus">CAN Bus:</label>
-                    <input type="text" id="CANbus" name="CANbus" required>
+                    <label for="drive_ratio">Drive Gear Ratio ( x:1):</label>
+                    <input type="number" id="drive_ratio" name="drive_ratio" required>
                 </div>
+                <div>
+                    <label for="angle_ratio">Angle Gear Ratio ( x:1):</label>
+                    <input type="number" id="angle_ratio" name="angle_ratio" required>
+                </div>
+                <div>
+                    <label for="wheel_diameter_inches">Wheel diameter (in):</label>
+                    <input type="number" id="wheel_diameter_inches" name="wheel_diameter_inches" required>
+                </div>
+                <div>
+                    <label for="use_foc">Use FOC:</label>
+                    <input type="checkbox" id="use_foc" name="use_foc">
+                </div>
+                <div>
+                    <label for="trackwidth">Trackwidth (left-right, meters):</label>
+                    <input type="number" id="trackwidth" name="trackwidth">
+                </div>
+                <div>
+                    <label for="wheelbase">Wheelbase (front-back, meters):</label>
+                    <input type="number" id="wheelbase" name="wheelbase">
+                </div>
+                
                 <!-- Add more input fields as needed -->
             </div>
+        </fieldset>
+        <legend>Speed Limits</legend>
+            <div class="grid-container">
+                <div>
+                    <label for="pigeon_id">Pigeon CAN ID:</label>
+                    <input type="number" id="pigeon_id" name="pigeon_id" required>
+                </div>
+            </div>
+        <fieldset>
+
         </fieldset>
     </form>
     <form id="downloadForm" style="text-align: center;">
         <button type="submit">Download Configuration</button>
     </form>
-    <div id="output"></div>
+    <div>
+        <h2>Json properties</h2>
+    </div>
+    <div id="output">
+        <div id="outputContent"></div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

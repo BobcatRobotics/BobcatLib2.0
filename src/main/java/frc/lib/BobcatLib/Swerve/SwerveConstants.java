@@ -19,7 +19,6 @@ import frc.lib.BobcatLib.Team254.ModuleConstants;
 
 
 public class SwerveConstants {
-    public static final double stickDeadband = 0.01;
     public static final String CANbus = "CANt_open_file"; // if using canivore, put its name here (177 names it's canivores 'CANt_open_file'),
                                                           // otherwise, put an empty string (""), and the default rio canbus will be used
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(false, false);
@@ -32,7 +31,7 @@ public class SwerveConstants {
     public static class Kinematics {
         public static final double wheelBase = 0.521; // meters
         public static final double trackWidth = 0.521;
-        public static final double driveBaseRadius = Math.sqrt(2 * Math.pow(wheelBase / 2, 2));
+        public static final double driveBaseRadius = Math.sqrt(2 * Math.pow(wheelBase / 2, 2)); //TODO assumes square wheelbase
         public static final double wheelCircumference = Units.inchesToMeters(4) * Math.PI;
         public static final Translation2d[] moduleTranslations = new Translation2d[] {
                 new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
