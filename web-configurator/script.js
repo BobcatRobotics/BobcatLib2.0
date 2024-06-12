@@ -2,33 +2,28 @@ document.querySelectorAll('input').forEach(input => {
     // Trigger save on both input and change events
     input.addEventListener('input', updateAndSaveConfig);
     input.addEventListener('change', updateAndSaveConfig);
-    console.log('Event listener added to input');
 });
 
 // Event listener for the moduleForm to save configuration
 document.getElementById('moduleForm').addEventListener('submit', function(event) {
     event.preventDefault();
     updateAndSaveConfig();
-    console.log('Module form submitted');
 });
 
 // Event listener for the configForm to save configuration
 document.getElementById('configForm').addEventListener('submit', function(event) {
     event.preventDefault();
     updateAndSaveConfig();
-    console.log('Config form submitted');
 });
 
 // Event listener for the downloadForm to trigger download
 document.getElementById('downloadForm').addEventListener('submit', function(event) {
     event.preventDefault();
     downloadConfig();
-    console.log('Download form submitted');
 });
 
 // Function to update and save configuration for both forms
 function updateAndSaveConfig() {
-    console.log('updateAndSaveConfig called');
     // Collect data from both forms
     const moduleFormData = new FormData(document.getElementById('moduleForm'));
     const configFormData = new FormData(document.getElementById('configForm'));
@@ -37,16 +32,14 @@ function updateAndSaveConfig() {
     const moduleConfigData = Object.fromEntries(moduleFormData.entries());
     const swerveDriveConfigData = Object.fromEntries(configFormData.entries());
 
-    // Process checkbox values
+    // Process checkbox values explicitly
+    //This doesn't work properly
     moduleConfigData.use_foc = document.getElementById('use_foc').checked;
-
-    console.log('Module config data:', moduleConfigData);
-    console.log('Swerve drive config data:', swerveDriveConfigData);
 
     // Save individual configurations to local storage
     localStorage.setItem('moduleConfig', JSON.stringify(moduleConfigData));
     localStorage.setItem('swerveDriveConfig', JSON.stringify(swerveDriveConfigData));
-
+    
     // Merge and save both configurations
     saveMergedConfig();
 }
@@ -62,14 +55,12 @@ function saveMergedConfig() {
     // Save merged configuration to local storage
     localStorage.setItem('mergedConfig', JSON.stringify(mergedConfig));
 
-    console.log('Merged config data:', mergedConfig);
-
     // Display the merged configuration
     displayConfig(mergedConfig);
 }
 
-// Function to display configuration
-function displayConfig(config) {
+// Function to display module configuration
+function displayModuleConfig(config) {
     const output = document.getElementById('outputContent');
     output.innerHTML = ''; // Clear existing content
     Object.entries(config).forEach(([key, value]) => {
@@ -77,7 +68,21 @@ function displayConfig(config) {
         p.textContent = `${key}: ${value}`;
         output.appendChild(p);
     });
-    console.log('Configuration displayed:', config);
+}
+
+// Function to display swerve drive configuration
+function displayConfig(config) {
+    const output = document.getElementById('outputContent');
+    output.innerHTML = ''; // Clear existing content
+
+    const showJsonProps = document.getElementById('showJson').checked;
+    if(showJsonProps){
+    Object.entries(config).forEach(([key, value]) => {
+        const p = document.createElement('p');
+        p.textContent = `${key}: ${value}`;
+        output.appendChild(p);
+    });
+    }
 }
 
 // Function to download JSON
@@ -92,7 +97,6 @@ function downloadJSON(data, filename) {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    console.log('Configuration downloaded');
 }
 
 // Function to download configuration
@@ -109,7 +113,7 @@ window.addEventListener('load', () => {
     const savedModuleConfig = localStorage.getItem('moduleConfig');
     if (savedModuleConfig) {
         const moduleConfigData = JSON.parse(savedModuleConfig);
-        displayConfig(moduleConfigData);
+        displayModuleConfig(moduleConfigData);
     }
 
     const savedSwerveDriveConfig = localStorage.getItem('swerveDriveConfig');
@@ -122,5 +126,4 @@ window.addEventListener('load', () => {
     if (mergedConfig) {
         displayConfig(mergedConfig);
     }
-    console.log('Page loaded and configurations displayed');
 });

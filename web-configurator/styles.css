@@ -118,3 +118,64 @@ fieldset:nth-child(odd) {
     grid-gap: 10px; /* Gap between items */
 }
 
+.grid-container{
+    display: grid;
+    grid-template-columns: repeat(8, 1fr); /* Adjust the number of columns as needed */
+
+}
+
+#chassis{
+    background-color: #4b000531;
+}
+#module{
+    background-color: #4b000531;
+}
+#limits{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
+
+}
+
+#chassisdiv.grid-container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
+    grid-gap: 10px; /* Gap between items */
+}
+
+#chassisdiv.grid-container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
+    grid-gap: 10px; /* Gap between items */
+}
+
+#modulediv.grid-container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
+    grid-gap: 10px; /* Gap between items */
+
+}
+
+input.showJson{
+    width: auto;
+    height: auto;
+}
+
+
+#downloadForm{
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+#lablelablelable{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#output{
+    border-width: 1px;
+    border-style: solid;
+    border-color: #410000;
+}

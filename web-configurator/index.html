@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Swerve Drive Configurator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <h1>Bobactlib Swerve Drive Configurator 🦀</h1>
     <form id="moduleForm">
@@ -20,7 +22,7 @@
             <label for="mod0_offset_deg">Encoder offset (deg):</label>
             <input type="number" id="mod0_offset_deg" name="mod0_offset_deg" required>
         </fieldset>
-    
+
         <fieldset>
             <legend>Front Right Module</legend>
             <label for="mod1_angle_id">Angle Motor CAN ID:</label>
@@ -44,7 +46,7 @@
             <label for="mod2_offset_deg">Encoder offset (deg):</label>
             <input type="number" id="mod2_offset_deg" name="mod2_offset_deg" required>
         </fieldset>
-    
+
         <fieldset>
             <legend>Back Right Module</legend>
             <label for="mod3_angle_id">Angle Motor CAN ID:</label>
@@ -83,7 +85,7 @@
                 </div>
                 <div>
                     <label for="use_foc">Use FOC:</label>
-                    <input type="checkbox" id="use_foc" name="use_foc">
+                    <input type="checkbox" id="use_foc" name="use_foc" checked>
                 </div>
                 <div>
                     <label for="trackwidth">Trackwidth (left-right, meters):</label>
@@ -93,30 +95,69 @@
                     <label for="wheelbase">Wheelbase (front-back, meters):</label>
                     <input type="number" id="wheelbase" name="wheelbase">
                 </div>
-                
+
                 <!-- Add more input fields as needed -->
             </div>
         </fieldset>
-        <legend>Speed Limits</legend>
-            <div class="grid-container">
-                <div>
-                    <label for="pigeon_id">Pigeon CAN ID:</label>
-                    <input type="number" id="pigeon_id" name="pigeon_id" required>
+        <fieldset id="limits">
+            <legend>Speed Limits</legend>
+            <fieldset id="chassis">
+                <legend>Chassis Limits</legend>
+                <div class="grid-container" id="chassisdiv">
+                    <div>
+                        <label for="chassis_max_speed">Max Speed (meters/sec):</label>
+                        <input type="number" id="chassis_max_speed" name="chassis_max_speed" required>
+                    </div>
+                    <div>
+                        <label for="chassis_max_accel">Max Acceleration (meters/sec^2):</label>
+                        <input type="number" id="chassis_max_accel" name="chassis_max_accel" required>
+                    </div>
+                    <div>
+                        <label for="chassis_max_angle_speed">Max Angular Velocity (deg/sec):</label>
+                        <input type="number" id="chassis_max_angle_speed" name="chassis_max_angle_speed" required>
+                    </div>
+                    <div>
+                        <label for="chassis_max_angle_accel">Max Angular Acceleration (deg/sec^2):</label>
+                        <input type="number" id="chassis_max_angle_accel" name="chassis_max_angle_accel" required>
+                    </div>
                 </div>
-            </div>
-        <fieldset>
-
+            </fieldset>
+            <fieldset id="module">
+                <legend>Module Limits</legend>
+                <div class="grid-container" id="modulediv">
+                    <div>
+                        <label for="module_max_speed">Max Speed (meters/sec):</label>
+                        <input type="number" id="module_max_speed" name="module_max_speed" required>
+                    </div>
+                    <div>
+                        <label for="chassis_max_accel">Max Acceleration (meters/sec^2):</label>
+                        <input type="number" id="module_max_accel" name="module_max_accel" required>
+                    </div>
+                    <div>
+                        <label for="module_max_angle_speed">Max Angular Velocity (deg/sec):</label>
+                        <input type="number" id="module_max_angle_speed" name="module_max_angle_speed" required>
+                    </div>
+                    <div>
+                        <label for="chassis_max_angle_accel">Max Angular Acceleration (deg/sec^2):</label>
+                        <input type="number" id="module_max_angle_accel" name="module_max_angle_accel" required>
+                    </div>
+                </div>
+            </fieldset>
         </fieldset>
+
+
     </form>
     <form id="downloadForm" style="text-align: center;">
-        <button type="submit">Download Configuration</button>
+        <button type="submit" , id="wickedcooldownloadbutton">Download Configuration</button>
+        <div id="output">
+            <label id="lablelablelable" name="lablelablelable">
+                <input type="checkbox" name="showJson" id="showJson" class="showJson">
+                Show Generated Json Properties
+            </label>
+        </div>
     </form>
-    <div>
-        <h2>Json properties</h2>
-    </div>
-    <div id="output">
-        <div id="outputContent"></div>
-    </div>
+    <div id="outputContent"></div>
     <script src="script.js"></script>
 </body>
+
 </html>
