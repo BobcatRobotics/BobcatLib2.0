@@ -9,7 +9,14 @@
 </head>
 
 <body>
-    <h1>Bobactlib Swerve Drive Configurator 🦀</h1>
+    <fieldset id="title" style="background-color: transparent; border: none; padding: 0;">
+    <div style="text-align: center;">
+        <span><lib>Bobact<b>&lt;/&gt;lib</b></lib> &nbsp;&nbsp;&nbsp;</span>
+    </div>
+    <div style="text-align: center;">
+        <span><swerve>Swerve Drive</swerve> Configurator 🦀</span>
+    </div>
+    </fieldset>
     <form id="moduleForm">
         <fieldset>
             <legend>Front Left Module</legend>
@@ -84,7 +91,7 @@
                     <input type="number" id="wheel_diameter_inches" name="wheel_diameter_inches" required>
                 </div>
                 <div>
-                    <label for="use_foc">Use FOC:</label>
+                    <label for="`_foc">Use FOC:</label>
                     <input type="checkbox" id="use_foc" name="use_foc" checked>
                 </div>
                 <div>
@@ -94,6 +101,10 @@
                 <div>
                     <label for="wheelbase">Wheelbase (front-back, meters):</label>
                     <input type="number" id="wheelbase" name="wheelbase">
+                </div>
+                <div>
+                    <label for="holo_align_tolerance">Rotational Alignment Tolerance (deg):</label>
+                    <input type="number" id="holo_align_tolerance" name="holo_align_tolerance">
                 </div>
 
                 <!-- Add more input fields as needed -->
@@ -150,78 +161,78 @@
                 <legend>Module</legend>
                 <fieldset style="background-color: transparent;">
                     <legend>Angle</legend>
-                    <label for="angle_kP">P</label>
-                    <input type="number" id="angle_kP" name="angle_kP">
-                    <label for="angle_kI">I</label>
-                    <input type="number" id="angle_kI" name="angle_kI">
-                    <label for="angle_kD">D</label>
-                    <input type="number" id="angle_kD" name="angle_kD">
+                    <label for="mod_angle_kP">P</label>
+                    <input type="number" id="mod_angle_kP" name="mod_angle_kP">
+                    <label for="mod_angle_kI">I</label>
+                    <input type="number" id="angle_kI" name="mod_angle_kI">
+                    <label for="mod_angle_kD">D</label>
+                    <input type="number" id="mod_angle_kD" name="mod_angle_kD">
                 </fieldset>
                 <fieldset style="background-color: transparent;" class="grid-container" id="driveGains" name="driveGains">
                     <legend>Drive</legend>
-                    <label for="drive_kP">P</label>
-                    <input type="number" id="drive_kP" name="drive_kP">
-                    <label for="drive_kI">I</label>
-                    <input type="number" id="drive_kI" name="drive_kI">
-                    <label for="drive_kD">D</label>
-                    <input type="number" id="drive_kD" name="drive_kD">
-                    <label for="drive_kP">S</label>
-                    <input type="number" id="drive_kP" name="drive_kP">
-                    <label for="drive_kI">V</label>
-                    <input type="number" id="drive_kI" name="drive_kI">
-                    <label for="drive_kD">A</label>
-                    <input type="number" id="drive_kD" name="drive_kD">
+                    <label for="mod_drive_kP">P</label>
+                    <input type="number" id="mod_drive_kP" name="mod_drive_kP">
+                    <label for="mod_drive_kI">I</label>
+                    <input type="number" id="mod_drive_kI" name="mod_drive_kI">
+                    <label for="mod_drive_kD">D</label>
+                    <input type="number" id="mod_drive_kD" name="mod_drive_kD">
+                    <label for="mod_drive_kP">S</label>
+                    <input type="number" id="mod_drive_kP" name="mod_drive_kP">
+                    <label for="mod_drive_kI">V</label>
+                    <input type="number" id="mod_drive_kI" name="mod_drive_kI">
+                    <label for="mod_drive_kD">A</label>
+                    <input type="number" id="mod_drive_kD" name="mod_drive_kD">
                 </fieldset>
             </fieldset>
-            <fieldset id="moduleGains" class="grid-container" style="background-color: #9c00005e;">
+            <fieldset id="moduleGains" class="grid-container">
                 <legend>Auto</legend>
                 <fieldset style="background-color: transparent;">
                     <legend>Rotation</legend>
-                    <label for="angle_kP">P</label>
-                    <input type="number" id="angle_kP" name="angle_kP">
-                    <label for="angle_kI">I</label>
-                    <input type="number" id="angle_kI" name="angle_kI">
-                    <label for="angle_kD">D</label>
-                    <input type="number" id="angle_kD" name="angle_kD">
+                    <label for="auto_rot_kP">P</label>
+                    <input type="number" id="auto_rot_kP" name="auto_rot_kP">
+                    <label for="auto_rot_kI">I</label>
+                    <input type="number" id="auto_rot_kI" name="auto_rot_kI">
+                    <label for="auto_rot_kD">D</label>
+                    <input type="number" id="auto_rot_kD" name="auto_rot_kD">
                 </fieldset>
                 <fieldset style="background-color: transparent;">
                     <legend>Translation</legend>
-                    <label for="drive_kP">P</label>
-                    <input type="number" id="drive_kP" name="drive_kP">
-                    <label for="drive_kI">I</label>
-                    <input type="number" id="drive_kI" name="drive_kI">
-                    <label for="drive_kD">D</label>
-                    <input type="number" id="drive_kD" name="drive_kD">
+                    <label for="auto_trans_kP">P</label>
+                    <input type="number" id="auto_trans_kP" name="auto_trans_kP">
+                    <label for="auto_trans_kI">I</label>
+                    <input type="number" id="auto_trans_kI" name="auto_trans_kI">
+                    <label for="auto_drive_kD">D</label>
+                    <input type="number" id="auto_trans_kD" name="auto_trans_kD">
                 </fieldset>
             </fieldset>
-            <fieldset id="moduleGains" class="grid-container" style="background-color: #9c00005e;">
+            <fieldset id="moduleGains" class="grid-container" >
                 <legend>Teleop</legend>
                 <fieldset style="background-color: transparent;">
                     <legend>Rotation</legend>
-                    <label for="angle_kP">P</label>
-                    <input type="number" id="angle_kP" name="angle_kP">
-                    <label for="angle_kI">I</label>
-                    <input type="number" id="angle_kI" name="angle_kI">
-                    <label for="angle_kD">D</label>
-                    <input type="number" id="angle_kD" name="angle_kD">
+                    <label for="teleop_angle_kP">P</label>
+                    <input type="number" id="teleop_angle_kP" name="teleop_angle_kP">
+                    <label for="teleop_angle_kI">I</label>
+                    <input type="number" id="teleop_angle_kI" name="teleop_angle_kI">
+                    <label for="teleop_angle_kD">D</label>
+                    <input type="number" id="teleop_angle_kD" name="teleop_angle_kD">
                 </fieldset>
                 <fieldset style="background-color: transparent;">
                     <legend>Translation</legend>
-                    <label for="drive_kP">P</label>
-                    <input type="number" id="drive_kP" name="drive_kP">
-                    <label for="drive_kI">I</label>
-                    <input type="number" id="drive_kI" name="drive_kI">
-                    <label for="drive_kD">D</label>
-                    <input type="number" id="drive_kD" name="drive_kD">
+                    <label for="teleop_trans_kP">P</label>
+                    <input type="number" id="teleop_trans_kP" name="teleop_trans_kP">
+                    <label for="teleop_trans_kI">I</label>
+                    <input type="number" id="trans_kI" name="teleop_trans_kI">
+                    <label for="teleop_trans_kD">D</label>
+                    <input type="number" id="teleop_trans_kD" name="teleop_trans_kD">
                 </fieldset>
                 <fieldset style="background-color: transparent;">
                     <legend>AutoAlign</legend>
-                    <label for="drive_kP">P</label>
-                    <input type="number" id="drive_kP" name="drive_kP">
-                    <label for="drive_kI">I</label>
-                    <input type="number" id="drive_kI" name="drive_kI">
-                    <label for="drive_kD">D</label>
-                    <input type="number" id="drive_kD" name="drive_kD">
+                    <label for="autoalign_kP">P</label>
+                    <input type="number" id="autoalign_kP" name="autoalign_kP">
+                    <label for="autoalign_kI">I</label>
+                    <input type="number" id="autoalign_kI" name="autoalign_kI">
+                    <label for="autoalign_kD">D</label>
+                    <input type="number" id="autoalign_kD" name="autoalign_kD">
                 </fieldset>
             </fieldset>
             
@@ -231,11 +242,15 @@
 
     </form>
     <form id="downloadForm" style="text-align: center;">
-        <button type="submit" , id="wickedcooldownloadbutton">Download Configuration</button>
-        <div id="output">
+        <button type="submit" , id="wickedcooldownloadbutton">Download Configuration!</button>
+        <div id="output" class="grid-container">
             <label id="lablelablelable" name="lablelablelable">
-                <input type="checkbox" name="showJson" id="showJson" class="showJson">
-                Show Generated Json Properties
+                <!-- Rounded switch -->
+                <label class="switch">
+                    <input type="checkbox" id="showJson">
+                    <span class="slider round"></span>
+                </label>
+                <div style="font-size: large; padding: 12px;" >Show Generated Json Properties</div>
             </label>
         </div>
     </form>

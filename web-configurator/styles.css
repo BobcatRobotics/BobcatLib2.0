@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f0f0f0;
+    background-color: #d7f7dd;
 }
 
 h1 {
@@ -21,26 +21,25 @@ input {
 button {
     margin-top: 20px;
     padding: 10px;
-    background-color: maroon;
-    color: #edff4f;
+    background-color: #b7c0ee;
+    color: #330c2f;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #410000;
+    background-color: #7067cf;
 }
 
 #outputContent {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 10px;
     margin-top: 20px;
-    background: #fff;
+    background: #d7f7dd;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 #outputContent h2 {
@@ -74,17 +73,14 @@ form {
 
 #downloadForm button {
     margin-top: 0; /* Reset margin-top for the button */
+    font-size: larger;
 }
 
-#downloadForm {
-    text-align: center;
-    margin-top: 20px; /* Adjust margin as needed */
-    margin-bottom: 20px;
-}
 
 fieldset {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 2px solid #b7c0ee;
+    background-color: #d0d4e9;
 }
 
 legend {
@@ -103,13 +99,6 @@ input {
     box-sizing: border-box; /* Ensure padding is included in width */
 }
 
-fieldset:nth-child(even) {
-    background-color: #9c00005e; /* Alternate background color for even numbered fieldsets */
-}
-
-fieldset:nth-child(odd) {
-    background-color: #e2b13c5e; /* Alternate background color for even numbered fieldsets */
-}
 
 .fieldset-grid {
     display: grid;
@@ -119,16 +108,10 @@ fieldset:nth-child(odd) {
 
 .grid-container{
     display: grid;
-    grid-template-columns: repeat(8, 1fr); /* Adjust the number of columns as needed */
+    grid-template-columns: repeat(9, 1fr); /* Adjust the number of columns as needed */
 
 }
 
-#chassis{
-    background-color: #4b000531;
-}
-#module{
-    background-color: #4b000531;
-}
 #limits{
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
@@ -154,41 +137,38 @@ fieldset:nth-child(odd) {
 
 }
 
-input.showJson{
-    width: auto;
-    height: auto;
-}
-
 
 #downloadForm{
     margin: auto;
     width: 50%;
     padding: 10px;
     grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20%;
 }
 
 #lablelablelable{
     display: flex;
-    align-items: center;
-    justify-content: center;
+
+    background-color: transparent;
+    border: none;
+    font-size: small;
 }
 
 #output{
-    border-width: 1px;
-    border-style: solid;
-    border-color: #410000;
+    border-style: none;
+    background-color: transparent;
 }
 
 #gains.grid-container{
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Adjust the number of columns as needed */
+    grid-template-columns: repeat(3, 1fr); /* Adjust the number of columns as needed */
 }
 
 #moduleGains{
     display: flex;
     align-items: center;
     justify-content: center; 
-    max-width: fit-content;
+    min-width: fit-content;
 }
 
 #driveGains.grid-container{
@@ -196,3 +176,98 @@ input.showJson{
     grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */ 
     grid-template-rows: repeat(3, 1fr);
 }
+
+span {  font-size: 2em;}
+span b { font-size: 100%; font-weight:600; ;}
+span lib {font-family: monospace; font-size: 140%; color: #330c2f;}
+span swerve {
+    font-family:  Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    color: #7067cf;
+}
+
+#output.grid-container{
+    min-width: 350px;
+    grid-template-columns: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /* The switch - the box around the slider */
+ .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #7b287d;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #7067cf;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  } 
