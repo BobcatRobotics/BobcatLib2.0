@@ -85,7 +85,6 @@ form {
 fieldset {
     padding: 10px;
     border: 1px solid #ccc;
-    min-width: 100px;
 }
 
 legend {
@@ -178,4 +177,22 @@ input.showJson{
     border-width: 1px;
     border-style: solid;
     border-color: #410000;
+}
+
+#gains.grid-container{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Adjust the number of columns as needed */
+}
+
+#moduleGains{
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    max-width: fit-content;
+}
+
+#driveGains.grid-container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */ 
+    grid-template-rows: repeat(3, 1fr);
 }

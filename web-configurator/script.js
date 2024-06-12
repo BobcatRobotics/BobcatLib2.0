@@ -104,7 +104,7 @@ function downloadConfig() {
     const mergedConfig = JSON.parse(localStorage.getItem('mergedConfig'));
     if (mergedConfig) {
         // Download the configuration JSON
-        downloadJSON(mergedConfig, 'merged_config.json');
+        downloadJSON(mergedConfig, 'SwerveConstants.json');
     }
 }
 

@@ -53,8 +53,8 @@ public class SwerveConstants {
         public static class Module {
             public static final double maxSpeed = 5.5;
             public static final double maxAccel = 3;
-            public static final double maxAngularVelocity = 5;
-            public static final double maxAngularAccel = 5;
+            public static final Rotation2d maxAngularVelocity = Rotation2d.fromDegrees(360 * 2.5);
+            public static final Rotation2d maxAngularAccel = Rotation2d.fromDegrees(360 * 2.5);
         }
     }
 
