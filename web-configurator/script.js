@@ -1,129 +1,98 @@
-document.querySelectorAll('input').forEach(input => {
-    // Trigger save on both input and change events
-    input.addEventListener('input', updateAndSaveConfig);
-    input.addEventListener('change', updateAndSaveConfig);
-});
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('#moduleForm');
+    const configForm = document.querySelector('#configForm');
+    const outputContent = document.querySelector('#outputContent');
+    const downloadButton = document.querySelector('#wickedcooldownloadbutton');
+    const useFocCheckbox = document.querySelector('#use_foc');
+    const voltageFFGains = document.querySelector('#voltage_ff_gains');
+    const showJson = document.querySelector('#showJson');
 
-// Event listener for the moduleForm to save configuration
-document.getElementById('moduleForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    updateAndSaveConfig();
-});
-
-// Event listener for the configForm to save configuration
-document.getElementById('configForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    updateAndSaveConfig();
-});
-
-// Event listener for the downloadForm to trigger download
-document.getElementById('downloadForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    downloadConfig();
-});
-
-// Function to update and save configuration for both forms
-function updateAndSaveConfig() {
-    // Collect data from both forms
-    const moduleFormData = new FormData(document.getElementById('moduleForm'));
-    const configFormData = new FormData(document.getElementById('configForm'));
-
-    // Convert form data to objects
-    const moduleConfigData = Object.fromEntries(moduleFormData.entries());
-    const swerveDriveConfigData = Object.fromEntries(configFormData.entries());
-
-    // Process checkbox values explicitly
-    //This doesn't work properly
-    moduleConfigData.use_foc = document.getElementById('use_foc').checked;
-
-    // Save individual configurations to local storage
-    localStorage.setItem('moduleConfig', JSON.stringify(moduleConfigData));
-    localStorage.setItem('swerveDriveConfig', JSON.stringify(swerveDriveConfigData));
-    
-    // Merge and save both configurations
-    saveMergedConfig();
-}
-
-// Function to save the merged configuration
-function saveMergedConfig() {
-    const moduleConfigData = JSON.parse(localStorage.getItem('moduleConfig')) || {};
-    const swerveDriveConfigData = JSON.parse(localStorage.getItem('swerveDriveConfig')) || {};
-
-    // Merge both configurations
-    const mergedConfig = { ...moduleConfigData, ...swerveDriveConfigData };
-
-    // Save merged configuration to local storage
-    localStorage.setItem('mergedConfig', JSON.stringify(mergedConfig));
-
-    // Display the merged configuration
-    displayConfig(mergedConfig);
-}
-
-// Function to display module configuration
-function displayModuleConfig(config) {
-    const output = document.getElementById('outputContent');
-    output.innerHTML = ''; // Clear existing content
-    Object.entries(config).forEach(([key, value]) => {
-        const p = document.createElement('p');
-        p.textContent = `${key}: ${value}`;
-        output.appendChild(p);
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        updateConfig();
     });
-}
 
-// Function to display swerve drive configuration
-function displayConfig(config) {
-    const output = document.getElementById('outputContent');
-    output.innerHTML = ''; // Clear existing content
-
-    const showJsonProps = document.getElementById('showJson').checked;
-    if(showJsonProps){
-    Object.entries(config).forEach(([key, value]) => {
-        const p = document.createElement('p');
-        p.textContent = `${key}: ${value}`;
-        output.appendChild(p);
+    configForm.addEventListener('submit', event => {
+        event.preventDefault();
+        updateConfig();
     });
+
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', updateConfig);
+        input.addEventListener('change', updateConfig);
+    });
+
+    downloadButton.addEventListener('click', downloadConfig);
+
+    useFocCheckbox.addEventListener('change', () => {
+        updateConfig();
+    });
+    voltageFFGains.addEventListener('change', () => {
+        updateConfig();
+    });
+
+    function updateConfig() {
+        const moduleFormData = new FormData(form);
+        const configFormData = new FormData(configForm);
+        const config = {};
+
+        moduleFormData.forEach((value, key) => {
+            const inputElement = form.querySelector(`[name="${key}"]`);
+            config[key] = parseValue(value, inputElement);
+        });
+        config.voltage_ff_gains = voltageFFGains.checked;
+        configFormData.forEach((value, key) => {
+            const inputElement = configForm.querySelector(`[name="${key}"]`);
+            config[key] = parseValue(value, inputElement);
+        });
+
+        config.use_foc = useFocCheckbox.checked;
+
+
+        const jsonString = JSON.stringify(config, null, 2);
+        // Save to local storage for persistence
+        localStorage.setItem('config', jsonString);
+        if (showJson.checked) {
+            outputContent.textContent = jsonString;
+        } else {
+            outputContent.textContent = "";
+        }
+
     }
-}
 
-// Function to download JSON
-function downloadJSON(data, filename) {
-    const jsonStr = JSON.stringify(data, null, 2); // Pretty print JSON
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-// Function to download configuration
-function downloadConfig() {
-    const mergedConfig = JSON.parse(localStorage.getItem('mergedConfig'));
-    if (mergedConfig) {
-        // Download the configuration JSON
-        downloadJSON(mergedConfig, 'SwerveConstants.json');
-    }
-}
-
-// Load saved configurations on page load
-window.addEventListener('load', () => {
-    const savedModuleConfig = localStorage.getItem('moduleConfig');
-    if (savedModuleConfig) {
-        const moduleConfigData = JSON.parse(savedModuleConfig);
-        displayModuleConfig(moduleConfigData);
+    function parseValue(value, inputElement) {
+        if (value === '') {
+            if (inputElement && inputElement.type === 'number') {
+                return 0; // Handle empty number fields as 0
+            }
+            return ''; // Handle empty non-number fields as empty strings
+        }
+        if (value === 'true' || value === "on") return true;
+        if (value === 'false') return false;
+        if (!isNaN(value) && inputElement && inputElement.type === 'number') return Number(value);
+        return value;
     }
 
-    const savedSwerveDriveConfig = localStorage.getItem('swerveDriveConfig');
-    if (savedSwerveDriveConfig) {
-        const swerveDriveConfigData = JSON.parse(savedSwerveDriveConfig);
-        displayConfig(swerveDriveConfigData);
+    function downloadConfig() {
+        const jsonString = localStorage.getItem('config');
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'config.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
-    const mergedConfig = JSON.parse(localStorage.getItem('mergedConfig'));
-    if (mergedConfig) {
-        displayConfig(mergedConfig);
+    // Load and display the saved configuration on page load
+    const savedConfig = localStorage.getItem('config');
+    if (savedConfig) {
+        outputContent.textContent = savedConfig;
     }
+
+    // Initial display based on the checkbox state
+    useFocCheckbox.dispatchEvent(new Event('change'));
+    voltageFFGains.dispatchEvent(new Event('change'));
 });

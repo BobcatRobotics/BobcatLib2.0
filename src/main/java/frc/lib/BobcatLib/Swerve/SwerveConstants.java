@@ -19,6 +19,7 @@ import frc.lib.BobcatLib.Team254.ModuleConstants;
 
 
 public class SwerveConstants {
+
     public static final String CANbus = "CANt_open_file"; // if using canivore, put its name here (177 names it's canivores 'CANt_open_file'),
                                                           // otherwise, put an empty string (""), and the default rio canbus will be used
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(false, false);
