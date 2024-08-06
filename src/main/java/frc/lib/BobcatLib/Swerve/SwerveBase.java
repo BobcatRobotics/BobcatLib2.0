@@ -299,13 +299,13 @@ public class SwerveBase extends SubsystemBase{
     public OdometryState getOdometryState() {
         double avgAccel = 0;
         for (SwerveModule module : modules) {
-            if (module.getDriveAcceleration() > 5) {
+            if (module.getDriveAcceleration() > 6) {
                 return OdometryState.THROWOUT;
             }
             avgAccel += module.getDriveAcceleration() / modules.length;
         }
         Logger.recordOutput("Swerve/Odometry/avgAccel", avgAccel);
-        if (avgAccel > 4) {
+        if (avgAccel > 5) {
             return OdometryState.DISTRUST;
         } else {
             return OdometryState.TRUST;
@@ -618,6 +618,21 @@ public class SwerveBase extends SubsystemBase{
         return modules[moduleNumber].getVelocityMetersPerSec();
     }
 
+    /**
+     * 0 - quasi fwd
+     * 1 - quasi bck
+     * 2 - dyn fwd
+     * 3 - dyn bck
+     */
+    public Command[] sysidRoutines(){
+        return new Command[]{
+            charachterizeModules(SysidTest.QUASISTATIC_FORWARD),
+            charachterizeModules(SysidTest.QUASISTATIC_BACKWARD),
+            charachterizeModules(SysidTest.DYNAMIC_FORWARD),
+            charachterizeModules(SysidTest.DYNAMIC_BACKWARD)
+        };
+    }
+
     public Command charachterizeModules(SysidTest test) {
         
         SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(),
@@ -647,5 +662,5 @@ public class SwerveBase extends SubsystemBase{
         }
     }
 
-
+    
 }

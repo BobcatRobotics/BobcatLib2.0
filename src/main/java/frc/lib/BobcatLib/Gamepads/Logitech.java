@@ -17,6 +17,16 @@ public class Logitech{
     public Trigger start;
     public Trigger leftStick;
     public Trigger rightStick;
+    public Trigger povUp;
+    public Trigger povDown;
+    public Trigger povLeft;
+    public Trigger povRight;
+    public Trigger povCenter;
+    public Trigger povDownLeft;
+    public Trigger povDownRight;
+    public Trigger povUpLeft;
+    public Trigger povUpRight;
+    
     public DoubleSupplier leftXAxis;
     public DoubleSupplier leftYAxis;
     public DoubleSupplier rightXAxis;
@@ -52,6 +62,7 @@ public class Logitech{
         gp = new CommandJoystick(port);
         configureTriggers();
         configureAxes();
+        
     }
 
     private void configureTriggers(){
@@ -65,6 +76,17 @@ public class Logitech{
         start = gp.button(10);
         leftStick = gp.button(11);
         rightStick = gp.button(12);
+        povUp = gp.povUp();
+        povDown = gp.povDown();
+        povLeft = gp.povLeft();
+        povRight = gp.povRight();
+        povCenter = gp.povCenter();
+        povDownLeft = gp.povDownLeft();
+        povDownRight = gp.povDownRight();
+        povUpLeft = gp.povUpLeft();
+        povUpRight = gp.povUpRight();
+
+        
     }
 
     private void configureAxes(){

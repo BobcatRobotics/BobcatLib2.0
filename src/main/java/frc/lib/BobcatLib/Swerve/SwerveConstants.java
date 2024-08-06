@@ -159,7 +159,7 @@ public class SwerveConstants {
             public static final int angleMotorID = 2;
             public static final int driveMotorID = 1;
 
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(353.3); //round to tenths
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(288.7); // 353.3 round to tenths
 
             public static final String name = "front-left";
 
@@ -174,7 +174,7 @@ public class SwerveConstants {
             public static final int driveMotorID = 3;
             public static final String name = "front-right";
 
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(188.7); 
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(31.6); 
             public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
                     angleOffset, name);
         }
@@ -184,7 +184,7 @@ public class SwerveConstants {
             public static final int cancoderID = 3;
             public static final int angleMotorID = 6;
             public static final int driveMotorID = 5;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(54.0); 
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(22.8); 
             public static final String name = "back-left";
 
             public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
@@ -196,7 +196,7 @@ public class SwerveConstants {
             public static final int cancoderID = 4;
             public static final int angleMotorID = 8;
             public static final int driveMotorID = 7;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(105.0);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(232.9);
             public static final String name = "back-right";
 
             public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
