@@ -1,6 +1,6 @@
 {
-  "fileName": "YourLibTemplate.json",
-  "name": "YourLibTemplate",
+  "fileName": "BobcatLib.json",
+  "name": "BobcatLib",
   "version": "0.0.0.1",
   "frcYear": "2024",
   "uuid": "{GUID}",
@@ -10,8 +10,8 @@
   "jsonUrl": "{YourLibProjectGithubPagesDirectory}/YourLibTemplate.json",
   "javaDependencies": [
     {
-      "groupId": "YourLibTemplate",
-      "artifactId": "YourLibTemplate-java",
+      "groupId": "BobcatLib",
+      "artifactId": "BobcatLib-java",
       "version": "0.0.0.1"
     }
   ],
