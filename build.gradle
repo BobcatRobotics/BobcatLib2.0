@@ -8,6 +8,7 @@ plugins {
     id 'edu.wpi.first.GradleVsCode' version '2.1.0'
     id "edu.wpi.first.GradleRIO" version "2024.3.2"
     id "com.diffplug.spotless" version "6.11.0"
+    id("io.freefair.lombok") version "8.6"
 }
 
 repositories {
