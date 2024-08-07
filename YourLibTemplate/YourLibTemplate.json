@@ -1,0 +1,22 @@
+{
+  "fileName": "YourLibTemplate.json",
+  "name": "YourLibTemplate",
+  "version": "0.0.0.1",
+  "frcYear": "2024",
+  "uuid": "{GUID}",
+  "mavenUrls": [
+    "{YourLibProjectGithubPagesDirectory}/repos"
+  ],
+  "jsonUrl": "{YourLibProjectGithubPagesDirectory}/YourLibTemplate.json",
+  "javaDependencies": [
+    {
+      "groupId": "YourLibTemplate",
+      "artifactId": "YourLibTemplate-java",
+      "version": "0.0.0.1"
+    }
+  ],
+  "jniDependencies": [
+  ],
+  "cppDependencies": [
+  ]
+}
