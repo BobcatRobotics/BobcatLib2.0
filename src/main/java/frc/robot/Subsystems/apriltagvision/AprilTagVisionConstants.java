@@ -24,11 +24,11 @@ public class AprilTagVisionConstants {
   public static final Pose3d[] cameraPoses =
             new Pose3d[] {
               new Pose3d(
-                  Units.inchesToMeters(9.735),
-                  Units.inchesToMeters(9.974),
-                  Units.inchesToMeters(8.837),
-                  new Rotation3d(0.0, Units.degreesToRadians(-28.125), 0.0)
-                      .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(30.0)))),
+                  -1*Units.inchesToMeters(6.5),
+                  Units.inchesToMeters(0),
+                  Units.inchesToMeters(10),
+                  new Rotation3d(0.0, Units.degreesToRadians(-30), Units.degreesToRadians(180.0))),
+                      // .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(30.0)))),
               new Pose3d(
                   Units.inchesToMeters(9.735),
                   Units.inchesToMeters(-9.974),
@@ -42,7 +42,7 @@ public class AprilTagVisionConstants {
 
   public static final String[] cameraIds =
             new String[] {
-              "cam0",
+              "/dev/video0",
               "cam1"
             };
 }

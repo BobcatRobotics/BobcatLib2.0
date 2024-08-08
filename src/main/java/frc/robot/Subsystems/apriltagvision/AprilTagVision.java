@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 
 import static frc.robot.Subsystems.apriltagvision.AprilTagVisionConstants.ambiguityThreshold;
@@ -52,6 +53,14 @@ public class AprilTagVision extends SubsystemBase {
   private final Swerve swerve;
 
   public AprilTagVision(Swerve swerve, Supplier<AprilTagLayoutType> aprilTagTypeSupplier, AprilTagVisionIO... io) {
+
+    Logger.recordOutput("CamPosNT",               new Pose3d(
+                  -1*Units.inchesToMeters(6.5),
+                  Units.inchesToMeters(0),
+                  Units.inchesToMeters(10),
+                  new Rotation3d(0.0, Units.degreesToRadians(-30), Units.degreesToRadians(180.0)))
+);
+
     this.aprilTagTypeSupplier = aprilTagTypeSupplier;
     this.io = io;
     this.swerve = swerve;

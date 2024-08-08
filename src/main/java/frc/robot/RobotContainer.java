@@ -74,7 +74,16 @@ public class RobotContainer {
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module2Constants.constants), //bl
                                                 new SwerveModuleIOFalcon(SwerveConstants.Module.Module3Constants.constants), //br
                                                 cameras);
+
+                                // swerve = new Swerve(new GyroIO() {
+                                // },
+                                //                 new SwerveModuleIOSim(),
+                                //                 new SwerveModuleIOSim(),
+                                //                 new SwerveModuleIOSim(),
+                                //                 new SwerveModuleIOSim(),
+                                //                 cameras);
                                 sysid = new Sysid(swerve);
+                                
                                 northstar =new AprilTagVision(swerve, this::getLayout, new AprilTagVisionIONorthstar(this::getLayout, 0));
 
 

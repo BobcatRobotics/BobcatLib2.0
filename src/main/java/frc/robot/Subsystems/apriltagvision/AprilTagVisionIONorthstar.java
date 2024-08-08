@@ -15,18 +15,20 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.util.function.Supplier;
 import frc.robot.Subsystems.apriltagvision.AprilTagVisionFieldConstants.AprilTagLayoutType;
 import frc.lib.Team6328.Alert;
 
 public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
   private static final int cameraResolutionWidth = 1600;
-  private static final int cameraResolutionHeight = 1200;
+  private static final int cameraResolutionHeight = 1304;
   private static final int cameraAutoExposure = 1;
-  private static final int cameraExposure = 10;
-  private static final int cameraGain = 25;
+  // private static final int cameraExposure = 10;
+  private static final int cameraGain = 2;
   private static final int maxFPS = 50;
-
+  private int cameraExposure = (int)SmartDashboard.getNumber("cameraExposure", 10);
   private final Supplier<AprilTagLayoutType> aprilTagTypeSupplier;
   private AprilTagLayoutType lastAprilTagType = null;
 
