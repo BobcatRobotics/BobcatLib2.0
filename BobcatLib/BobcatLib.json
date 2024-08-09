@@ -3,7 +3,7 @@
   "name": "BobcatLib",
   "version": "0.0.0.1",
   "frcYear": "2024",
-  "uuid": "{GUID}",
+  "uuid": "54e0bd1e-8eee-49ad-96b1-ad3abd3676e3", 
   "mavenUrls": [
     "{YourLibProjectGithubPagesDirectory}/repos"
   ],
