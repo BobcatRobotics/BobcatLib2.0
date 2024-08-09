@@ -7,42 +7,89 @@
 
 package frc.robot.Subsystems.apriltagvision;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.function.Supplier;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Subsystems.apriltagvision.AprilTagVisionFieldConstants.AprilTagLayoutType;
+import lombok.Getter;
 
 public class AprilTagVisionConstants {
-  public static final double ambiguityThreshold = 0.4;
-  public static final double targetLogTimeSecs = 0.1;
-  public static final double fieldBorderMargin = 0.5;
-  public static final double zMargin = 0.75;
-  public static final double xyStdDevCoefficient = 0.005;
-  public static final double thetaStdDevCoefficient = 0.01;
+  public static final double fieldLength = Units.inchesToMeters(651.223);
+  public static final double fieldWidth = Units.inchesToMeters(323.277);
 
-  public static final double[] stdDevFactors =new double[] {1.0, 1.0};
+  public static final double ambiguityThreshold;
+  public static final double targetLogTimeSecs;
+  public static final double fieldBorderMargin;
+  public static final double zMargin;
+  public static final double xyStdDevCoefficient;
+  public static final double thetaStdDevCoefficient;
 
-  public static final Pose3d[] cameraPoses =
-            new Pose3d[] {
-              new Pose3d(
-                  -1*Units.inchesToMeters(6.5),
-                  Units.inchesToMeters(0),
-                  Units.inchesToMeters(10),
-                  new Rotation3d(0.0, Units.degreesToRadians(-30), Units.degreesToRadians(180.0))),
-                      // .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(30.0)))),
-              new Pose3d(
-                  Units.inchesToMeters(9.735),
-                  Units.inchesToMeters(-9.974),
-                  Units.inchesToMeters(8.837),
-                  new Rotation3d(0.0, Units.degreesToRadians(-28.125), 0.0)
-                      .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(-30.0))))
-            };
+  public static final double[] stdDevFactors;
 
-  public static final String[] instanceNames =
-        new String[] {"northstar0", "northstar1"};
+  public static final Pose3d[] cameraPoses;
 
-  public static final String[] cameraIds =
-            new String[] {
-              "/dev/video0",
-              "cam1"
-            };
+  public static final String[] instanceNames;
+
+  public static final String[] cameraIds;
+  private int[] cameraResolutionWidth;
+  private static final int[] cameraResolutionHeight;
+  private static final int cameraAutoExposure;
+  // private static final int cameraExposure = 10;
+  private static final int cameraGain[];
+  private static final int maxFPS[];
+  private int cameraExposure[];
+  // private final Supplier<AprilTagLayoutType> aprilTagTypeSupplier;
+  
+  public static final double aprilTagWidth = Units.inchesToMeters(6.50);
+  public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.OFFICIAL;
+
+  @Getter
+  public enum AprilTagLayoutType {
+    OFFICIAL("2024-official"),
+    // SPEAKERS_ONLY("2024-speakers"),
+    // AMPS_ONLY("2024-amps"),
+    // WPI("2024-wpi"),
+    CUSTOM("custom"),
+    CUSTOM2("custom2");
+
+    private AprilTagLayoutType(String name) {
+        try {
+          layout =
+              new AprilTagFieldLayout(
+                  Path.of(Filesystem.getDeployDirectory().getPath(), "apriltags", name + ".json"));
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      
+      if (layout == null) {
+        layoutString = "";
+      } else {
+        try {
+          layoutString = new ObjectMapper().writeValueAsString(layout);
+        } catch (JsonProcessingException e) {
+          throw new RuntimeException(
+              "Failed to serialize AprilTag layout JSON " + toString() + "for Northstar");
+        }
+      }
+    }
+
+    private final AprilTagFieldLayout layout;
+    private final String layoutString;
+  }
+
+  public AprilTagVisionConstants(int[] cameraResolutionWidth){
+    this.cameraResolutionWidth = cameraResolutionWidth;
+
+  }
+
 }

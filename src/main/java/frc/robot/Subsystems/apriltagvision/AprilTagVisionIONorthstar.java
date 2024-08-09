@@ -9,6 +9,7 @@ package frc.robot.Subsystems.apriltagvision;
 
 import static frc.robot.Subsystems.apriltagvision.AprilTagVisionConstants.*;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -22,14 +23,38 @@ import frc.robot.Subsystems.apriltagvision.AprilTagVisionFieldConstants.AprilTag
 import frc.lib.Team6328.Alert;
 
 public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
-  private static final int cameraResolutionWidth = 1600;
-  private static final int cameraResolutionHeight = 1304;
-  private static final int cameraAutoExposure = 1;
+  public double ambiguityThreshold;
+  public double targetLogTimeSecs;
+  public double fieldBorderMargin;
+  public double zMargin;
+  public double xyStdDevCoefficient;
+  public double thetaStdDevCoefficient;
+
+  public double[] stdDevFactors;
+
+  public Pose3d[] cameraPoses;
+
+  public String[] instanceNames;
+
+  public String[] cameraIds;
+  private int[] cameraResolutionWidth;
+  private int[] cameraResolutionHeight;
+  private int[] cameraAutoExposure;
   // private static final int cameraExposure = 10;
-  private static final int cameraGain = 2;
-  private static final int maxFPS = 50;
-  private int cameraExposure = (int)SmartDashboard.getNumber("cameraExposure", 10);
+  private int[] cameraGain;
+  private int[] maxFPS;
+  private int[] cameraExposure;
+
   private final Supplier<AprilTagLayoutType> aprilTagTypeSupplier;
+
+  // private static final int cameraResolutionWidth = 1600;
+  // private static final int cameraResolutionHeight = 1304;
+  // private static final int cameraAutoExposure = 1;
+  // // private static final int cameraExposure = 10;
+  // private static final int cameraGain = 2;
+  // private static final int maxFPS = 50;
+  // private int cameraExposure = (int)SmartDashboard.getNumber("cameraExposure", 10);
+  // private final Supplier<AprilTagLayoutType> aprilTagTypeSupplier;
   private AprilTagLayoutType lastAprilTagType = null;
 
   private final StringPublisher tagLayoutPublisher;
@@ -41,12 +66,15 @@ public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
   private final Alert disconnectedAlert;
   private final Timer disconnectedTimer = new Timer();
 
-  public AprilTagVisionIONorthstar(Supplier<AprilTagLayoutType> aprilTagTypeSupplier, int index) {
+  public AprilTagVisionIONorthstar(Supplier<AprilTagLayoutType> aprilTagTypeSupplier, int index, AprilTagVisionConstants aprilTagVisionConstants) {
     this.aprilTagTypeSupplier = aprilTagTypeSupplier;
+    this.cameraResolutionWidth = cameraResolutionWidth;
+    this.cameraResolutionHeight = cameraResolutionHeight;
+    
     var northstarTable = NetworkTableInstance.getDefault().getTable(instanceNames[index]);
     var configTable = northstarTable.getSubTable("config");
     configTable.getStringTopic("camera_id").publish().set(cameraIds[index]);
-    configTable.getIntegerTopic("camera_resolution_width").publish().set(cameraResolutionWidth);
+    configTable.getIntegerTopic("camera_resolution_width").publish().set(cameraResolutionWidth[index]);
     configTable.getIntegerTopic("camera_resolution_height").publish().set(cameraResolutionHeight);
     configTable.getIntegerTopic("camera_auto_exposure").publish().set(cameraAutoExposure);
     configTable.getIntegerTopic("camera_exposure").publish().set(cameraExposure);
