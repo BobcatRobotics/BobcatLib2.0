@@ -8,189 +8,247 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import BobcatLib.Team254.ModuleConstants;
 
 public class SwerveConstants {
-    public static final double stickDeadband = 0.01;
-    public static final ReplanningConfig replanningConfig = new ReplanningConfig(false, false);
-    public static final Rotation2d holoAlignTolerance = Rotation2d.fromDegrees(0);
-    public static final int pigeonID = 0;
-    public static final boolean useFOC = true;
-    public static final double angleGearRatio = ((150.0 / 7.0) / 1.0);
-    public static final double driveGearRatio = (5.36 / 1.0);
+    public SwerveConstants(
+        double stickDeadband, ReplanningConfig replanningConfig, Rotation2d holoAlignTolerance, int pigeonID,
+        boolean useFOC, double angleGearRatio, double driveGearRatio, KinematicsConstants kinematicsConstants,
+        SwerveSpeedLimits speedLimits, HardwareConfigs hardwareConfigs, OdometryConstants odometryConstants,
+        SwerveModuleConfigs moduleConfigs){
+        this.stickDeadband = stickDeadband;
+        this.replanningConfig = replanningConfig;
+        this.holoAlignTolerance = holoAlignTolerance;
+        this.pigeonID = pigeonID;
+        this.useFOC = useFOC;
+        this.angleGearRatio = angleGearRatio;
+        this.driveGearRatio = driveGearRatio;
+        this.kinematicsConstants = kinematicsConstants;
+        this.speedLimits = speedLimits;
+        this.hardwareConfigs = hardwareConfigs;
+        this.odometryConstants = odometryConstants;
+        this.moduleConfigs = moduleConfigs;
+    }
 
-    public static class Kinematics {
-        public static final double wheelBase = 0.521; // meters
-        public static final double trackWidth = 0.521;
-        public static final double driveBaseRadius = Math.sqrt(2 * Math.pow(wheelBase / 2, 2));
-        public static final double wheelCircumference = Units.inchesToMeters(4) * Math.PI;
-        public static final Translation2d[] moduleTranslations = new Translation2d[] {
+    public double stickDeadband = 0; 
+    public ReplanningConfig replanningConfig = new ReplanningConfig();
+    public Rotation2d holoAlignTolerance = Rotation2d.fromDegrees(0);
+    public int pigeonID = 0;
+    public boolean useFOC = true;
+    public double angleGearRatio = ((150.0 / 7.0) / 1.0);
+    public double driveGearRatio = (5.36 / 1.0);
+    public KinematicsConstants kinematicsConstants;
+    public SwerveSpeedLimits speedLimits;
+    public HardwareConfigs hardwareConfigs;
+    public OdometryConstants odometryConstants;
+    public SwerveModuleConfigs moduleConfigs;
+
+    public class KinematicsConstants {
+        /**
+         * All measurments in METERS!!!!!!!
+         * @param wheelBase distance between front and back wheels
+         * @param trackWidth distance between left and right wheels
+         * @param wheelCircumference you got this one
+         */
+        public KinematicsConstants(double wheelBase, double trackWidth,
+        double wheelCircumference){
+            this.wheelBase = wheelBase;
+            this.trackWidth = trackWidth;
+            this.wheelCircumference = wheelCircumference;
+            driveBaseRadius = Math.sqrt(2 * Math.pow(wheelBase / 2, 2));
+            moduleTranslations =  
+            new Translation2d[] {
                 new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
                 new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
                 new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
                 new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0)
-        };
-        public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(moduleTranslations);
+            };
+            kinematics = new SwerveDriveKinematics(moduleTranslations);
+        }
+        public double wheelBase; // meters
+        public double trackWidth;
+        public double driveBaseRadius;
+        public double wheelCircumference;
+        public Translation2d[] moduleTranslations;
+        public SwerveDriveKinematics kinematics;
     }
 
-    public static class Limits {
-        public static class Chassis {
-            public static final double maxSpeed = 4.5; // meters
-            public static final double maxAccel = 3;
-            public static final Rotation2d maxAngularVelocity = Rotation2d.fromDegrees(360 * 2.5);
-            public static final Rotation2d maxAngularAccel = Rotation2d.fromDegrees(360 / 2);
-        }
 
-        public static class Module {
-            public static final double maxSpeed = 5.5;
-            public static final double maxAccel = 3;
-            public static final double maxAngularVelocity = 5;
-            public static final double maxAngularAccel = 5;
-        }
-    }
-
-    /**
-     * also contains gains
-     */
-    public static class Configs {
-        public static class Auto {
-            public static final double rotKP = 4;
-            public static final double rotKI = 0;
-            public static final double rotKD = 0;
-            public static final double transKP = 6;
-            public static final double transKI = 0;
-            public static final double transKD = 1.4;
-            public static final PIDConstants transPidConstants = new PIDConstants(transKP, transKI, transKD);
-            public static final PIDConstants rotPidConstants = new PIDConstants(rotKP, rotKI, rotKD);
-        }
-
-        public static class Teleop {
-            public static final double rotKP = 2;
-            public static final double rotKI = 0;
-            public static final double rotKD = 0;
-            public static final double transKP = 10;
-            public static final double transKI = 0;
-            public static final double transKD = 0;
-            public static final PIDConstants transPidConstants = new PIDConstants(transKP, transKI, transKD);
-            public static final PIDConstants rotPidConstants = new PIDConstants(rotKP, rotKI, rotKD);
-        }
-
-        public static class AutoAlign {
-            public static final Rotation2d tolerance = Rotation2d.fromDegrees(2);
-            public static final double rotationKP = 3.5;
-            public static final double rotationKI = 0;
-            public static final double rotationKD = 0;
-            public static final PIDConstants rotPidConstants = new PIDConstants(rotationKP, rotationKI, rotationKD);
-        }
-
-        public static class Module {
-            public static class Angle {
-                public static final double kP = 0.3;
-                public static final double kI = 0;
-                public static final double kD = 0;
-                public static final double kS = 0;
-                public static final double kV = 0;
-                public static final double kA = 0;
-                public static final InvertedValue angleMotorInvert = InvertedValue.Clockwise_Positive;
-                public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
-                public static final boolean angleSupplyCurrentLimitEnable = true;
-                public static final double angleSupplyCurrentLimit = 25.0;
-                public static final double angleSupplyCurrentThreshold = 40.0;
-                public static final double angleSupplyTimeThreshold = 0.1;
-                public static final boolean angleStatorCurrentLimitEnable = true;
-                public static final double angleStatorCurrentLimit = 20;
-            }
-
-            public static class Drive {
-                public static final double kS = 0.14267 / 12;
-                public static final double kA = 2.0718 / 12;
-                public static final double kV = 0.42622 / 12;
-                public static final double kP = 0.1;
-                public static final double kI = 0;
-                public static final double kD = 0;
-                public static final InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
-                public static final boolean driveSupplyCurrentLimitEnable = true;
-                public static final double driveSupplyCurrentLimit = 35.0;
-                public static final double driveSupplyCurrentThreshold = 60.0;
-                public static final double driveSupplyTimeThreshold = 0.1;
-                public static final boolean driveStatorCurrentLimitEnable = true;
-                public static final double driveStatorCurrentLimit = 60;
-                public static final double openLoopRamp = 0.25;
-                public static final double closedLoopRamp = 0.0;
-            }
-
-            public static class CANCoder {
-                public static final AbsoluteSensorRangeValue sensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-                public static final SensorDirectionValue sensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-            }
-
-        }
-    }
-
-    public static class Odometry {
-        // odometry stuff only, vision stuff is in LimelightConstants
-
-        public static final Matrix<N3, N1> trustStdDevs = VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(1));
-        public static final Matrix<N3, N1> distrustStdDevs = VecBuilder.fill(0.15, 0.15, Units.degreesToRadians(1));
-        public static final double odometryThrowoutAccel = 5.5; // m/s^2
-        public static final double odometryDistrustAccel = 4; // m/s^2
-    }
-
-    public static class Module {
-        /*
-         * Offsets must be done with bevels facing towards spivit motor
+    public class SpeedLimit{
+        public double maxVelocity;
+        public double maxAccel;
+        public Rotation2d maxAngularVelocity;
+        public Rotation2d maxAngularAccel;
+        /**
+         * linear mesurements in meters
          */
-        /* FRONT LEFT */
-        public static final class Module0Constants {
-            public static final int cancoderID = 1;
-            public static final int angleMotorID = 2;
-            public static final int driveMotorID = 1;
-
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(285.46875);
-
-            public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
-                    angleOffset);
+        public SpeedLimit(double maxVelocity, double maxAccel, Rotation2d maxAngularVelocity, Rotation2d maxAngularAccel){  
+            this.maxVelocity = maxVelocity;
+            this.maxAccel = maxAccel;
+            this.maxAngularAccel = maxAngularAccel;
+            this.maxAngularVelocity = maxAngularVelocity;
         }
-
-        /* FRONT RIGHT */
-        public static final class Module1Constants {
-            public static final int cancoderID = 2;
-            public static final int angleMotorID = 4;
-            public static final int driveMotorID = 3;
-
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(27.861328125); 
-            public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
-                    angleOffset);
+    }
+    public class SwerveSpeedLimits {
+        public SpeedLimit chassisLimits;
+        public SpeedLimit moduleLimits;
+        /**
+         * @param chassisLimits speed limits of the overall drivetrain
+         * @param moduleLimitss speed limits of each individual module
+         */
+        public SwerveSpeedLimits(SpeedLimit chassisLimits, SpeedLimit moduleLimits){
+            this.chassisLimits = chassisLimits;
+            this.moduleLimits = moduleLimits;
         }
+    }
 
-        /* BACK LEFT */
-        public static final class Module2Constants {
-            public static final int cancoderID = 3;
-            public static final int angleMotorID = 6;
-            public static final int driveMotorID = 5;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(176.30859375); 
 
-            public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
-                    angleOffset);
+    public class SwervePIDConfig{
+        public double rotKP;
+        public double rotKI;
+        public double rotKD;
+        public double transKP;
+        public double transKI;
+        public double transKD;
+        public PIDConstants transPidConstants;
+        public PIDConstants rotPidConstants;
+         
+        public SwervePIDConfig(double rotKP, double rotKI, double rotKD, 
+        double transKP, double transKI, double transKD){
+        this.rotKP = rotKP;
+        this.rotKI = rotKI;
+        this.rotKD = rotKD;
+        this.transKP = transKP;
+        this.transKI = transKI;
+        this.transKD = transKD;
         }
+    }
+    public class SwerveMotorConfig{
+        public double kP;
+        public double kI;
+        public double kD;
+        public double kS;
+        public double kV;
+        public double kA;
+        public InvertedValue motorInvert;
+        public NeutralModeValue neutralMode;
+        public boolean supplyCurrentLimitEnable;
+        public double supplyCurrentLimit;
+        public double supplyCurrentThreshold;
+        public double supplyTimeThreshold;
+        public boolean statorCurrentLimitEnable;
+        public double statorCurrentLimit;
+        public double openLoopRamp;
+        public double closedLoopRamp;
+        
+        /**
+         * see docs on current limiting for more info
+         * https://www.chiefdelphi.com/t/current-limiting-on-swerve/454392
+         */
+        public SwerveMotorConfig(double rotKP, double rotKI, double rotKD, 
+        double transKP, double transKI, double transKD, InvertedValue motorInvert, NeutralModeValue neutralMode,
+        boolean supplyCurrentLimitEnable, double supplyCurrentLimit, double supplyCurrentThreshold, double supplyTimeThreshold,
+        boolean statorCurrentLimitEnable, double statorCurrentLimit, double openLoopRamp, double closedLoopRamp){
+        this.kP = rotKP;
+        this.kI = rotKI;
+        this.kD = rotKD;
+        this.kS = transKP;
+        this.kV = transKI;
+        this.kA = transKD;
+        this.motorInvert = motorInvert;
+        this.neutralMode = neutralMode;
+        this.supplyCurrentLimitEnable = supplyCurrentLimitEnable;
+        this.supplyCurrentLimit = supplyCurrentLimit;
+        this.supplyCurrentThreshold = supplyCurrentThreshold;
+        this.supplyTimeThreshold = supplyTimeThreshold;
+        this.statorCurrentLimitEnable = statorCurrentLimitEnable;
+        this.statorCurrentLimit = statorCurrentLimit;
+        this.openLoopRamp = openLoopRamp;
+        this.closedLoopRamp = closedLoopRamp;  
+        }
+    }
 
-        /* BACK RIGHT */
-        public static final class Module3Constants {
-            public static final int cancoderID = 4;
-            public static final int angleMotorID = 8;
-            public static final int driveMotorID = 7;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(321.153);
+    public class HardwareConfigs {
+        SwervePIDConfig autoConfig;
+        SwervePIDConfig teleopConfig;
+        SwervePIDConfig autoAlignConfig;
+        SwerveMotorConfig angleMotorConfig;
+        SwerveMotorConfig driveMotorConfig;
+        AbsoluteSensorRangeValue cancoderSensorRange;
+        SensorDirectionValue cancoderSensorDirection;
 
-            public static final ModuleConstants constants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID,
-                    angleOffset);
+       /**
+        * gains taken from sysid should likely need to be devided by 12 to convert from volts to percent
+        * @param autoConfig rotation and translation gains to use in auto
+        * @param teleopConfig rotation and translation gains to use in teleop
+        * @param autoAlignConfig rotation gains to use in auto, translation gains will not be used and can be set to any number
+        */
+       public HardwareConfigs(
+        SwervePIDConfig autoConfig, SwervePIDConfig teleopConfig, SwervePIDConfig autoAlignConfig,
+        SwerveMotorConfig angleMotorConfig, SwerveMotorConfig driveMotorConfig, 
+        AbsoluteSensorRangeValue cancoderSensorRange, SensorDirectionValue cancoderSensorDirection){
+        this.autoConfig = autoConfig;
+        this.teleopConfig = teleopConfig;
+        this.autoAlignConfig = autoAlignConfig;
+        this.angleMotorConfig = angleMotorConfig;
+        this.driveMotorConfig = driveMotorConfig;
+        this.cancoderSensorDirection = cancoderSensorDirection;
+        this.cancoderSensorRange = cancoderSensorRange;
+       }
+    }
+
+    public class OdometryConstants {
+        // odometry stuff only, vision stuff is in LimelightConstants
+        /**
+         * units based in meters
+         * @param trustStdDevs std devs to use when we trust the measurements
+         * @param distrustStdDevs std devs to use when the measurements are unreliable
+         * @param odometryThrowoutAccel acceleration beyond this value will throw out odometry measurements
+         * @param odometryDistrustAccel aceceleration beyond this value will use distrust measurements
+         */
+        public OdometryConstants(Matrix<N3, N1> trustStdDevs, Matrix<N3, N1> distrustStdDevs,
+         double odometryThrowoutAccel, double odometryDistrustAccel){
+            this.trustStdDevs = trustStdDevs;
+            this.distrustStdDevs = distrustStdDevs;
+            this.odometryDistrustAccel = odometryDistrustAccel;
+            this.odometryThrowoutAccel = odometryThrowoutAccel;
+        }
+        public Matrix<N3, N1> trustStdDevs;
+        public Matrix<N3, N1> distrustStdDevs;
+        public double odometryThrowoutAccel; // m/s^2
+        public double odometryDistrustAccel; // m/s^2
+    }
+
+    public class ModuleConfig{
+        public int cancoderID;
+        public int angleMotorID;
+        public int driveMotorID;
+        public Rotation2d angleOffset;
+        public ModuleConstants moduleConstants;
+
+        public ModuleConfig(int cancoderID, int angleMotorID, int driveMotorID, Rotation2d angleOffset){
+            this.cancoderID = cancoderID;
+            this.angleMotorID = angleMotorID;
+            this.driveMotorID = driveMotorID;
+            this.angleOffset = angleOffset;
+            this.moduleConstants = new ModuleConstants(driveMotorID, angleMotorID, cancoderID, angleOffset);
+        }
+    }
+    public static class SwerveModuleConfigs {
+        ModuleConfig frontLeft;
+        ModuleConfig frontRight;
+        ModuleConfig backLeft;
+        ModuleConfig backRight;  
+        public SwerveModuleConfigs(ModuleConfig frontLeft, ModuleConfig frontRight, ModuleConfig backLeft, ModuleConfig backRight){
+            this.frontLeft = frontLeft;
+            this.frontRight = frontRight;
+            this.backLeft = backLeft;
+            this.backRight = backRight;
         }
     }
 

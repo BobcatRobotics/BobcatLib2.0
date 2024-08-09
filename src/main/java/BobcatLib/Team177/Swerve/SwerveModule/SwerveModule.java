@@ -10,9 +10,9 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import BobcatLib.Team177.Swerve.SwerveConstants;
-import BobcatLib.Team177.Swerve.SwerveConstants.Configs;
-import BobcatLib.Team177.Swerve.SwerveConstants.Limits;
+import BobcatLib.Team177.Swerve.SwerveConstantsOLD;
+import BobcatLib.Team177.Swerve.SwerveConstantsOLD.Configs;
+import BobcatLib.Team177.Swerve.SwerveConstantsOLD.Limits;
 
 public class SwerveModule {
     private final SwerveModuleIO io;
@@ -50,7 +50,7 @@ public class SwerveModule {
         int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together
         odometryPositions = new SwerveModulePosition[sampleCount];
         for (int i = 0; i < sampleCount; i++) {
-            double positionMeters = inputs.odometryDrivePositionsRad[i] * (SwerveConstants.Kinematics.wheelCircumference / (2 * Math.PI));
+            double positionMeters = inputs.odometryDrivePositionsRad[i] * (SwerveConstantsOLD.Kinematics.wheelCircumference / (2 * Math.PI));
             Rotation2d angle =
                 inputs.odometryAnglePositions[i].minus(
                     inputs.offset != null ? inputs.offset : new Rotation2d());
@@ -79,7 +79,7 @@ public class SwerveModule {
         // Update velocity based on turn error
         optimizedState.speedMetersPerSecond *= Math.cos(angleController.getPositionError());
 
-        double velocity = optimizedState.speedMetersPerSecond / SwerveConstants.Kinematics.wheelCircumference;
+        double velocity = optimizedState.speedMetersPerSecond / SwerveConstantsOLD.Kinematics.wheelCircumference;
         double velocityOut = MathUtil.clamp(
                 driveController.calculate(inputs.driveVelocityRotPerSec, velocity)
                         + driveFeedforward.calculate(velocity),
@@ -131,7 +131,7 @@ public class SwerveModule {
      * @return drive motor position, in meters
      */
     public double getPositionMeters() {
-        return inputs.drivePositionRot * SwerveConstants.Kinematics.wheelCircumference;
+        return inputs.drivePositionRot * SwerveConstantsOLD.Kinematics.wheelCircumference;
     }
 
     /**
@@ -139,7 +139,7 @@ public class SwerveModule {
      * @return velocity, in meter per second
      */
     public double getVelocityMetersPerSec() {
-        return inputs.driveVelocityRotPerSec * SwerveConstants.Kinematics.wheelCircumference;
+        return inputs.driveVelocityRotPerSec * SwerveConstantsOLD.Kinematics.wheelCircumference;
     }
 
     /**

@@ -8,7 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import BobcatLib.Team177.Swerve.SwerveConstants.Limits;
+import BobcatLib.Team177.Swerve.SwerveConstantsOLD.Limits;
 
 public class TeleopSwerve extends Command {
     private SwerveBase swerve;
@@ -63,9 +63,9 @@ public class TeleopSwerve extends Command {
     public void execute() {
 
         /* Get Values, Deadband */
-        double translationVal = MathUtil.applyDeadband(translation.getAsDouble(), SwerveConstants.stickDeadband);
-        double strafeVal = MathUtil.applyDeadband(strafe.getAsDouble(), SwerveConstants.stickDeadband);
-        double rotationVal = MathUtil.applyDeadband(rotation.getAsDouble(), SwerveConstants.stickDeadband); // from 0 to one
+        double translationVal = MathUtil.applyDeadband(translation.getAsDouble(), SwerveConstantsOLD.stickDeadband);
+        double strafeVal = MathUtil.applyDeadband(strafe.getAsDouble(), SwerveConstantsOLD.stickDeadband);
+        double rotationVal = MathUtil.applyDeadband(rotation.getAsDouble(), SwerveConstantsOLD.stickDeadband); // from 0 to one
 
         /*
          * If joysticks not receiving any normal input, use twist values for fine adjust

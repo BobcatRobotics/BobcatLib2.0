@@ -19,7 +19,7 @@ public class GyroIOPigeon2 implements GyroIO {
     private final StatusSignal<Double> yawVelocity;
 
     public GyroIOPigeon2() {
-        pigeon = new Pigeon2(SwerveConstants.pigeonID);
+        pigeon = new Pigeon2(SwerveConstantsOLD.pigeonID);
         Pigeon2Configuration config = new Pigeon2Configuration();
         pigeon.getConfigurator().apply(config);
         // config.MountPose.MountPoseYaw = 180;
