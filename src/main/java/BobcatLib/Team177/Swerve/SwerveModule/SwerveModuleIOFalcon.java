@@ -10,14 +10,17 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import BobcatLib.Team177.Swerve.PhoenixOdometryThread;
+import BobcatLib.Team177.Swerve.SwerveConstants.SwerveMotorConfig;
 import BobcatLib.Team254.ModuleConstants;
-import BobcatLib.Team177.Swerve.SwerveConstantsOLD;
+
 public class SwerveModuleIOFalcon implements SwerveModuleIO {
     private final TalonFX driveMotor;
     private final TalonFX angleMotor;
@@ -44,10 +47,19 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
     private final Queue<Double> anglePositionQueue;
     private final StatusSignal<Double> angleAbsolutePosition;
     private VoltageOut sysidControl = new VoltageOut(0); 
+    private double driveGearRatio;
+    private double angleGearRatio;
+    public SwerveMotorConfig driveMotorConfig;
+    public SwerveMotorConfig angleMotorConfig;
+    AbsoluteSensorRangeValue cancoderSensorRange; 
+    SensorDirectionValue cancoderSensorDirection;
 
-
-    public SwerveModuleIOFalcon(ModuleConstants moduleConstants) {
+    public SwerveModuleIOFalcon(ModuleConstants moduleConstants, boolean useFOC, 
+    double driveGearRatio, double angleGearRatio, SwerveMotorConfig driveMotorConfig, SwerveMotorConfig angleMotorConfig,
+    AbsoluteSensorRangeValue cancoderSensorRange, SensorDirectionValue cancoderSensorDirection) {
         encoderOffset = moduleConstants.angleOffset;
+        this.cancoderSensorDirection = cancoderSensorDirection;
+        this.cancoderSensorRange = cancoderSensorRange;
 
         angleEncoder = new CANcoder(moduleConstants.cancoderID);
         configAngleEncoder();
@@ -56,8 +68,8 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         driveMotor = new TalonFX(moduleConstants.driveMotorID);
         configDriveMotor();
 
-        driveRequest = new DutyCycleOut(0.0).withEnableFOC(SwerveConstantsOLD.useFOC);
-        angleRequest = new DutyCycleOut(0.0).withEnableFOC(SwerveConstantsOLD.useFOC);
+        driveRequest = new DutyCycleOut(0.0).withEnableFOC(useFOC);
+        angleRequest = new DutyCycleOut(0.0).withEnableFOC(useFOC);
 
         timestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
 
@@ -98,8 +110,8 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         driveAppliedVolts);
 
 
-        inputs.drivePositionRot = drivePosition.getValueAsDouble() / SwerveConstantsOLD.driveGearRatio;
-        inputs.driveVelocityRotPerSec = driveVelocity.getValueAsDouble() / SwerveConstantsOLD.driveGearRatio;
+        inputs.drivePositionRot = drivePosition.getValueAsDouble() / driveGearRatio;
+        inputs.driveVelocityRotPerSec = driveVelocity.getValueAsDouble() / driveGearRatio;
 
         inputs.canCoderPositionRot = Rotation2d.fromRadians(MathUtil.angleModulus(Rotation2d.fromRotations(angleAbsolutePosition.getValueAsDouble()).minus(encoderOffset).getRadians())).getRotations();
         inputs.rawCanCoderPositionDeg = Rotation2d.fromRotations(angleAbsolutePosition.getValueAsDouble()).getDegrees(); // Used only for shuffleboard to display values to get offsets
@@ -108,7 +120,7 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
             timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
         inputs.odometryDrivePositionsRad =
             drivePositionQueue.stream()
-                .mapToDouble((Double value) -> Units.rotationsToRadians(value) / SwerveConstantsOLD.driveGearRatio)
+                .mapToDouble((Double value) -> Units.rotationsToRadians(value) / driveGearRatio)
                 .toArray();
         inputs.odometryAnglePositions =
             anglePositionQueue.stream()
@@ -180,25 +192,25 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         TalonFXConfiguration config = new TalonFXConfiguration();
         driveMotor.getConfigurator().apply(new TalonFXConfiguration());
 
-        config.CurrentLimits.SupplyCurrentLimitEnable = SwerveConstantsOLD.Configs.Module.Drive.driveSupplyCurrentLimitEnable;
-        config.CurrentLimits.SupplyCurrentLimit = SwerveConstantsOLD.Configs.Module.Drive.driveSupplyCurrentLimit;
-        config.CurrentLimits.SupplyCurrentThreshold = SwerveConstantsOLD.Configs.Module.Drive.driveSupplyCurrentThreshold;
-        config.CurrentLimits.SupplyTimeThreshold = SwerveConstantsOLD.Configs.Module.Drive.driveSupplyTimeThreshold;
+        config.CurrentLimits.SupplyCurrentLimitEnable = driveMotorConfig.supplyCurrentLimitEnable;
+        config.CurrentLimits.SupplyCurrentLimit = driveMotorConfig.supplyCurrentLimit;
+        config.CurrentLimits.SupplyCurrentThreshold = driveMotorConfig.supplyCurrentThreshold;
+        config.CurrentLimits.SupplyTimeThreshold = driveMotorConfig.supplyTimeThreshold;
 
-        config.CurrentLimits.StatorCurrentLimitEnable = SwerveConstantsOLD.Configs.Module.Drive.driveStatorCurrentLimitEnable;
-        config.CurrentLimits.StatorCurrentLimit = SwerveConstantsOLD.Configs.Module.Drive.driveStatorCurrentLimit;
+        config.CurrentLimits.StatorCurrentLimitEnable = driveMotorConfig.statorCurrentLimitEnable;
+        config.CurrentLimits.StatorCurrentLimit = driveMotorConfig.statorCurrentLimit;
 
-        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = SwerveConstantsOLD.Configs.Module.Drive.openLoopRamp;
-        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = SwerveConstantsOLD.Configs.Module.Drive.openLoopRamp;
-        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = SwerveConstantsOLD.Configs.Module.Drive.openLoopRamp;
-        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = SwerveConstantsOLD.Configs.Module.Drive.closedLoopRamp;
-        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = SwerveConstantsOLD.Configs.Module.Drive.closedLoopRamp;
-        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = SwerveConstantsOLD.Configs.Module.Drive.closedLoopRamp;
+        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = driveMotorConfig.openLoopRamp;
+        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = driveMotorConfig.openLoopRamp;
+        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = driveMotorConfig.openLoopRamp;
+        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = driveMotorConfig.closedLoopRamp;
+        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = driveMotorConfig.closedLoopRamp;
+        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = driveMotorConfig.closedLoopRamp;
 
         
 
-        config.MotorOutput.Inverted = SwerveConstantsOLD.Configs.Module.Drive.driveMotorInvert;
-        config.MotorOutput.NeutralMode = SwerveConstantsOLD.Configs.Module.Drive.driveNeutralMode;
+        config.MotorOutput.Inverted = driveMotorConfig.motorInvert;
+        config.MotorOutput.NeutralMode = driveMotorConfig.neutralMode;
 
         driveMotor.getConfigurator().apply(config);
 
@@ -212,16 +224,16 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         TalonFXConfiguration config = new TalonFXConfiguration();
         angleMotor.getConfigurator().apply(new TalonFXConfiguration());
 
-        config.CurrentLimits.SupplyCurrentLimitEnable = SwerveConstantsOLD.Configs.Module.Angle.angleSupplyCurrentLimitEnable;
-        config.CurrentLimits.SupplyCurrentThreshold = SwerveConstantsOLD.Configs.Module.Angle.angleSupplyCurrentThreshold;
-        config.CurrentLimits.SupplyTimeThreshold = SwerveConstantsOLD.Configs.Module.Angle.angleSupplyTimeThreshold;
+        config.CurrentLimits.SupplyCurrentLimitEnable = angleMotorConfig.supplyCurrentLimitEnable;
+        config.CurrentLimits.SupplyCurrentThreshold = angleMotorConfig.supplyCurrentThreshold;
+        config.CurrentLimits.SupplyTimeThreshold = angleMotorConfig.supplyTimeThreshold;
 
-        config.CurrentLimits.StatorCurrentLimitEnable = SwerveConstantsOLD.Configs.Module.Angle.angleStatorCurrentLimitEnable;
-        config.CurrentLimits.StatorCurrentLimit = SwerveConstantsOLD.Configs.Module.Angle.angleStatorCurrentLimit;
+        config.CurrentLimits.StatorCurrentLimitEnable = driveMotorConfig.statorCurrentLimitEnable;
+        config.CurrentLimits.StatorCurrentLimit = driveMotorConfig.statorCurrentLimit;
         
 
-        config.MotorOutput.Inverted = SwerveConstantsOLD.Configs.Module.Angle.angleMotorInvert;
-        config.MotorOutput.NeutralMode = SwerveConstantsOLD.Configs.Module.Angle.angleNeutralMode;
+        config.MotorOutput.Inverted = angleMotorConfig.motorInvert;
+        config.MotorOutput.NeutralMode = angleMotorConfig.neutralMode;
 
         angleMotor.getConfigurator().apply(config);
     }
@@ -234,8 +246,8 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         CANcoderConfiguration config = new CANcoderConfiguration();
         angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
 
-        config.MagnetSensor.AbsoluteSensorRange = SwerveConstantsOLD.Configs.Module.CANCoder.sensorRange;
-        config.MagnetSensor.SensorDirection = SwerveConstantsOLD.Configs.Module.CANCoder.sensorDirection;
+        config.MagnetSensor.AbsoluteSensorRange = cancoderSensorRange;
+        config.MagnetSensor.SensorDirection = cancoderSensorDirection;
 
         angleEncoder.getConfigurator().apply(config);
     }

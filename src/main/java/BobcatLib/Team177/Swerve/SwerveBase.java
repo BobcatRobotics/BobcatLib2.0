@@ -36,7 +36,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import BobcatLib.Team177.BobcatUtil;
 import BobcatLib.Team177.PoseEstimation.BobcatSwerveEstimator;
-import BobcatLib.Team177.Swerve.SwerveConstantsOLD.Configs;
 import BobcatLib.Team177.Swerve.Interfaces.AutomatedSwerve;
 import BobcatLib.Team177.Swerve.Interfaces.SysidCompatibleSwerve;
 import BobcatLib.Team177.Swerve.SwerveModule.SwerveModule;
@@ -67,16 +66,17 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     private Rotation2d lastYaw = new Rotation2d();
     private double loopPeriodSecs;
     private int[] filterTags;
+    private SwerveConstants constants;
 
     //aim assist
     private Rotation2d autoAlignAngle = new Rotation2d();
     private Translation2d aimAssistTranslation = new Translation2d();
 
     private final PathConstraints pathfindingConstraints = new PathConstraints(
-        SwerveConstantsOLD.Limits.Chassis.maxSpeed,
-        SwerveConstantsOLD.Limits.Chassis.maxAccel,
-        SwerveConstantsOLD.Limits.Chassis.maxAngularVelocity.getRadians(),
-        SwerveConstantsOLD.Limits.Chassis.maxAngularAccel.getRadians()
+        constants.speedLimits.chassisLimits.maxVelocity,
+        constants.speedLimits.chassisLimits.maxAccel,
+        constants.speedLimits.chassisLimits.maxAngularVelocity.getRadians(),
+        constants.speedLimits.chassisLimits.maxAngularAccel.getRadians()
         );
    
     Matrix<N3, N1> trustautostdDev;
@@ -87,16 +87,16 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     public SwerveBase(GyroIO gyroIO, SwerveModuleIO flIO, SwerveModuleIO frIO, SwerveModuleIO blIO, SwerveModuleIO brIO,
             double loopPeriodSecs, int[] filterTags, Matrix<N3, N1> trustautostdDev,
          Matrix<N3, N1> trusttelestdDev, Matrix<N3, N1> regautostdDev, Matrix<N3, N1> regtelestdDev,
-         Vision... cameras) {
+         SwerveConstants constants, Vision... cameras) {
         
         this.cameras = Arrays.asList(cameras);
-        
+        this.constants = constants;
         this.gyroIO = gyroIO;
         modules = new SwerveModule[] {
-                new SwerveModule(flIO, 0),
-                new SwerveModule(frIO, 1),
-                new SwerveModule(blIO, 2),
-                new SwerveModule(brIO, 3)
+                new SwerveModule(flIO, 0, constants),
+                new SwerveModule(frIO, 1, constants),
+                new SwerveModule(blIO, 2, constants),
+                new SwerveModule(brIO, 3, constants)
         };
         this.loopPeriodSecs = loopPeriodSecs;
         this.filterTags = filterTags;
@@ -104,13 +104,13 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
         PhoenixOdometryThread.getInstance().start();
 
-        rotationPID = new PIDController(SwerveConstantsOLD.Configs.Teleop.rotKP, SwerveConstantsOLD.Configs.Teleop.rotKI, SwerveConstantsOLD.Configs.Teleop.rotKD);
+        rotationPID = new PIDController(constants.pidConfigs.teleopConfig.rotKP, constants.pidConfigs.teleopConfig.rotKI, constants.pidConfigs.teleopConfig.rotKD);
         rotationPID.enableContinuousInput(0, 2 * Math.PI);
-        autoAlignPID = new PIDController(SwerveConstantsOLD.Configs.AutoAlign.rotationKP, SwerveConstantsOLD.Configs.AutoAlign.rotationKI, SwerveConstantsOLD.Configs.AutoAlign.rotationKI);
+        autoAlignPID = new PIDController(constants.pidConfigs.autoAlignConfig.rotKP, constants.pidConfigs.autoAlignConfig.rotKI, constants.pidConfigs.autoAlignConfig.rotKD);
         autoAlignPID.enableContinuousInput(0, 2 * Math.PI);
 
         //std devs will be actually set later, so we dont need to initialize them to actual values here
-        poseEstimator = new BobcatSwerveEstimator(SwerveConstantsOLD.Kinematics.kinematics, getYaw(), getModulePositions(), new Pose2d(), VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0));
+        poseEstimator = new BobcatSwerveEstimator(constants.kinematicsConstants.kinematics, getYaw(), getModulePositions(), new Pose2d(), VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0));
         
   
         // setpointGenerator =
@@ -125,11 +125,11 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                 this::getChassisSpeeds,
                 this::drive,
                 new HolonomicPathFollowerConfig(
-                        Configs.Auto.transPidConstants,
-                        Configs.Auto.rotPidConstants,
-                        SwerveConstantsOLD.Limits.Module.maxSpeed,
-                        SwerveConstantsOLD.Kinematics.wheelBase,
-                        SwerveConstantsOLD.replanningConfig),
+                        constants.pidConfigs.autoConfig.transPidConstants,
+                        constants.pidConfigs.autoConfig.rotPidConstants,
+                        constants.speedLimits.moduleLimits.maxVelocity,
+                        constants.kinematicsConstants.driveBaseRadius,
+                        constants.replanningConfig),
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
                     // alliance
@@ -218,13 +218,13 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                 case THROWOUT:
                     break;
                 case DISTRUST:
-                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, SwerveConstantsOLD.Odometry.distrustStdDevs);
+                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, constants.odometryConstants.distrustStdDevs);
                     break;
                 case TRUST:
-                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, SwerveConstantsOLD.Odometry.trustStdDevs);
+                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, constants.odometryConstants.trustStdDevs);
                     break;
                 default:
-                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, SwerveConstantsOLD.Odometry.trustStdDevs);
+                    poseEstimator.updateWithTime(sampleTimestamps[i], lastYaw, modulePositions, constants.odometryConstants.trustStdDevs);
                     break;
             }
             
@@ -281,13 +281,13 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
                 case THROWOUT:
                     break;
                 case DISTRUST:
-                    poseEstimator.update(getYaw(), getModulePositions(), SwerveConstantsOLD.Odometry.distrustStdDevs);
+                    poseEstimator.update(getYaw(), getModulePositions(), constants.odometryConstants.distrustStdDevs);
                     break;
                 case TRUST:
-                    poseEstimator.update(getYaw(), getModulePositions(), SwerveConstantsOLD.Odometry.trustStdDevs);
+                    poseEstimator.update(getYaw(), getModulePositions(), constants.odometryConstants.trustStdDevs);
                     break;
                 default:
-                    poseEstimator.update(getYaw(), getModulePositions(), SwerveConstantsOLD.Odometry.trustStdDevs);
+                    poseEstimator.update(getYaw(), getModulePositions(), constants.odometryConstants.trustStdDevs);
                     break;
             }
         poseEstimator.update(getYaw(), getModulePositions());
@@ -378,9 +378,9 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         // setpointGenerator.generateSetpoint(SwerveConstants.moduleLimits,
         // currentSetpoint, desiredSpeeds, Constants.loopPeriodSecs);
 
-        SwerveModuleState[] swerveModuleStates = SwerveConstantsOLD.Kinematics.kinematics.toSwerveModuleStates(desiredSpeeds);
+        SwerveModuleState[] swerveModuleStates = constants.kinematicsConstants.kinematics.toSwerveModuleStates(desiredSpeeds);
         // SwerveModuleState[] swerveModuleStates = currentSetpoint.moduleStates();
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstantsOLD.Limits.Module.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.speedLimits.moduleLimits.maxVelocity);
 
         for (SwerveModule mod : modules) {
             mod.setDesiredState(swerveModuleStates[mod.index]);
@@ -398,8 +398,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
         lastMovingYaw = getYaw().getRadians();
 
-        SwerveModuleState[] swerveModuleStates = SwerveConstantsOLD.Kinematics.kinematics.toSwerveModuleStates(targetSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstantsOLD.Limits.Module.maxSpeed);
+        SwerveModuleState[] swerveModuleStates = constants.kinematicsConstants.kinematics.toSwerveModuleStates(targetSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, constants.speedLimits.moduleLimits.maxVelocity);
 
         for (SwerveModule mod : modules) {
             mod.setDesiredState(swerveModuleStates[mod.index]);
@@ -412,7 +412,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
      * @param desiredStates array of states for the modules to be set to
      */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstantsOLD.Limits.Module.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, constants.speedLimits.moduleLimits.maxVelocity);
         for (SwerveModule mod : modules) {
             mod.setDesiredState(desiredStates[mod.index]);
         }
@@ -451,7 +451,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
      * @return current chassis speeds
      */
     public ChassisSpeeds getChassisSpeeds() {
-        return SwerveConstantsOLD.Kinematics.kinematics.toChassisSpeeds(getModuleStates());
+        return constants.kinematicsConstants.kinematics.toChassisSpeeds(getModuleStates());
     }
 
     /**
@@ -521,7 +521,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
  
     public boolean aligned(AlignmentCheckType checkType) {
-        double tolerance = SwerveConstantsOLD.holoAlignTolerance.getRadians();
+        double tolerance = constants.holoAlignTolerance.getRadians();
         switch(checkType){
             case AUTOALIGN:
                 return Math.abs(autoAlignPID.getPositionError()) <= tolerance;
@@ -542,9 +542,9 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
     public boolean aligned(Rotation2d angle) {
         if (BobcatUtil.getAlliance() == Alliance.Blue) {
-            return Math.abs(angle.getRadians() - getYaw().getRadians()) <= SwerveConstantsOLD.holoAlignTolerance.getRadians();
+            return Math.abs(angle.getRadians() - getYaw().getRadians()) <= constants.holoAlignTolerance.getRadians();
         } else {
-            return Math.abs(angle.getRadians() - getYaw().getRadians()) <= SwerveConstantsOLD.holoAlignTolerance.getRadians();
+            return Math.abs(angle.getRadians() - getYaw().getRadians()) <= constants.holoAlignTolerance.getRadians();
         }
     }
 

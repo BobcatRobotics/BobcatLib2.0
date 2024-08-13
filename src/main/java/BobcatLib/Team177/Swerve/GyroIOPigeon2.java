@@ -18,8 +18,8 @@ public class GyroIOPigeon2 implements GyroIO {
     private final Queue<Double> yawTimestampQueue;
     private final StatusSignal<Double> yawVelocity;
 
-    public GyroIOPigeon2() {
-        pigeon = new Pigeon2(SwerveConstantsOLD.pigeonID);
+    public GyroIOPigeon2(int pigeonID) {
+        pigeon = new Pigeon2(pigeonID);
         Pigeon2Configuration config = new Pigeon2Configuration();
         pigeon.getConfigurator().apply(config);
         // config.MountPose.MountPoseYaw = 180;

@@ -4,7 +4,6 @@ package BobcatLib.Team177.Swerve.SwerveModule;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import BobcatLib.Team177.Swerve.SwerveConstantsOLD;
 public class SwerveModuleIOSim implements SwerveModuleIO {
     private FlywheelSim driveSim;
     private FlywheelSim angleSim;
@@ -12,10 +11,10 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
     private double angleAbsolutePosRot = Math.random();
     private double loopPeriodSecs;
 
-    public SwerveModuleIOSim(double loopPeriodSecs) {
+    public SwerveModuleIOSim(double loopPeriodSecs, double driveGearRatio, double angleGearRatio) {
         // Using flywheels to simulate motors
-        driveSim = new FlywheelSim(DCMotor.getFalcon500(1), SwerveConstantsOLD.driveGearRatio, 0.025);
-        angleSim = new FlywheelSim(DCMotor.getFalcon500(1), SwerveConstantsOLD.angleGearRatio, 0.004);
+        driveSim = new FlywheelSim(DCMotor.getFalcon500(1), driveGearRatio, 0.025);
+        angleSim = new FlywheelSim(DCMotor.getFalcon500(1), angleGearRatio, 0.004);
         this.loopPeriodSecs = loopPeriodSecs;
     }
 

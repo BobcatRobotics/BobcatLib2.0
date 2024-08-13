@@ -8,7 +8,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import BobcatLib.Team177.Swerve.SwerveConstantsOLD.Limits;
 
 public class TeleopSwerve extends Command {
     private SwerveBase swerve;
@@ -23,28 +22,29 @@ public class TeleopSwerve extends Command {
     private PIDController aimAssistXController = new PIDController(0.2, 0, 0); // TODO tune
     private PIDController aimAssistYController = new PIDController(0.2, 0, 0);
     private Translation2d currTranslation = new Translation2d();
+    private double stickDeadband;
+    private double maxVelocity;
+    private Rotation2d maxAngularVelocity;
 
     /**
-     * 
-     * suppliers are objects that can return a value that will change, for example a
-     * method that returns a double can be input as a doubleSupplier
-     * 
-     * @param swerve        the swerve subsystem
-     * @param translation   the value to drive the robot forward and backward
-     * @param strafe        value to drive the robot left and right
-     * @param rotation      value to rotate the drivetrain
-     * @param robotCentric  field-centric if false
-     * @param fineStrafe    slow speed control, cancled if translation or strafe is
-     *                      in use
-     * @param fineTrans     slow speed control, cancled if translation or strafe is
-     *                      in use
-     * @param snapToAmp     should we automatically rotate to the amp
-     * @param snapToSpeaker should we automatically align to the speaker
-     * @param pass          align to be facing the amp for passing notes
+     * creates a command to control your swerve in teleop.
+     * Suppliers are methods that you pass in, for example, a BooleanSupplier is a method 
+     * that returns a boolean when called
+     * @param swerve your swerve subsystem
+     * @param translation forward-back [-1,1]
+     * @param strafe left-right [-1,1]
+     * @param rotation ccw+ [-1,1]
+     * @param robotCentric when true, forward will be relative to the front of the robot, not the field
+     * @param fineStrafe [-1,1]
+     * @param fineTrans [-1,1]
+     * @param aimAssistSupplier when true, aim assist will be active
+     * @param autoAlignSupplier when true, autoalign will be active
+     * @param stickDeadband stick values less than this will be rounded to 0, useful for sticks with drift
      */
     public TeleopSwerve(SwerveBase swerve, DoubleSupplier translation, DoubleSupplier strafe,
             DoubleSupplier rotation, BooleanSupplier robotCentric, DoubleSupplier fineStrafe, DoubleSupplier fineTrans,
-            BooleanSupplier aimAssistSupplier, BooleanSupplier autoAlignSupplier) {
+            BooleanSupplier aimAssistSupplier, BooleanSupplier autoAlignSupplier, double stickDeadband,
+            double maxChassisSpeedMetersPerSecond, Rotation2d maxChassisAngularVelocity) {
 
         this.swerve = swerve;
         addRequirements(swerve);
@@ -57,15 +57,18 @@ public class TeleopSwerve extends Command {
         this.fineTrans = fineTrans;
         this.aimAssistSupplier = aimAssistSupplier;
         this.autoAlignSupplier = autoAlignSupplier;
+        this.stickDeadband = stickDeadband;
+        maxVelocity = maxChassisSpeedMetersPerSecond;
+        maxAngularVelocity = maxChassisAngularVelocity;
         }
 
     @Override
     public void execute() {
 
         /* Get Values, Deadband */
-        double translationVal = MathUtil.applyDeadband(translation.getAsDouble(), SwerveConstantsOLD.stickDeadband);
-        double strafeVal = MathUtil.applyDeadband(strafe.getAsDouble(), SwerveConstantsOLD.stickDeadband);
-        double rotationVal = MathUtil.applyDeadband(rotation.getAsDouble(), SwerveConstantsOLD.stickDeadband); // from 0 to one
+        double translationVal = MathUtil.applyDeadband(translation.getAsDouble(), stickDeadband);
+        double strafeVal = MathUtil.applyDeadband(strafe.getAsDouble(), stickDeadband);
+        double rotationVal = MathUtil.applyDeadband(rotation.getAsDouble(), stickDeadband); // from 0 to one
 
         /*
          * If joysticks not receiving any normal input, use twist values for fine adjust
@@ -88,8 +91,8 @@ public class TeleopSwerve extends Command {
 
         /* Drive */
         swerve.drive(
-                new Translation2d(translationVal, strafeVal).times(Limits.Chassis.maxSpeed),
-                rotationVal * Limits.Chassis.maxAngularVelocity.getRadians(),
+                new Translation2d(translationVal, strafeVal).times(maxVelocity),
+                rotationVal * maxAngularVelocity.getRadians(),
                 !robotCentric.getAsBoolean(),
                 autoAlignSupplier.getAsBoolean());
 
