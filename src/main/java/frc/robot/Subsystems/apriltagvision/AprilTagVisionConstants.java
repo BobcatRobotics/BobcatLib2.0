@@ -27,27 +27,27 @@ public class AprilTagVisionConstants {
   public static final double fieldLength = Units.inchesToMeters(651.223);
   public static final double fieldWidth = Units.inchesToMeters(323.277);
 
-  public static final double ambiguityThreshold;
-  public static final double targetLogTimeSecs;
-  public static final double fieldBorderMargin;
-  public static final double zMargin;
-  public static final double xyStdDevCoefficient;
-  public static final double thetaStdDevCoefficient;
+  public  double ambiguityThreshold;
+  public  double targetLogTimeSecs;
+  public  double fieldBorderMargin;
+  public  double zMargin;
+  public  double xyStdDevCoefficient;
+  public  double thetaStdDevCoefficient;
 
-  public static final double[] stdDevFactors;
+  public   double[] stdDevFactors;
 
-  public static final Pose3d[] cameraPoses;
+  public   Pose3d[] cameraPoses;
 
-  public static final String[] instanceNames;
+  public   String[] instanceNames;
 
-  public static final String[] cameraIds;
+  public   String[] cameraIds;
   private int[] cameraResolutionWidth;
-  private static final int[] cameraResolutionHeight;
-  private static final int cameraAutoExposure;
+  private   int[] cameraResolutionHeight;
+  private   int cameraAutoExposure;
   // private static final int cameraExposure = 10;
-  private static final int cameraGain[];
-  private static final int maxFPS[];
-  private int cameraExposure[];
+  private int[] cameraGain;
+  private int[] maxFPS;
+  private int[] cameraExposure;
   // private final Supplier<AprilTagLayoutType> aprilTagTypeSupplier;
   
   public static final double aprilTagWidth = Units.inchesToMeters(6.50);
@@ -87,8 +87,33 @@ public class AprilTagVisionConstants {
     private final String layoutString;
   }
 
-  public AprilTagVisionConstants(int[] cameraResolutionWidth){
+  /**
+               * @param ambiguityThreshold
+               * @param targetLogTimeSecs
+               * @param fieldBorderMargin
+               * @param zMargin
+               * @param xyStdDevCoefficient
+               * @param thetaStdDevCoefficient
+               * @param cameraIds
+               * @param cameraResolutionWidth
+               * @param cameraResolutionHeight
+               * @param cameraAutoExposure
+               * @param cameraGain
+               * @param maxFPS
+               */
+              public AprilTagVisionConstants(double ambiguityThreshold, double targetLogTimeSecs, double fieldBorderMargin, double zMargin, double xyStdDevCoefficient, double thetaStdDevCoefficient, String[] cameraIds, int[] cameraResolutionWidth, int[] cameraResolutionHeight, int cameraAutoExposure, int[] cameraGain, int[] maxFPS ){
+    this.ambiguityThreshold = ambiguityThreshold;
+    this.targetLogTimeSecs = targetLogTimeSecs;
+    this.zMargin = zMargin;
+    this.xyStdDevCoefficient = xyStdDevCoefficient;
+    this.thetaStdDevCoefficient = thetaStdDevCoefficient;
     this.cameraResolutionWidth = cameraResolutionWidth;
+    this.cameraResolutionHeight = cameraResolutionHeight;
+    this.cameraIds = cameraIds;
+    this.cameraAutoExposure = cameraAutoExposure;
+    this.cameraGain = cameraGain;
+    this.maxFPS = maxFPS;
+
 
   }
 
