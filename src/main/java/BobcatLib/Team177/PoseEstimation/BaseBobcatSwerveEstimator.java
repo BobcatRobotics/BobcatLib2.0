@@ -20,10 +20,10 @@ import edu.wpi.first.math.numbers.N3;
  * vision measurements with swerve drive encoder distance measurements. It is intended to be a
  * drop-in replacement for {@link edu.wpi.first.math.kinematics.SwerveDriveOdometry}.
  *
- * <p>{@link SwerveDrivePoseEstimator#update} should be called every robot loop.
+ * <p>SwerveDrivePoseEstimator update should be called every robot loop.
  *
- * <p>{@link SwerveDrivePoseEstimator#addVisionMeasurement} can be called as infrequently as you
- * want; if you never call it, then this class will behave as regular encoder odometry.
+ * <p>SwerveDrivePoseEstimator addVisionMeasurement can be called as infrequently as you want; if
+ * you never call it, then this class will behave as regular encoder odometry.
  */
 public class BaseBobcatSwerveEstimator extends BobcatEstimator<SwerveDriveWheelPositions> {
   private final int m_numModules;
@@ -112,7 +112,8 @@ public class BaseBobcatSwerveEstimator extends BobcatEstimator<SwerveDriveWheelP
     return update(gyroAngle, new SwerveDriveWheelPositions(modulePositions));
   }
 
- public Pose2d update(Rotation2d gyroAngle, SwerveModulePosition[] modulePositions, Matrix<N3, N1> stateStdDevs) {
+  public Pose2d update(
+      Rotation2d gyroAngle, SwerveModulePosition[] modulePositions, Matrix<N3, N1> stateStdDevs) {
     setStateStdDevs(stateStdDevs);
     return update(gyroAngle, new SwerveDriveWheelPositions(modulePositions));
   }
@@ -141,9 +142,12 @@ public class BaseBobcatSwerveEstimator extends BobcatEstimator<SwerveDriveWheelP
    * @return The estimated pose of the robot in meters.
    */
   public Pose2d updateWithTime(
-      double currentTimeSeconds, Rotation2d gyroAngle, SwerveModulePosition[] modulePositions, Matrix<N3, N1> stateStdDevs) {
-      setStateStdDevs(stateStdDevs);
-      return updateWithTime(
+      double currentTimeSeconds,
+      Rotation2d gyroAngle,
+      SwerveModulePosition[] modulePositions,
+      Matrix<N3, N1> stateStdDevs) {
+    setStateStdDevs(stateStdDevs);
+    return updateWithTime(
         currentTimeSeconds, gyroAngle, new SwerveDriveWheelPositions(modulePositions));
   }
 

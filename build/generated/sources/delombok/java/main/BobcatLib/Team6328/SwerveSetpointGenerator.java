@@ -22,8 +22,10 @@
 //  *
 //  * <p>Takes a prior setpoint (ChassisSpeeds), a desired setpoint (from a driver, or from a path
 //  * follower), and outputs a new setpoint that respects all of the kinematic constraints on module
-//  * rotation speed and wheel velocity/acceleration. By generating a new setpoint every iteration, the
-//  * robot will converge to the desired setpoint quickly while avoiding any intermediate state that is
+//  * rotation speed and wheel velocity/acceleration. By generating a new setpoint every iteration,
+// the
+//  * robot will converge to the desired setpoint quickly while avoiding any intermediate state that
+// is
 //  * kinematically infeasible (and can result in wheel slip or robot heading drift as a result).
 //  */
 // @Builder
@@ -250,7 +252,8 @@
 //     if (all_modules_should_flip
 //         && !prevSetpoint.chassisSpeeds().toTwist2d().epsilonEquals(new Twist2d())
 //         && !desiredState.toTwist2d().epsilonEquals(new Twist2d())) {
-//       // It will (likely) be faster to stop the robot, rotate the modules in place to the complement
+//       // It will (likely) be faster to stop the robot, rotate the modules in place to the
+// complement
 //       // of the desired
 //       // angle, and accelerate again.
 //       return generateSetpoint(limits, prevSetpoint, new ChassisSpeeds(), dt);
@@ -269,13 +272,15 @@
 //     // desiredState.
 //     double min_s = 1.0;
 
-//     // In cases where an individual module is stopped, we want to remember the right steering angle
+//     // In cases where an individual module is stopped, we want to remember the right steering
+// angle
 //     // to command (since
 //     // inverse kinematics doesn't care about angle, we can be opportunistically lazy).
 //     List<Optional<Rotation2d>> overrideSteering = new ArrayList<>(modules.length);
 //     // Enforce steering velocity limits. We do this by taking the derivative of steering angle at
 //     // the current angle,
-//     // and then backing out the maximum interpolant between start and goal states. We remember the
+//     // and then backing out the maximum interpolant between start and goal states. We remember
+// the
 //     // minimum across all modules, since
 //     // that is the active constraint.
 //     final double max_theta_step = dt * limits.maxSteeringVelocity();
@@ -296,7 +301,8 @@
 //         }
 
 //         var necessaryRotation =
-//             prevSetpoint.moduleStates()[i].angle.unaryMinus().rotateBy(desiredModuleState[i].angle);
+//
+// prevSetpoint.moduleStates()[i].angle.unaryMinus().rotateBy(desiredModuleState[i].angle);
 //         if (flipHeading(necessaryRotation)) {
 //           necessaryRotation = necessaryRotation.rotateBy(Rotation2d.fromRadians(Math.PI));
 //         }
@@ -350,7 +356,8 @@
 //           min_s == 1.0 ? desired_vx[i] : (desired_vx[i] - prev_vx[i]) * min_s + prev_vx[i];
 //       double vy_min_s =
 //           min_s == 1.0 ? desired_vy[i] : (desired_vy[i] - prev_vy[i]) * min_s + prev_vy[i];
-//       // Find the max s for this drive wheel. Search on the interval between 0 and min_s, because we
+//       // Find the max s for this drive wheel. Search on the interval between 0 and min_s, because
+// we
 //       // already know we can't go faster
 //       // than that.
 //       final int kMaxIterations = 10;

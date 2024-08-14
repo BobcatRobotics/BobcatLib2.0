@@ -6,5 +6,8 @@ package BobcatLib.Team177.Vision;
 
 /** Add your docs here. */
 public enum LEDMode {
-    FORCEBLINK, FORCEOFF, FORCEON, PIPELINECONTROL
+  FORCEBLINK,
+  FORCEOFF,
+  FORCEON,
+  PIPELINECONTROL
 }

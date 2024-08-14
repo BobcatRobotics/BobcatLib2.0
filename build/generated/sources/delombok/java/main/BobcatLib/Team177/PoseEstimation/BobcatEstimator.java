@@ -25,10 +25,9 @@ import java.util.Objects;
 /**
  * This class wraps {@link Odometry} to fuse latency-compensated vision measurements with encoder
  * measurements. Robot code should not use this directly- Instead, use the particular type for your
- * drivetrain (e.g., {@link DifferentialDrivePoseEstimator}). It is intended to be a drop-in
- * replacement for {@link Odometry}; in fact, if you never call {@link
- * BobcatEstimator#addVisionMeasurement} and only call {@link BobcatEstimator#update} then this will
- * behave exactly the same as Odometry.
+ * drivetrain (e.g., DifferentialDriveEstimator). It is intended to be a drop-in replacement for
+ * {@link Odometry}; in fact, if you never call {@link BobcatEstimator#addVisionMeasurement} and
+ * only call {@link BobcatEstimator#update} then this will behave exactly the same as Odometry.
  *
  * <p>{@link BobcatEstimator#update} should be called every robot loop.
  *
@@ -66,7 +65,7 @@ public class BobcatEstimator<T extends WheelPositions<T>> {
       Matrix<N3, N1> visionMeasurementStdDevs) {
     m_kinematics = kinematics;
     m_odometry = odometry;
-    
+
     setStateStdDevs(stateStdDevs);
     setVisionMeasurementStdDevs(visionMeasurementStdDevs);
   }
@@ -98,13 +97,11 @@ public class BobcatEstimator<T extends WheelPositions<T>> {
     }
   }
 
-  public final void setStateStdDevs(Matrix<N3, N1> stateStdDevs){
+  public final void setStateStdDevs(Matrix<N3, N1> stateStdDevs) {
     for (int i = 0; i < 3; ++i) {
       m_q.set(i, 0, stateStdDevs.get(i, 0) * stateStdDevs.get(i, 0));
     }
   }
-
-  
 
   /**
    * Resets the robot's position on the field.
@@ -135,8 +132,8 @@ public class BobcatEstimator<T extends WheelPositions<T>> {
    * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
    * while still accounting for measurement noise.
    *
-   * <p>This method can be called as infrequently as you want, as long as you are calling {@link
-   * BobcatEstimator#update} every loop.
+   * <p>This method can be called as infrequently as you want, as long as you are calling
+   * SwerveDrive Pose Estimator Update every loop.
    *
    * <p>To promote stability of the pose estimate and make it robust to bad vision data, we
    * recommend only adding vision measurements that are already within one meter or so of the

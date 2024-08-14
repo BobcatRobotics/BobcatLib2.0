@@ -1,7 +1,8 @@
 package BobcatLib.Team177.Swerve.SwerveModule;
 
-import java.util.Queue;
-
+import BobcatLib.Team177.Swerve.PhoenixOdometryThread;
+import BobcatLib.Team177.Swerve.SwerveConstants.SwerveMotorConfig;
+import BobcatLib.Team254.ModuleConstants;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -13,92 +14,96 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import BobcatLib.Team177.Swerve.PhoenixOdometryThread;
-import BobcatLib.Team177.Swerve.SwerveConstants.SwerveMotorConfig;
-import BobcatLib.Team254.ModuleConstants;
+import java.util.Queue;
 
 public class SwerveModuleIOFalcon implements SwerveModuleIO {
-    private final TalonFX driveMotor;
-    private final TalonFX angleMotor;
-    private final CANcoder angleEncoder;
+  private final TalonFX driveMotor;
+  private final TalonFX angleMotor;
+  private final CANcoder angleEncoder;
 
-    private final Rotation2d encoderOffset;
+  private final Rotation2d encoderOffset;
 
-    private final DutyCycleOut driveRequest;
-    private final DutyCycleOut angleRequest;
+  private final DutyCycleOut driveRequest;
+  private final DutyCycleOut angleRequest;
 
-    private final StatusSignal<Double> internalTempDrive;
-    private final StatusSignal<Double> processorTempDrive;
-    private final StatusSignal<Double> internalTempAngle;
-    private final StatusSignal<Double> processorTempAngle;
-    private final StatusSignal<Double> driveAppliedVolts;
+  private final StatusSignal<Double> internalTempDrive;
+  private final StatusSignal<Double> processorTempDrive;
+  private final StatusSignal<Double> internalTempAngle;
+  private final StatusSignal<Double> processorTempAngle;
+  private final StatusSignal<Double> driveAppliedVolts;
 
-    private final Queue<Double> timestampQueue;
+  private final Queue<Double> timestampQueue;
 
-    private final Queue<Double> drivePositionQueue;
-    private final StatusSignal<Double> drivePosition;
-    private final StatusSignal<Double> driveVelocity;
-    private final StatusSignal<Double> driveAcceleration;
+  private final Queue<Double> drivePositionQueue;
+  private final StatusSignal<Double> drivePosition;
+  private final StatusSignal<Double> driveVelocity;
+  private final StatusSignal<Double> driveAcceleration;
 
-    private final Queue<Double> anglePositionQueue;
-    private final StatusSignal<Double> angleAbsolutePosition;
-    private VoltageOut sysidControl = new VoltageOut(0); 
-    private double driveGearRatio;
-    private double angleGearRatio;
-    public SwerveMotorConfig driveMotorConfig;
-    public SwerveMotorConfig angleMotorConfig;
-    AbsoluteSensorRangeValue cancoderSensorRange; 
-    SensorDirectionValue cancoderSensorDirection;
+  private final Queue<Double> anglePositionQueue;
+  private final StatusSignal<Double> angleAbsolutePosition;
+  private VoltageOut sysidControl = new VoltageOut(0);
+  private double driveGearRatio;
+  private double angleGearRatio;
+  public SwerveMotorConfig driveMotorConfig;
+  public SwerveMotorConfig angleMotorConfig;
+  AbsoluteSensorRangeValue cancoderSensorRange;
+  SensorDirectionValue cancoderSensorDirection;
 
-    public SwerveModuleIOFalcon(ModuleConstants moduleConstants, boolean useFOC, 
-    double driveGearRatio, double angleGearRatio, SwerveMotorConfig driveMotorConfig, SwerveMotorConfig angleMotorConfig,
-    AbsoluteSensorRangeValue cancoderSensorRange, SensorDirectionValue cancoderSensorDirection) {
-        encoderOffset = moduleConstants.angleOffset;
-        this.cancoderSensorDirection = cancoderSensorDirection;
-        this.cancoderSensorRange = cancoderSensorRange;
+  public SwerveModuleIOFalcon(
+      ModuleConstants moduleConstants,
+      boolean useFOC,
+      double driveGearRatio,
+      double angleGearRatio,
+      SwerveMotorConfig driveMotorConfig,
+      SwerveMotorConfig angleMotorConfig,
+      AbsoluteSensorRangeValue cancoderSensorRange,
+      SensorDirectionValue cancoderSensorDirection) {
+    encoderOffset = moduleConstants.angleOffset;
+    this.cancoderSensorDirection = cancoderSensorDirection;
+    this.cancoderSensorRange = cancoderSensorRange;
 
-        angleEncoder = new CANcoder(moduleConstants.cancoderID);
-        configAngleEncoder();
-        angleMotor = new TalonFX(moduleConstants.angleMotorID);
-        configAngleMotor();
-        driveMotor = new TalonFX(moduleConstants.driveMotorID);
-        configDriveMotor();
+    angleEncoder = new CANcoder(moduleConstants.cancoderID);
+    configAngleEncoder();
+    angleMotor = new TalonFX(moduleConstants.angleMotorID);
+    configAngleMotor();
+    driveMotor = new TalonFX(moduleConstants.driveMotorID);
+    configDriveMotor();
 
-        driveRequest = new DutyCycleOut(0.0).withEnableFOC(useFOC);
-        angleRequest = new DutyCycleOut(0.0).withEnableFOC(useFOC);
+    driveRequest = new DutyCycleOut(0.0).withEnableFOC(useFOC);
+    angleRequest = new DutyCycleOut(0.0).withEnableFOC(useFOC);
 
-        timestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
+    timestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
 
-        drivePosition = driveMotor.getPosition();
-        drivePositionQueue =
-            PhoenixOdometryThread.getInstance().registerSignal(driveMotor, driveMotor.getPosition());
-        driveVelocity = driveMotor.getVelocity();
-        driveAcceleration = driveMotor.getAcceleration();
-        angleAbsolutePosition = angleEncoder.getAbsolutePosition();
-        anglePositionQueue =
-            PhoenixOdometryThread.getInstance().registerSignal(angleEncoder, angleEncoder.getPosition());
+    drivePosition = driveMotor.getPosition();
+    drivePositionQueue =
+        PhoenixOdometryThread.getInstance().registerSignal(driveMotor, driveMotor.getPosition());
+    driveVelocity = driveMotor.getVelocity();
+    driveAcceleration = driveMotor.getAcceleration();
+    angleAbsolutePosition = angleEncoder.getAbsolutePosition();
+    anglePositionQueue =
+        PhoenixOdometryThread.getInstance()
+            .registerSignal(angleEncoder, angleEncoder.getPosition());
 
-        internalTempDrive = driveMotor.getDeviceTemp();
-        processorTempDrive = driveMotor.getProcessorTemp();
-        internalTempAngle = angleMotor.getDeviceTemp();
-        processorTempAngle = angleMotor.getProcessorTemp();
-        driveAppliedVolts = driveMotor.getMotorVoltage();
-        
+    internalTempDrive = driveMotor.getDeviceTemp();
+    processorTempDrive = driveMotor.getProcessorTemp();
+    internalTempAngle = angleMotor.getDeviceTemp();
+    processorTempAngle = angleMotor.getProcessorTemp();
+    driveAppliedVolts = driveMotor.getMotorVoltage();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(
-            50.0, drivePosition, driveVelocity, angleAbsolutePosition, driveAppliedVolts);
-        BaseStatusSignal.setUpdateFrequencyForAll(5, internalTempAngle, internalTempDrive, processorTempAngle, processorTempDrive);
-        driveMotor.optimizeBusUtilization();
-        angleMotor.optimizeBusUtilization();
-    }
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0, drivePosition, driveVelocity, angleAbsolutePosition, driveAppliedVolts);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        5, internalTempAngle, internalTempDrive, processorTempAngle, processorTempDrive);
+    driveMotor.optimizeBusUtilization();
+    angleMotor.optimizeBusUtilization();
+  }
 
-    public void updateInputs(SwerveModuleIOInputs inputs) {
-        inputs.offset = encoderOffset;
-        BaseStatusSignal.refreshAll(
+  public void updateInputs(SwerveModuleIOInputs inputs) {
+    inputs.offset = encoderOffset;
+    BaseStatusSignal.refreshAll(
         drivePosition,
         driveVelocity,
         angleAbsolutePosition,
@@ -109,153 +114,151 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
         driveAcceleration,
         driveAppliedVolts);
 
+    inputs.drivePositionRot = drivePosition.getValueAsDouble() / driveGearRatio;
+    inputs.driveVelocityRotPerSec = driveVelocity.getValueAsDouble() / driveGearRatio;
 
-        inputs.drivePositionRot = drivePosition.getValueAsDouble() / driveGearRatio;
-        inputs.driveVelocityRotPerSec = driveVelocity.getValueAsDouble() / driveGearRatio;
+    inputs.canCoderPositionRot =
+        Rotation2d.fromRadians(
+                MathUtil.angleModulus(
+                    Rotation2d.fromRotations(angleAbsolutePosition.getValueAsDouble())
+                        .minus(encoderOffset)
+                        .getRadians()))
+            .getRotations();
+    inputs.rawCanCoderPositionDeg =
+        Rotation2d.fromRotations(angleAbsolutePosition.getValueAsDouble())
+            .getDegrees(); // Used only for shuffleboard to display values to get offsets
 
-        inputs.canCoderPositionRot = Rotation2d.fromRadians(MathUtil.angleModulus(Rotation2d.fromRotations(angleAbsolutePosition.getValueAsDouble()).minus(encoderOffset).getRadians())).getRotations();
-        inputs.rawCanCoderPositionDeg = Rotation2d.fromRotations(angleAbsolutePosition.getValueAsDouble()).getDegrees(); // Used only for shuffleboard to display values to get offsets
+    inputs.odometryTimestamps =
+        timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
+    inputs.odometryDrivePositionsRad =
+        drivePositionQueue.stream()
+            .mapToDouble((Double value) -> Units.rotationsToRadians(value) / driveGearRatio)
+            .toArray();
+    inputs.odometryAnglePositions =
+        anglePositionQueue.stream()
+            // .map((Double value) ->
+            // Rotation2d.fromRadians(MathUtil.angleModulus(Rotation2d.fromRotations(value).minus(encoderOffset).getRadians())))
+            .map((Double value) -> Rotation2d.fromRotations(value))
+            .toArray(Rotation2d[]::new);
 
-        inputs.odometryTimestamps =
-            timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-        inputs.odometryDrivePositionsRad =
-            drivePositionQueue.stream()
-                .mapToDouble((Double value) -> Units.rotationsToRadians(value) / driveGearRatio)
-                .toArray();
-        inputs.odometryAnglePositions =
-            anglePositionQueue.stream()
-                // .map((Double value) -> Rotation2d.fromRadians(MathUtil.angleModulus(Rotation2d.fromRotations(value).minus(encoderOffset).getRadians())))
-                .map((Double value) -> Rotation2d.fromRotations(value))
-                .toArray(Rotation2d[]::new);
+    timestampQueue.clear();
+    drivePositionQueue.clear();
+    anglePositionQueue.clear();
 
-        timestampQueue.clear();
-        drivePositionQueue.clear();
-        anglePositionQueue.clear();
+    inputs.internalTempAngle = internalTempAngle.getValueAsDouble();
+    inputs.internalTempDrive = internalTempDrive.getValueAsDouble();
+    inputs.processorTempAngle = processorTempAngle.getValueAsDouble();
+    inputs.processorTempDrive = processorTempDrive.getValueAsDouble();
+    inputs.appliedDriveVoltage = driveAppliedVolts.getValueAsDouble();
+  }
 
-        inputs.internalTempAngle = internalTempAngle.getValueAsDouble();
-        inputs.internalTempDrive = internalTempDrive.getValueAsDouble();
-        inputs.processorTempAngle = processorTempAngle.getValueAsDouble();
-        inputs.processorTempDrive = processorTempDrive.getValueAsDouble();
-        inputs.appliedDriveVoltage = driveAppliedVolts.getValueAsDouble();
-    }
+  /**
+   * Sets the percent out of the drive motor
+   *
+   * @param percent percent to set it to, from -1.0 to 1.0
+   */
+  public void setDrivePercentOut(double percent) {
+    driveMotor.setControl(driveRequest.withOutput(percent));
+  }
 
-    /**
-     * Sets the percent out of the drive motor
-     * @param percent percent to set it to, from -1.0 to 1.0
-     */
-    public void setDrivePercentOut(double percent) {
-        driveMotor.setControl(driveRequest.withOutput(percent));
-    }
+  /** Stops the drive motor */
+  public void stopDrive() {
+    driveMotor.stopMotor();
+  }
 
-    /**
-     * Stops the drive motor
-     */
-    public void stopDrive() {
-        driveMotor.stopMotor();
-    }
+  /**
+   * Sets the neutral mode of the drive motor
+   *
+   * @param mode mode to set it to
+   */
+  public void setDriveNeutralMode(NeutralModeValue mode) {
+    driveMotor.setNeutralMode(mode);
+  }
 
-    /**
-     * Sets the neutral mode of the drive motor
-     * @param mode mode to set it to
-     */
-    public void setDriveNeutralMode(NeutralModeValue mode) {
-        driveMotor.setNeutralMode(mode);
-    }
+  /**
+   * Sets the percent out of the angle motor
+   *
+   * @param percent percent to set it to, from -1.0 to 1.0
+   */
+  public void setAnglePercentOut(double percent) {
+    angleMotor.setControl(angleRequest.withOutput(percent));
+  }
 
-    /**
-     * Sets the percent out of the angle motor
-     * @param percent percent to set it to, from -1.0 to 1.0
-     */
-    public void setAnglePercentOut(double percent) {
-        angleMotor.setControl(angleRequest.withOutput(percent));
-    }
+  /** Stops the angle motor */
+  public void stopAngle() {
+    angleMotor.stopMotor();
+  }
 
-    /**
-     * Stops the angle motor
-     */
-    public void stopAngle() {
-        angleMotor.stopMotor();
-    }
+  /**
+   * Sets the neutral mode of the angle motor
+   *
+   * @param mode mode to set it to
+   */
+  public void setAngleNeutralMode(NeutralModeValue mode) {
+    angleMotor.setNeutralMode(mode);
+  }
 
-    /**
-     * Sets the neutral mode of the angle motor
-     * @param mode mode to set it to
-     */
-    public void setAngleNeutralMode(NeutralModeValue mode) {
-        angleMotor.setNeutralMode(mode);
-    }
+  /** Applies all configurations to the drive motor */
+  public void configDriveMotor() {
+    TalonFXConfiguration config = new TalonFXConfiguration();
+    driveMotor.getConfigurator().apply(new TalonFXConfiguration());
 
-    /**
-     * Applies all configurations to the drive motor
-     */
-    public void configDriveMotor() {
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        driveMotor.getConfigurator().apply(new TalonFXConfiguration());
+    config.CurrentLimits.SupplyCurrentLimitEnable = driveMotorConfig.supplyCurrentLimitEnable;
+    config.CurrentLimits.SupplyCurrentLimit = driveMotorConfig.supplyCurrentLimit;
+    config.CurrentLimits.SupplyCurrentThreshold = driveMotorConfig.supplyCurrentThreshold;
+    config.CurrentLimits.SupplyTimeThreshold = driveMotorConfig.supplyTimeThreshold;
 
-        config.CurrentLimits.SupplyCurrentLimitEnable = driveMotorConfig.supplyCurrentLimitEnable;
-        config.CurrentLimits.SupplyCurrentLimit = driveMotorConfig.supplyCurrentLimit;
-        config.CurrentLimits.SupplyCurrentThreshold = driveMotorConfig.supplyCurrentThreshold;
-        config.CurrentLimits.SupplyTimeThreshold = driveMotorConfig.supplyTimeThreshold;
+    config.CurrentLimits.StatorCurrentLimitEnable = driveMotorConfig.statorCurrentLimitEnable;
+    config.CurrentLimits.StatorCurrentLimit = driveMotorConfig.statorCurrentLimit;
 
-        config.CurrentLimits.StatorCurrentLimitEnable = driveMotorConfig.statorCurrentLimitEnable;
-        config.CurrentLimits.StatorCurrentLimit = driveMotorConfig.statorCurrentLimit;
+    config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = driveMotorConfig.openLoopRamp;
+    config.OpenLoopRamps.TorqueOpenLoopRampPeriod = driveMotorConfig.openLoopRamp;
+    config.OpenLoopRamps.VoltageOpenLoopRampPeriod = driveMotorConfig.openLoopRamp;
+    config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = driveMotorConfig.closedLoopRamp;
+    config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = driveMotorConfig.closedLoopRamp;
+    config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = driveMotorConfig.closedLoopRamp;
 
-        config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = driveMotorConfig.openLoopRamp;
-        config.OpenLoopRamps.TorqueOpenLoopRampPeriod = driveMotorConfig.openLoopRamp;
-        config.OpenLoopRamps.VoltageOpenLoopRampPeriod = driveMotorConfig.openLoopRamp;
-        config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = driveMotorConfig.closedLoopRamp;
-        config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = driveMotorConfig.closedLoopRamp;
-        config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = driveMotorConfig.closedLoopRamp;
+    config.MotorOutput.Inverted = driveMotorConfig.motorInvert;
+    config.MotorOutput.NeutralMode = driveMotorConfig.neutralMode;
 
-        
+    driveMotor.getConfigurator().apply(config);
 
-        config.MotorOutput.Inverted = driveMotorConfig.motorInvert;
-        config.MotorOutput.NeutralMode = driveMotorConfig.neutralMode;
+    driveMotor.getConfigurator().setPosition(0);
+  }
 
-        driveMotor.getConfigurator().apply(config);
+  /** Applies all configurations to the angle motor */
+  public void configAngleMotor() {
+    TalonFXConfiguration config = new TalonFXConfiguration();
+    angleMotor.getConfigurator().apply(new TalonFXConfiguration());
 
-        driveMotor.getConfigurator().setPosition(0);
-    }
+    config.CurrentLimits.SupplyCurrentLimitEnable = angleMotorConfig.supplyCurrentLimitEnable;
+    config.CurrentLimits.SupplyCurrentThreshold = angleMotorConfig.supplyCurrentThreshold;
+    config.CurrentLimits.SupplyTimeThreshold = angleMotorConfig.supplyTimeThreshold;
 
-    /**
-     * Applies all configurations to the angle motor
-     */
-    public void configAngleMotor() {
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        angleMotor.getConfigurator().apply(new TalonFXConfiguration());
+    config.CurrentLimits.StatorCurrentLimitEnable = driveMotorConfig.statorCurrentLimitEnable;
+    config.CurrentLimits.StatorCurrentLimit = driveMotorConfig.statorCurrentLimit;
 
-        config.CurrentLimits.SupplyCurrentLimitEnable = angleMotorConfig.supplyCurrentLimitEnable;
-        config.CurrentLimits.SupplyCurrentThreshold = angleMotorConfig.supplyCurrentThreshold;
-        config.CurrentLimits.SupplyTimeThreshold = angleMotorConfig.supplyTimeThreshold;
+    config.MotorOutput.Inverted = angleMotorConfig.motorInvert;
+    config.MotorOutput.NeutralMode = angleMotorConfig.neutralMode;
 
-        config.CurrentLimits.StatorCurrentLimitEnable = driveMotorConfig.statorCurrentLimitEnable;
-        config.CurrentLimits.StatorCurrentLimit = driveMotorConfig.statorCurrentLimit;
-        
+    angleMotor.getConfigurator().apply(config);
+  }
 
-        config.MotorOutput.Inverted = angleMotorConfig.motorInvert;
-        config.MotorOutput.NeutralMode = angleMotorConfig.neutralMode;
+  /** Applies all configurations to the angle absolute encoder */
+  public void configAngleEncoder() {
+    CANcoderConfiguration config = new CANcoderConfiguration();
+    angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
 
-        angleMotor.getConfigurator().apply(config);
-    }
+    config.MagnetSensor.AbsoluteSensorRange = cancoderSensorRange;
+    config.MagnetSensor.SensorDirection = cancoderSensorDirection;
 
+    angleEncoder.getConfigurator().apply(config);
+  }
 
-    /**
-     * Applies all configurations to the angle absolute encoder
-     */
-    public void configAngleEncoder() {
-        CANcoderConfiguration config = new CANcoderConfiguration();
-        angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
-
-        config.MagnetSensor.AbsoluteSensorRange = cancoderSensorRange;
-        config.MagnetSensor.SensorDirection = cancoderSensorDirection;
-
-        angleEncoder.getConfigurator().apply(config);
-    }
-
-    @Override
-    public void runCharachterization(double volts){
-        sysidControl.withOutput(volts);
-        angleMotor.setPosition(0);
-        driveMotor.setControl(sysidControl);
-    }
+  @Override
+  public void runCharachterization(double volts) {
+    sysidControl.withOutput(volts);
+    angleMotor.setPosition(0);
+    driveMotor.setControl(sysidControl);
+  }
 }

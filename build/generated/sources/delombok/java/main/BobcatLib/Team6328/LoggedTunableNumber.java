@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
-
 /**
  * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not or
  * value not in dashboard.
@@ -54,7 +53,7 @@ public class LoggedTunableNumber {
     if (!hasDefault) {
       hasDefault = true;
       this.defaultValue = defaultValue;
-      if (true) { //TODO check if tuning mode
+      if (true) { // TODO check if tuning mode
         dashboardNumber = new LoggedDashboardNumber(key, defaultValue);
       }
     }
