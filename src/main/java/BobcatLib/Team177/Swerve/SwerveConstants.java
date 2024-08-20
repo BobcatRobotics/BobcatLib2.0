@@ -40,7 +40,7 @@ public class SwerveConstants {
     this.moduleConfigs = moduleConfigs;
   }
 
-  public class KinematicsConstants {
+  public static class KinematicsConstants {
     /**
      * All measurments in METERS!!!!!!!
      *
@@ -71,7 +71,7 @@ public class SwerveConstants {
     public SwerveDriveKinematics kinematics;
   }
 
-  public class SpeedLimit {
+  public static class SpeedLimit {
     public double maxVelocity;
     public double maxAccel;
     public Rotation2d maxAngularVelocity;
@@ -90,7 +90,7 @@ public class SwerveConstants {
     }
   }
 
-  public class SwerveSpeedLimits {
+  public static class SwerveSpeedLimits {
     public SpeedLimit chassisLimits;
     public SpeedLimit moduleLimits;
 
@@ -104,7 +104,7 @@ public class SwerveConstants {
     }
   }
 
-  public class SwervePIDConfig {
+  public static class SwervePIDConfig {
     public double rotKP;
     public double rotKI;
     public double rotKD;
@@ -127,7 +127,7 @@ public class SwerveConstants {
     }
   }
 
-  public class SwerveMotorConfig {
+  public static class SwerveMotorConfig {
     public double kP;
     public double kI;
     public double kD;
@@ -150,12 +150,12 @@ public class SwerveConstants {
      * https://www.chiefdelphi.com/t/current-limiting-on-swerve/454392
      */
     public SwerveMotorConfig(
-        double rotKP,
-        double rotKI,
-        double rotKD,
-        double transKP,
-        double transKI,
-        double transKD,
+        double KP,
+        double KI,
+        double KD,
+        double KS,
+        double KV,
+        double KA,
         InvertedValue motorInvert,
         NeutralModeValue neutralMode,
         boolean supplyCurrentLimitEnable,
@@ -166,12 +166,12 @@ public class SwerveConstants {
         double statorCurrentLimit,
         double openLoopRamp,
         double closedLoopRamp) {
-      this.kP = rotKP;
-      this.kI = rotKI;
-      this.kD = rotKD;
-      this.kS = transKP;
-      this.kV = transKI;
-      this.kA = transKD;
+      this.kP = KP;
+      this.kI = KI;
+      this.kD = KD;
+      this.kS = KS;
+      this.kV = KV;
+      this.kA = KA;
       this.motorInvert = motorInvert;
       this.neutralMode = neutralMode;
       this.supplyCurrentLimitEnable = supplyCurrentLimitEnable;
@@ -185,7 +185,7 @@ public class SwerveConstants {
     }
   }
 
-  public class PIDConfigs {
+  public static class PIDConfigs {
     public SwervePIDConfig autoConfig;
     public SwervePIDConfig teleopConfig;
     public SwervePIDConfig autoAlignConfig;
@@ -215,7 +215,7 @@ public class SwerveConstants {
     }
   }
 
-  public class OdometryConstants {
+  public static class OdometryConstants {
     // odometry stuff only, vision stuff is in LimelightConstants
     /**
      * units based in meters
@@ -243,7 +243,7 @@ public class SwerveConstants {
     public double odometryDistrustAccel; // m/s^2
   }
 
-  public class ModuleConfig {
+  public static class ModuleConfig {
     public int cancoderID;
     public int angleMotorID;
     public int driveMotorID;
