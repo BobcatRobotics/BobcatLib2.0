@@ -1,6 +1,6 @@
 package BobcatLib.Team177.Swerve.SwerveModule;
 
-import BobcatLib.Team177.Swerve.SwerveConstants;
+import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;

@@ -5,8 +5,9 @@ BobcatLib.Team177.CANdle
 BobcatLib.Team177.Gamepads
 BobcatLib.Team177.PoseEstimation
 BobcatLib.Team177.Swerve
+BobcatLib.Team177.Swerve.Constants
+BobcatLib.Team177.Swerve.Gyro
 BobcatLib.Team177.Swerve.Interfaces
-BobcatLib.Team177.Swerve.JsonParser
 BobcatLib.Team177.Swerve.SwerveModule
 BobcatLib.Team177.Sysid
 BobcatLib.Team177.Vision

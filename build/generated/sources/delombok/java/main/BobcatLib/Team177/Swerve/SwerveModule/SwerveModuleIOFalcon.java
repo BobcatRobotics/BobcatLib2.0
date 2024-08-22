@@ -1,7 +1,7 @@
 package BobcatLib.Team177.Swerve.SwerveModule;
 
+import BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveMotorConfig;
 import BobcatLib.Team177.Swerve.PhoenixOdometryThread;
-import BobcatLib.Team177.Swerve.SwerveConstants.SwerveMotorConfig;
 import BobcatLib.Team254.ModuleConstants;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
