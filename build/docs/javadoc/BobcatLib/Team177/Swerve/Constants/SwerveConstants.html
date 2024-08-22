@@ -152,6 +152,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="SwerveConstants.SwerveSpeedLimits.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.SwerveSpeedLimits</a></code></div>
 <div class="col-second even-row-color"><code><a href="#speedLimits" class="member-name-link">speedLimits</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>boolean</code></div>
+<div class="col-second odd-row-color"><code><a href="#useFOC" class="member-name-link">useFOC</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -163,13 +166,15 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.pathplanner.lib.util.ReplanningConfig,edu.wpi.first.math.geometry.Rotation2d,BobcatLib.Team177.Swerve.Constants.SwerveConstants.KinematicsConstants,BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveSpeedLimits,BobcatLib.Team177.Swerve.Constants.SwerveConstants.PIDConfigs,BobcatLib.Team177.Swerve.Constants.SwerveConstants.OdometryConstants,BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveModuleConfigs)" class="member-name-link">SwerveConstants</a><wbr>(com.pathplanner.lib.util.ReplanningConfig&nbsp;replanningConfig,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.pathplanner.lib.util.ReplanningConfig,edu.wpi.first.math.geometry.Rotation2d,BobcatLib.Team177.Swerve.Constants.SwerveConstants.KinematicsConstants,BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveSpeedLimits,BobcatLib.Team177.Swerve.Constants.SwerveConstants.PIDConfigs,BobcatLib.Team177.Swerve.Constants.SwerveConstants.OdometryConstants,BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveModuleConfigs,int,boolean)" class="member-name-link">SwerveConstants</a><wbr>(com.pathplanner.lib.util.ReplanningConfig&nbsp;replanningConfig,
  edu.wpi.first.math.geometry.Rotation2d&nbsp;holoAlignTolerance,
  <a href="SwerveConstants.KinematicsConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.KinematicsConstants</a>&nbsp;kinematicsConstants,
  <a href="SwerveConstants.SwerveSpeedLimits.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.SwerveSpeedLimits</a>&nbsp;speedLimits,
  <a href="SwerveConstants.PIDConfigs.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.PIDConfigs</a>&nbsp;pidConfigs,
  <a href="SwerveConstants.OdometryConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.OdometryConstants</a>&nbsp;odometryConstants,
- <a href="SwerveConstants.SwerveModuleConfigs.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.SwerveModuleConfigs</a>&nbsp;moduleConfigs)</code></div>
+ <a href="SwerveConstants.SwerveModuleConfigs.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.SwerveModuleConfigs</a>&nbsp;moduleConfigs,
+ int&nbsp;pigeonID,
+ boolean&nbsp;useFOC)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -246,6 +251,12 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SwerveConstants.SwerveModuleConfigs.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.SwerveModuleConfigs</a></span>&nbsp;<span class="element-name">moduleConfigs</span></div>
 </section>
 </li>
+<li>
+<section class="detail" id="useFOC">
+<h3>useFOC</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">useFOC</span></div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -255,7 +266,7 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.pathplanner.lib.util.ReplanningConfig,edu.wpi.first.math.geometry.Rotation2d,BobcatLib.Team177.Swerve.Constants.SwerveConstants.KinematicsConstants,BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveSpeedLimits,BobcatLib.Team177.Swerve.Constants.SwerveConstants.PIDConfigs,BobcatLib.Team177.Swerve.Constants.SwerveConstants.OdometryConstants,BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveModuleConfigs)">
+<section class="detail" id="&lt;init&gt;(com.pathplanner.lib.util.ReplanningConfig,edu.wpi.first.math.geometry.Rotation2d,BobcatLib.Team177.Swerve.Constants.SwerveConstants.KinematicsConstants,BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveSpeedLimits,BobcatLib.Team177.Swerve.Constants.SwerveConstants.PIDConfigs,BobcatLib.Team177.Swerve.Constants.SwerveConstants.OdometryConstants,BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveModuleConfigs,int,boolean)">
 <h3>SwerveConstants</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SwerveConstants</span><wbr><span class="parameters">(com.pathplanner.lib.util.ReplanningConfig&nbsp;replanningConfig,
  edu.wpi.first.math.geometry.Rotation2d&nbsp;holoAlignTolerance,
@@ -263,7 +274,9 @@ loadScripts(document, 'script');</script>
  <a href="SwerveConstants.SwerveSpeedLimits.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.SwerveSpeedLimits</a>&nbsp;speedLimits,
  <a href="SwerveConstants.PIDConfigs.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.PIDConfigs</a>&nbsp;pidConfigs,
  <a href="SwerveConstants.OdometryConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.OdometryConstants</a>&nbsp;odometryConstants,
- <a href="SwerveConstants.SwerveModuleConfigs.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.SwerveModuleConfigs</a>&nbsp;moduleConfigs)</span></div>
+ <a href="SwerveConstants.SwerveModuleConfigs.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants.SwerveModuleConfigs</a>&nbsp;moduleConfigs,
+ int&nbsp;pigeonID,
+ boolean&nbsp;useFOC)</span></div>
 </section>
 </li>
 </ul>

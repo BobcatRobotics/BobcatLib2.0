@@ -19,38 +19,30 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import java.io.File;
 import java.io.IOException;
 
-public class ParsedSwerveConstants {
-  private SwerveConstants constants;
-  private ReplanningConfig replanningConfig;
-  private Rotation2d holoAlignTolerance;
-  private KinematicsConstants kinematicsConstants;
-  private SwerveSpeedLimits swerveSpeedLimits;
-  private PIDConfigs pidConfigs;
-  private OdometryConstants odometryConstants;
-  private SwerveModuleConfigs moduleConfigs;
+public class SwerveConstantCreator {
 
-  public SwerveConstants parseConstants(File jsonFile) throws IOException {
+  public static SwerveConstants parseConstants(File jsonFile) throws IOException {
 
     ObjectMapper mapper = new ObjectMapper();
     JsonNode node;
     // read json file
     node = mapper.readTree(jsonFile);
 
-    replanningConfig =
+    ReplanningConfig replanningConfig =
         new ReplanningConfig(
             node.get(JsonElements.enableInitialReplanning).asBoolean(),
             node.get(JsonElements.enableDynamicReplanning).asBoolean());
 
-    holoAlignTolerance =
+    Rotation2d holoAlignTolerance =
         Rotation2d.fromRadians(node.get(JsonElements.holoAlignToleranceRads).asDouble(-1));
 
-    kinematicsConstants =
+    KinematicsConstants kinematicsConstants =
         new KinematicsConstants(
             node.get(JsonElements.wheelBaseMeters).asDouble(-1),
             node.get(JsonElements.trackWidthMeters).asDouble(-1),
             node.get(JsonElements.wheelCircumferenceMeters).asDouble(-1));
 
-    swerveSpeedLimits =
+    SwerveSpeedLimits swerveSpeedLimits =
         new SwerveSpeedLimits(
             new SpeedLimit(
                 node.get(JsonElements.chassisMaxVelocityMPS).asDouble(-1),
@@ -67,7 +59,7 @@ public class ParsedSwerveConstants {
                 Rotation2d.fromRadians(
                     node.get(JsonElements.moduleMaxAngularAccelRPS2).asDouble(-1))));
 
-    pidConfigs =
+    PIDConfigs pidConfigs =
         new PIDConfigs(
             new SwervePIDConfig( // auto
                 node.get(JsonElements.autoRotKP).asDouble(-1),
@@ -110,7 +102,8 @@ public class ParsedSwerveConstants {
                 node.get(JsonElements.angleStatorLimitEnable).asBoolean(),
                 node.get(JsonElements.angleStatorLimit).asDouble(-1),
                 0,
-                0),
+                0,
+                node.get(JsonElements.angleGearRatio).asDouble(-1)),
             new SwerveMotorConfig( // drive
                 node.get(JsonElements.driveKP).asDouble(-1),
                 node.get(JsonElements.driveKI).asDouble(-1),
@@ -131,9 +124,10 @@ public class ParsedSwerveConstants {
                 node.get(JsonElements.driveStatorLimitEnable).asBoolean(),
                 node.get(JsonElements.driveStatorLimit).asDouble(-1),
                 node.get(JsonElements.driveOpenLoopRamp).asDouble(),
-                node.get(JsonElements.driveClosedLoopRamp).asDouble()));
+                node.get(JsonElements.driveClosedLoopRamp).asDouble(),
+                node.get(JsonElements.driveGearRatio).asDouble(-1)));
 
-    odometryConstants =
+    OdometryConstants odometryConstants =
         new OdometryConstants(
             VecBuilder.fill(
                 node.get(JsonElements.stateTrustPositionStdDevMeters).asDouble(-1),
@@ -146,7 +140,7 @@ public class ParsedSwerveConstants {
             node.get(JsonElements.odometryThrowoutAccel).asDouble(-1),
             node.get(JsonElements.odometryDistrustAccel).asDouble(-1));
 
-    moduleConfigs =
+    SwerveModuleConfigs moduleConfigs =
         new SwerveModuleConfigs(
             new ModuleConfig(
                 node.get(JsonElements.flCancoderID).asInt(-1),
@@ -169,17 +163,16 @@ public class ParsedSwerveConstants {
                 node.get(JsonElements.brDriveID).asInt(-1),
                 Rotation2d.fromRadians(node.get(JsonElements.brOffsetRads).asDouble(-1))));
 
-    constants =
-        new SwerveConstants(
-            replanningConfig,
-            holoAlignTolerance,
-            kinematicsConstants,
-            swerveSpeedLimits,
-            pidConfigs,
-            odometryConstants,
-            moduleConfigs);
-
-    return constants;
+    return new SwerveConstants(
+        replanningConfig,
+        holoAlignTolerance,
+        kinematicsConstants,
+        swerveSpeedLimits,
+        pidConfigs,
+        odometryConstants,
+        moduleConfigs,
+        node.get(JsonElements.pigeonID).asInt(-1),
+        node.get(JsonElements.useFOC).asBoolean());
   }
 
   public class JsonElements {
@@ -190,6 +183,8 @@ public class ParsedSwerveConstants {
     public static final String wheelBaseMeters = "wheelBaseMeters";
     public static final String trackWidthMeters = "trackWidthMeters";
     public static final String wheelCircumferenceMeters = "wheelCircumferenceMeters";
+    public static final String pigeonID = "pigeonID";
+    public static final String useFOC = "useFOC";
 
     public static final String chassisMaxVelocityMPS = "chassisMaxVelocityMPS";
     public static final String chassisMaxAccelMPS2 = "chassisMaxAccelMPS2";
@@ -234,6 +229,7 @@ public class ParsedSwerveConstants {
         "angleSupplyCurrentLimitTimeThreshold";
     public static final String angleStatorLimitEnable = "angleStatorLimitEnable";
     public static final String angleStatorLimit = "angleStatorLimit";
+    public static final String angleGearRatio = "angleGearRatio";
 
     public static final String driveKP = "driveKP";
     public static final String driveKI = "driveKI";
@@ -253,6 +249,7 @@ public class ParsedSwerveConstants {
     public static final String driveStatorLimit = "driveStatorLimit";
     public static final String driveOpenLoopRamp = "driveOpenLoopRamp";
     public static final String driveClosedLoopRamp = "driveClosedLoopRamp";
+    public static final String driveGearRatio = "driveGearRatio";
 
     public static final String stateTrustPositionStdDevMeters = "stateTrustPositionStdDevMeters";
     public static final String stateTrustRotationStdDevRads = "stateTrustRotationStdDevRads";
