@@ -6,6 +6,7 @@ import BobcatLib.Team177.BobcatUtil;
 import BobcatLib.Team177.PoseEstimation.BobcatSwerveEstimator;
 import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
 import BobcatLib.Team177.Swerve.Gyro.GyroIO;
+import BobcatLib.Team177.Swerve.Gyro.GyroIOInputsAutoLogged;
 import BobcatLib.Team177.Swerve.Interfaces.AutomatedSwerve;
 import BobcatLib.Team177.Swerve.Interfaces.SysidCompatibleSwerve;
 import BobcatLib.Team177.Swerve.SwerveModule.SwerveModule;
