@@ -23,6 +23,7 @@ public class SwerveConstants {
   public OdometryConstants odometryConstants;
   public SwerveModuleConfigs moduleConfigs;
   public boolean useFOC = true;
+  public String canbus = "";
 
   public SwerveConstants(
       ReplanningConfig replanningConfig,
@@ -33,7 +34,8 @@ public class SwerveConstants {
       OdometryConstants odometryConstants,
       SwerveModuleConfigs moduleConfigs,
       int pigeonID,
-      boolean useFOC) {
+      boolean useFOC,
+      String canbus) {
     this.replanningConfig = replanningConfig;
     this.holoAlignTolerance = holoAlignTolerance;
     this.kinematicsConstants = kinematicsConstants;
@@ -43,6 +45,7 @@ public class SwerveConstants {
     this.moduleConfigs = moduleConfigs;
     this.pigeonID = pigeonID;
     this.useFOC = useFOC;
+    this.canbus = canbus;
   }
 
   public static class KinematicsConstants {
