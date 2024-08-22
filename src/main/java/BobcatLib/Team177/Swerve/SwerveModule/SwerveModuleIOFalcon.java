@@ -55,8 +55,6 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
   public SwerveModuleIOFalcon(
       ModuleConstants moduleConstants,
       boolean useFOC,
-      double driveGearRatio,
-      double angleGearRatio,
       SwerveMotorConfig driveMotorConfig,
       SwerveMotorConfig angleMotorConfig,
       AbsoluteSensorRangeValue cancoderSensorRange,
@@ -65,6 +63,9 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
     this.cancoderSensorDirection = cancoderSensorDirection;
     this.cancoderSensorRange = cancoderSensorRange;
 
+    driveGearRatio = driveMotorConfig.gearRatio;
+    angleGearRatio = angleMotorConfig.gearRatio;
+    
     angleEncoder = new CANcoder(moduleConstants.cancoderID);
     configAngleEncoder();
     angleMotor = new TalonFX(moduleConstants.angleMotorID);

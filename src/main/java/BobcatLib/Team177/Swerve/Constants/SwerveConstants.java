@@ -22,6 +22,7 @@ public class SwerveConstants {
   public PIDConfigs pidConfigs;
   public OdometryConstants odometryConstants;
   public SwerveModuleConfigs moduleConfigs;
+  public boolean useFOC = true;
 
   public SwerveConstants(
       ReplanningConfig replanningConfig,
@@ -30,7 +31,8 @@ public class SwerveConstants {
       SwerveSpeedLimits speedLimits,
       PIDConfigs pidConfigs,
       OdometryConstants odometryConstants,
-      SwerveModuleConfigs moduleConfigs) {
+      SwerveModuleConfigs moduleConfigs, int pigeonID,
+      boolean useFOC) {
     this.replanningConfig = replanningConfig;
     this.holoAlignTolerance = holoAlignTolerance;
     this.kinematicsConstants = kinematicsConstants;
@@ -38,6 +40,8 @@ public class SwerveConstants {
     this.pidConfigs = pidConfigs;
     this.odometryConstants = odometryConstants;
     this.moduleConfigs = moduleConfigs;
+    this.pigeonID = pigeonID;
+    this.useFOC = useFOC;
   }
 
   public static class KinematicsConstants {
@@ -144,6 +148,7 @@ public class SwerveConstants {
     public double statorCurrentLimit;
     public double openLoopRamp;
     public double closedLoopRamp;
+    public double gearRatio;
 
     /**
      * see docs on current limiting for more info
@@ -165,7 +170,8 @@ public class SwerveConstants {
         boolean statorCurrentLimitEnable,
         double statorCurrentLimit,
         double openLoopRamp,
-        double closedLoopRamp) {
+        double closedLoopRamp, 
+        double gearRatio) {
       this.kP = KP;
       this.kI = KI;
       this.kD = KD;
@@ -182,6 +188,7 @@ public class SwerveConstants {
       this.statorCurrentLimit = statorCurrentLimit;
       this.openLoopRamp = openLoopRamp;
       this.closedLoopRamp = closedLoopRamp;
+      this.gearRatio = gearRatio;
     }
   }
 
@@ -262,10 +269,10 @@ public class SwerveConstants {
   }
 
   public static class SwerveModuleConfigs {
-    ModuleConfig frontLeft;
-    ModuleConfig frontRight;
-    ModuleConfig backLeft;
-    ModuleConfig backRight;
+   public ModuleConfig frontLeft;
+   public ModuleConfig frontRight;
+   public ModuleConfig backLeft;
+   public ModuleConfig backRight;
 
     public SwerveModuleConfigs(
         ModuleConfig frontLeft,

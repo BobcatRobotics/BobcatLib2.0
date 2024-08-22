@@ -5,14 +5,21 @@ import static edu.wpi.first.units.Units.Volts;
 import BobcatLib.Team177.BobcatUtil;
 import BobcatLib.Team177.PoseEstimation.BobcatSwerveEstimator;
 import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
+import BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveMotorConfig;
 import BobcatLib.Team177.Swerve.Gyro.GyroIO;
 import BobcatLib.Team177.Swerve.Gyro.GyroIOInputsAutoLogged;
+import BobcatLib.Team177.Swerve.Gyro.GyroIOPigeon2;
 import BobcatLib.Team177.Swerve.Interfaces.AutomatedSwerve;
 import BobcatLib.Team177.Swerve.Interfaces.SysidCompatibleSwerve;
 import BobcatLib.Team177.Swerve.SwerveModule.SwerveModule;
 import BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO;
+import BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import BobcatLib.Team177.Vision.Vision;
 import BobcatLib.Team177.Vision.VisionObservation;
+import BobcatLib.Team254.ModuleConstants;
+
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
@@ -83,6 +90,23 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   Matrix<N3, N1> regautostdDev;
   Matrix<N3, N1> regtelestdDev;
 
+  /**
+   * Core constructor for the swerve base, dont use this unless you know what you are doing
+   * 
+   * @param gyroIO the gyro to be used
+   * @param flIO the front left swerve module
+   * @param frIO the front right swerve module
+   * @param blIO the back left swerve module
+   * @param brIO the back right swerve module
+   * @param loopPeriodSecs processor loop period in seconds (default 0.02)
+   * @param filterTags the tags to be ignored by the cameras
+   * @param trustautostdDev the trust std devs for auto
+   * @param trusttelestdDev the trust std devs for tele
+   * @param regautostdDev the regular std devs for auto
+   * @param regtelestdDev the regular std devs for tele
+   * @param constants the constants for the swerve base
+   * @param cameras the cameras to be used for vision
+   */
   public SwerveBase(
       GyroIO gyroIO,
       SwerveModuleIO flIO,
@@ -164,6 +188,61 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTarget);
   }
+  
+/**
+ * 
+ * @param constants the constants for the swerve base
+ * @param filterTags the tags to be ignored by the cameras
+ * @param visionStdDevs should contain 4 3x1 matrices, the first two are the trust std devs for auto and tele, the last two are the regular std devs for auto and tele,
+ * the matrices should be in the order of x, y, theta
+ * @param cameras the cameras to be used for vision
+ */
+  public SwerveBase(SwerveConstants constants, int[] filterTags, Matrix<N3,N1>[] visionStdDevs, Vision... cameras) {
+    this(constants, filterTags, visionStdDevs, 0.02, AbsoluteSensorRangeValue.Unsigned_0To1, SensorDirectionValue.CounterClockwise_Positive, cameras);
+  }
+  public SwerveBase(
+    SwerveConstants constants, int[] filterTags, Matrix<N3,N1>[] visionStdDevs,
+    double loopPeriodSecs, AbsoluteSensorRangeValue cancoderRange, SensorDirectionValue cancoderDirection, Vision... cameras) {
+        this(
+      new GyroIOPigeon2(0),
+      new SwerveModuleIOFalcon( // front left
+        constants.moduleConfigs.frontLeft.moduleConstants,
+        constants.useFOC,
+        constants.pidConfigs.driveMotorConfig, 
+        constants.pidConfigs.angleMotorConfig,
+        cancoderRange,
+        cancoderDirection),
+      new SwerveModuleIOFalcon( // front right
+        constants.moduleConfigs.frontRight.moduleConstants,
+        constants.useFOC,
+        constants.pidConfigs.driveMotorConfig, 
+        constants.pidConfigs.angleMotorConfig,
+        cancoderRange,
+        cancoderDirection),
+      new SwerveModuleIOFalcon( // back left
+        constants.moduleConfigs.backLeft.moduleConstants,
+        constants.useFOC,
+        constants.pidConfigs.driveMotorConfig, 
+        constants.pidConfigs.angleMotorConfig,
+        cancoderRange,
+        cancoderDirection),
+      new SwerveModuleIOFalcon( // back right
+        constants.moduleConfigs.backRight.moduleConstants,
+        constants.useFOC,
+        constants.pidConfigs.driveMotorConfig, 
+        constants.pidConfigs.angleMotorConfig,
+        cancoderRange,
+        cancoderDirection), 
+      loopPeriodSecs, 
+      filterTags,
+      visionStdDevs[0], 
+      visionStdDevs[1],
+      visionStdDevs[2],
+      visionStdDevs[3],
+      constants,
+      cameras);
+    } 
+
 
   public void setLastMovingYaw(double value) {
     lastMovingYaw = value;
