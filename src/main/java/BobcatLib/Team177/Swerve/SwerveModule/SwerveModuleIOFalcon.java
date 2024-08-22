@@ -44,6 +44,7 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
 
   private final Queue<Double> anglePositionQueue;
   private final StatusSignal<Double> angleAbsolutePosition;
+  private String canbus;
   private VoltageOut sysidControl = new VoltageOut(0);
   private double driveGearRatio;
   private double angleGearRatio;
@@ -58,19 +59,20 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
       SwerveMotorConfig driveMotorConfig,
       SwerveMotorConfig angleMotorConfig,
       AbsoluteSensorRangeValue cancoderSensorRange,
-      SensorDirectionValue cancoderSensorDirection) {
+      SensorDirectionValue cancoderSensorDirection,
+      String canbus) {
     encoderOffset = moduleConstants.angleOffset;
     this.cancoderSensorDirection = cancoderSensorDirection;
     this.cancoderSensorRange = cancoderSensorRange;
-
+    this.canbus = canbus;
     driveGearRatio = driveMotorConfig.gearRatio;
     angleGearRatio = angleMotorConfig.gearRatio;
 
-    angleEncoder = new CANcoder(moduleConstants.cancoderID);
+    angleEncoder = new CANcoder(moduleConstants.cancoderID, canbus);
     configAngleEncoder();
-    angleMotor = new TalonFX(moduleConstants.angleMotorID);
+    angleMotor = new TalonFX(moduleConstants.angleMotorID, canbus);
     configAngleMotor();
-    driveMotor = new TalonFX(moduleConstants.driveMotorID);
+    driveMotor = new TalonFX(moduleConstants.driveMotorID, canbus);
     configDriveMotor();
 
     driveRequest = new DutyCycleOut(0.0).withEnableFOC(useFOC);

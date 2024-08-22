@@ -172,7 +172,8 @@ public class SwerveConstantCreator {
         odometryConstants,
         moduleConfigs,
         node.get(JsonElements.pigeonID).asInt(-1),
-        node.get(JsonElements.useFOC).asBoolean());
+        node.get(JsonElements.useFOC).asBoolean(),
+        node.get(JsonElements.canbus).asText());
   }
 
   public class JsonElements {
@@ -185,6 +186,7 @@ public class SwerveConstantCreator {
     public static final String wheelCircumferenceMeters = "wheelCircumferenceMeters";
     public static final String pigeonID = "pigeonID";
     public static final String useFOC = "useFOC";
+    public static final String canbus = "canbus";
 
     public static final String chassisMaxVelocityMPS = "chassisMaxVelocityMPS";
     public static final String chassisMaxAccelMPS2 = "chassisMaxAccelMPS2";
