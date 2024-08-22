@@ -1,7 +1,7 @@
 package BobcatLib.Team177.Swerve.SwerveModule;
 
+import BobcatLib.Team177.Swerve.Constants.SwerveConstants.SwerveMotorConfig;
 import BobcatLib.Team177.Swerve.PhoenixOdometryThread;
-import BobcatLib.Team177.Swerve.SwerveConstants.SwerveMotorConfig;
 import BobcatLib.Team254.ModuleConstants;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -55,8 +55,6 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
   public SwerveModuleIOFalcon(
       ModuleConstants moduleConstants,
       boolean useFOC,
-      double driveGearRatio,
-      double angleGearRatio,
       SwerveMotorConfig driveMotorConfig,
       SwerveMotorConfig angleMotorConfig,
       AbsoluteSensorRangeValue cancoderSensorRange,
@@ -64,6 +62,9 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
     encoderOffset = moduleConstants.angleOffset;
     this.cancoderSensorDirection = cancoderSensorDirection;
     this.cancoderSensorRange = cancoderSensorRange;
+
+    driveGearRatio = driveMotorConfig.gearRatio;
+    angleGearRatio = angleMotorConfig.gearRatio;
 
     angleEncoder = new CANcoder(moduleConstants.cancoderID);
     configAngleEncoder();

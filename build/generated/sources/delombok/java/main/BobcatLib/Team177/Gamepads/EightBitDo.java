@@ -20,6 +20,15 @@ public class EightBitDo {
   public DoubleSupplier leftYAxis;
   public DoubleSupplier rightXAxis;
   public DoubleSupplier rightYAxis;
+  public Trigger povUp;
+  public Trigger povDown;
+  public Trigger povLeft;
+  public Trigger povRight;
+  public Trigger povCenter;
+  public Trigger povDownLeft;
+  public Trigger povDownRight;
+  public Trigger povUpLeft;
+  public Trigger povUpRight;
 
   /**
    * 8bitdo controller
@@ -47,13 +56,22 @@ public class EightBitDo {
     start = gp.button(8);
     leftPaddle = gp.button(9);
     rightPaddle = gp.button(10);
+    povUp = gp.povUp();
+    povDown = gp.povDown();
+    povLeft = gp.povLeft();
+    povRight = gp.povRight();
+    povCenter = gp.povCenter();
+    povDownLeft = gp.povDownLeft();
+    povDownRight = gp.povDownRight();
+    povUpLeft = gp.povUpLeft();
+    povUpRight = gp.povUpRight();
   }
 
   // TODO figure these out
   private void configureAxes() {
-    leftXAxis = () -> gp.getRawAxis(0);
+    leftXAxis = () -> gp.getRawAxis(1);
     leftYAxis = () -> gp.getRawAxis(0);
-    rightXAxis = () -> gp.getRawAxis(0);
-    rightYAxis = () -> gp.getRawAxis(0);
+    rightXAxis = () -> gp.getRawAxis(4);
+    rightYAxis = () -> gp.getRawAxis(3);
   }
 }
