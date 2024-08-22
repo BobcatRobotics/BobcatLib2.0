@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bobcatlib JSON Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            color: #004d40;
+            padding: 20px;
+        }
+        #json-generator {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #b2ebf2;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            min-height: 150px; /* Ensure card has a minimum height */
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        button {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #004d40;
+        }
+        span { font-size: 3em; }
+        span b { font-size: 100%; font-weight: 600; }
+        span lib { font-family: monospace; font-size: 140%; color: #770e0e; }
+        span slash { font-family: monospace; font-size: 100%; color: #dfba40; }
+        span swerve {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 600;
+            color: #7067cf;
+        }
+    </style>
+
+    </style>
+</head>
+<body>
+
+    <fieldset id="title" style="background-color: transparent; border: none; padding: 0;">
+        <div style="text-align: center;">
+            <span><lib>Bobact<slash>&lt;/&gt;</slash>lib</lib></span>
+        </div>
+        <div style="text-align: center;">
+            <span><swerve>Swerve Drive</swerve> Configurator 🦀</span>
+        </div>
+        </fieldset>
+
+<div id="json-generator">
+    <div class="card">
+        <h2>Front Left Module Config</h2>
+        <div class="input-group"><label>CanCoder ID:</label><input type="number" step="0.01" name="flCancoderID"></div>
+        <div class="input-group"><label>Drive Motor ID:</label><input type="number" step="0.01" name="flDriveID"></div>
+        <div class="input-group"><label>Angle Motor ID:</label><input type="number" step="0.01" name="flAngleID"></div>
+        <div class="input-group"><label>CanCoder Offset (Rads):</label><input type="number" step="0.01" name="flOffsetRads"></div>
+    </div>
+    <div class="card">
+        <h2>Front Right Module Config</h2>
+        <div class="input-group"><label>CanCoder ID:</label><input type="number" step="0.01" name="frCancoderID"></div>
+        <div class="input-group"><label>Drive Motor ID:</label><input type="number" step="0.01" name="frDriveID"></div>
+        <div class="input-group"><label>Angle Motor ID:</label><input type="number" step="0.01" name="frAngleID"></div>
+        <div class="input-group"><label>CanCoder Offset (Rads):</label><input type="number" step="0.01" name="frOffsetRads"></div>
+    </div>
+    <div class="card">
+        <h2>Back Left Module Config</h2>
+        <div class="input-group"><label>CanCoder ID:</label><input type="number" step="0.01" name="blCancoderID"></div>
+        <div class="input-group"><label>Drive Motor ID:</label><input type="number" step="0.01" name="blDriveID"></div>
+        <div class="input-group"><label>Angle Motor ID:</label><input type="number" step="0.01" name="blAngleID"></div>
+        <div class="input-group"><label>CanCoder Offset (Rads):</label><input type="number" step="0.01" name="blOffsetRads"></div>
+    </div>
+    <div class="card">
+        <h2>Back Right Module Config</h2>
+        <div class="input-group"><label>CanCoder ID:</label><input type="number" step="0.01" name="brCancoderID"></div>
+        <div class="input-group"><label>Drive Motor ID:</label><input type="number" step="0.01" name="brDriveID"></div>
+        <div class="input-group"><label>Angle Motor ID:</label><input type="number" step="0.01" name="brAngleID"></div>
+        <div class="input-group"><label>CanCoder Offset (Rads):</label><input type="number" step="0.01" name="brOffsetRads"></div>
+    </div>
+    <div class="card">
+        <h2>AutoAlign PID Config</h2>
+        <div class="input-group"><label>Rotation kP:</label><input type="number" step="0.01" name="autoAlignKP"></div>
+        <div class="input-group"><label>Rotation kI:</label><input type="number" step="0.01" name="autoAlignKI"></div>
+        <div class="input-group"><label>Rotation kD:</label><input type="number" step="0.01" name="autoAlignKD"></div>
+    </div>
+    <div class="card">
+        <h2>Auto PID Config</h2>
+        <div class="input-group"><label>Rotation kP:</label><input type="number" step="0.01" name="autoRotKP"></div>
+        <div class="input-group"><label>Rotation kI:</label><input type="number" step="0.01" name="autoRotKI"></div>
+        <div class="input-group"><label>Rotation kD:</label><input type="number" step="0.01" name="autoRotKD"></div>
+        <div class="input-group"><label>Translation kP:</label><input type="number" step="0.01" name="autoTransKP"></div>
+        <div class="input-group"><label>Translation kI:</label><input type="number" step="0.01" name="autoTransKI"></div>
+        <div class="input-group"><label>Translation kD:</label><input type="number" step="0.01" name="autoTransKD"></div>
+    </div>
+    <div class="card">
+        <h2>Teleop PID Config</h2>
+        <div class="input-group"><label>Rotation kP:</label><input type="number" step="0.01" name="teleopRotKP"></div>
+        <div class="input-group"><label>Rotation kI:</label><input type="number" step="0.01" name="teleopRotKI"></div>
+        <div class="input-group"><label>Rotation kD:</label><input type="number" step="0.01" name="teleopRotKD"></div>
+        <div class="input-group"><label>Translation kP:</label><input type="number" step="0.01" name="teleopTransKP"></div>
+        <div class="input-group"><label>Translation kI:</label><input type="number" step="0.01" name="teleopTransKI"></div>
+        <div class="input-group"><label>Translation kD:</label><input type="number" step="0.01" name="teleopTransKD"></div>
+    </div>
+
+    <div class="card">
+        <h2>General Configs</h2>
+        <div class="input-group"><label>Enable Initial Replanning:</label><input type="checkbox" name="enableInitialReplanning" checked></div>
+        <div class="input-group"><label>Enable Dynamic Replanning:</label><input type="checkbox" name="enableDynamicReplanning" checked></div>
+        <div class="input-group"><label>Holonomic Alignment Tolerance (rads):</label><input type="number" step="0.01" name="holoAlignToleranceRads" value="0.17"></div>
+        <div class="input-group"><label>Wheelbase (Meters):</label><input type="number" step="0.01" name="wheelBaseMeters"></div>
+        <div class="input-group"><label>Trackwidth (Meters):</label><input type="number" step="0.01" name="trackWidthMeters"></div>
+        <div class="input-group"><label>Wheel Circumference (Meters):</label><input type="number" step="0.01" value="0.1016" name="wheelCircumferenceMeters"></div>
+    </div>
+
+    <div class="card">
+        <h2>Chassis Speed Limits</h2>
+        <div class="input-group"><label>Max Velocity (M/s):</label><input type="number" step="0.01" name="chassisMaxVelocityMPS"></div>
+        <div class="input-group"><label>Max Accel (M/s^2):</label><input type="number" step="0.01" name="chassisMaxAccelMPS2"></div>
+        <div class="input-group"><label>Max Angular Velocity (Rads/sec):</label><input type="number" step="0.01" name="chassisMaxAngularVelocityRPS"></div>
+        <div class="input-group"><label>Max Angular Accel (Rads/sec^2):</label><input type="number" step="0.01" name="chassisMaxAngularAccelRPS2"></div>
+    </div>
+    <div class="card">
+        <h2>Module Speed Limits</h2>
+        <div class="input-group"><label>Max Velocity (M/s):</label><input type="number" step="0.01" name="moduleMaxVelocityMPS"></div>
+        <div class="input-group"><label>Max Accel (M/s^2):</label><input type="number" step="0.01" name="moduleMaxAccelMPS2"></div>
+        <div class="input-group"><label>Max Angular Velocity (Rads/sec):</label><input type="number" step="0.01" name="moduleMaxAngularVelocityRPS"></div>
+        <div class="input-group"><label>Max Angular Accel (Rads/sec^2):</label><input type="number" step="0.01" name="moduleMaxAngularAccelRPS2"></div>
+    </div>
+
+
+
+    <div class="card">
+        <h2>Odometry Configs</h2> 
+        <div class="input-group"><label>Trust Position Std Dev (Meters):</label><input type="number" value="0.01" step="0.01" name="stateTrustPositionStdDevMeters"></div>
+        <div class="input-group"><label>Trust Rotation Std Dev (Rads):</label><input type="number" value="0.017" step="0.01" name="stateTrustRotationStdDevRads"></div>
+        <div class="input-group"><label>Distrust Position Std Dev (Meters):</label><input type="number" value="0.15" step="0.01" name="stateDistrustPositionStdDevMeters"></div>
+        <div class="input-group"><label>Distrust Rotation Std Dev (Rads):</label><input type="number" value="0.17" step="0.01" name="stateDistrustRotationStdDevRads"></div>
+        <div class="input-group"><label>Distrust Acceleration (M/s^2):</label><input type="number" step="0.01" name="odometryThrowoutAccel"></div>
+        <div class="input-group"><label>Throwout Acceleration (M/s^2):</label><input type="number" step="0.01" name="odometryDistrustAccel"></div>
+
+    </div>
+
+
+        
+    <div class="card">
+        <h2>Angle Motor Config</h2>
+        <div class="input-group"><label>kP:</label><input type="number" step="0.01" name="angleKP"></div>
+        <div class="input-group"><label>kI:</label><input type="number" step="0.01" name="angleKI"></div>
+        <div class="input-group"><label>kD:</label><input type="number" step="0.01" name="angleKD"></div>
+        <div class="input-group"><label>kS:</label><input type="number" step="0.01" name="angleKS"></div>
+        <div class="input-group"><label>kV:</label><input type="number" step="0.01" name="angleKV"></div>
+        <div class="input-group"><label>kA:</label><input type="number" step="0.01" name="angleKA"></div>
+        <div class="input-group"><label>Motor Inverted:</label><input type="checkbox" name="angleInverted" checked></div>
+        <div class="input-group"><label>Should Coast:</label><input type="checkbox" name="angleShouldCoast" checked></div>
+        <div class="input-group"><label>Supply Current Limit Enabled?:</label><input type="checkbox" name="angleSupplyCurrentLimitEnable" checked></div>
+        <div class="input-group"><label>Supply Current Limit (Amps):</label><input type="number" step="0.01" value="25" name="angleSupplyCurrentLimit"></div>
+        <div class="input-group"><label>Supply Current Limit Threshold (Amps):</label><input type="number" value="40" step="0.01" name="angleSupplyCurrentLimitThreshold"></div>
+        <div class="input-group"><label>Supply Current Limit Time Threshold (Seconds):</label><input type="number" value="0.1" step="0.01" name="angleSupplyCurrentLimitTimeThreshold"></div>
+        <div class="input-group"><label>Stator Current Limit Enabled?</label><input type="checkbox" name="angleStatorLimitEnable" checked></div>
+        <div class="input-group"><label>Stator Current Limit (Amps):</label><input type="number" step="0.01" value="20" name="angleStatorLimit"></div>
+    </div>
+    <div class="card">
+        <h2>Drive Motor Config</h2>
+        <div class="input-group"><label>kP:</label><input type="number" step="0.01" name="driveKP"></div>
+        <div class="input-group"><label>kI:</label><input type="number" step="0.01" name="driveKI"></div>
+        <div class="input-group"><label>kD:</label><input type="number" step="0.01" name="driveKD"></div>
+        <div class="input-group"><label>kS:</label><input type="number" step="0.01" name="driveKS"></div>
+        <div class="input-group"><label>kV:</label><input type="number" step="0.01" name="driveKV"></div>
+        <div class="input-group"><label>kA:</label><input type="number" step="0.01" name="driveKA"></div>
+        <div class="input-group"><label>Motor Inverted:</label><input type="checkbox" name="driveInverted" ></div>
+        <div class="input-group"><label>Should Coast:</label><input type="checkbox" name="driveShouldCoast" ></div>
+        <div class="input-group"><label>Supply Current Limit Enabled?:</label><input type="checkbox" name="driveSupplyCurrentLimitEnable" checked></div>
+        <div class="input-group"><label>Supply Current Limit (Amps):</label><input type="number" step="0.01" value="35" name="driveSupplyCurrentLimit"></div>
+        <div class="input-group"><label>Supply Current Limit Threshold (Amps):</label><input type="number" value="60" step="0.01" name="driveSupplyCurrentLimitThreshold"></div>
+        <div class="input-group"><label>Supply Current Limit Time Threshold (Seconds):</label><input type="number" value="0.1" step="0.01" name="driveSupplyCurrentLimitTimeThreshold"></div>
+        <div class="input-group"><label>Stator Current Limit Enabled?</label><input type="checkbox" name="driveStatorLimitEnable" checked></div>
+        <div class="input-group"><label>Stator Current Limit (Amps):</label><input type="number" step="0.01" value="60" name="driveStatorLimit"></div>
+        <div class="input-group"><label>Open Loop Ramp:</label><input type="number" step="0.01" name="driveOpenLoopRamp" value="0"></div>
+        <div class="input-group"><label>Closed Loop Ramp:</label><input type="number" step="0.01" value="0" name="driveClosedLoopRamp" ></div>
+
+    </div>
+
+  
+    <button onclick="downloadJSON()">Generate JSON</button>
+    <pre id="output"></pre>
+
+</div>
+
+
+
+<script>
+    function downloadJSON() {
+        const cards = document.querySelectorAll('.card');
+    const data = {};
+
+    cards.forEach((card) => {
+        const inputs = card.querySelectorAll('input');
+        inputs.forEach((input) => {
+            const name = input.name;
+            let value = input.type === 'checkbox' ? input.checked : input.value;
+            data[name] = value;
+        });
+    });
+
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'swerve-config.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    document.getElementById('output').textContent = json;
+    }
+</script>
+
+</body>
+</html>
