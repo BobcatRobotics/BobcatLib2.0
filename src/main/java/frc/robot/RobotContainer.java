@@ -26,6 +26,7 @@ import smile.math.matrix.fp32.Matrix;
 import BobcatLib.Team177.Swerve.SwerveBase;
 
 
+
 public class RobotContainer {
 
         /* Joysticks + Gamepad */
@@ -50,12 +51,8 @@ public class RobotContainer {
                 }
                 switch (Constants.currentMode) {
                         // Real robot, instantiate hardware IO implementations
-                        default:
-                                
-                                swerve = new SwerveBase(swerveConstants,
-                                 new int[]{},
-                                  null,
-                                   null);
+                        default: 
+                                swerve = new SwerveBase(swerveConstants, new int[]{}, new Matrix[]{}, null);
 
 
                 }
