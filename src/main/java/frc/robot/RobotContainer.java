@@ -29,8 +29,6 @@ public class RobotContainer {
 
         /* Joysticks + Gamepad */
         private final Logitech gp = new Logitech(0);
-        
-
 
         /* Subsystems */
         public final Swerve swerve;
@@ -135,6 +133,7 @@ public class RobotContainer {
                 swerve.setAimAssistTranslation(new Translation2d(5,5));
                 TranslationAssist transAssist = new TranslationAssist(() -> swerve.getAimAssistTranslation(),() -> swerve.getPose().getTranslation(), gp.a, () -> false);
                 RotationalAssist rotAssist = new RotationalAssist(() -> new Rotation2d(), () -> swerve.getYaw(), () -> false, () -> false);
+                
                 swerve.setDefaultCommand(
                    new TeleopSwerve(
                         swerve,
