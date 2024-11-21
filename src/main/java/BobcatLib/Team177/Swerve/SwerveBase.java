@@ -197,7 +197,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   public SwerveBase(
       SwerveConstants constants,
       int[] filterTags,
-      Matrix<N3, N1>[] visionStdDevs,
+      Matrix[] visionStdDevs,
       Vision... cameras) {
     this(
         constants,
@@ -212,7 +212,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   public SwerveBase(
       SwerveConstants constants,
       int[] filterTags,
-      Matrix<N3, N1>[] visionStdDevs,
+      Matrix[] visionStdDevs,
       double loopPeriodSecs,
       AbsoluteSensorRangeValue cancoderRange,
       SensorDirectionValue cancoderDirection,
