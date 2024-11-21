@@ -1,4 +1,4 @@
-package BobcatLib.Team177.CANdle;
+package frc.lib.BobcatLib.CANdle;
 
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
