@@ -8,12 +8,11 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import BobcatLib.Team177.Gamepads.Logitech;
+import BobcatLib.Team177.Gamepads.EightBitDo;
 import BobcatLib.Team177.Swerve.Constants.SwerveConstantCreator;
 import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
-import BobcatLib.Team177.Swerve.Gyro.GyroIOPigeon2;
-import BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIOFalcon;
 import BobcatLib.Team177.Vision.Vision;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,18 +21,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Subsystems.Swerve.Swerve;
-import smile.math.matrix.fp32.Matrix;
-import BobcatLib.Team177.Swerve.SwerveBase;
-
-
+import BobcatLib.Team177.Swerve.TeleopSwerve;
 
 public class RobotContainer {
 
         /* Joysticks + Gamepad */
-        private final Logitech gp = new Logitech(0);
+        private final EightBitDo gp = new EightBitDo(0);
 
         /* Subsystems */
-        public final SwerveBase swerve;
+        public Swerve swerve;
         public SwerveConstants swerveConstants;
         // public Vision limelight1;
         // public Vision[] cameras;
@@ -51,9 +47,26 @@ public class RobotContainer {
                 }
                 switch (Constants.currentMode) {
                         // Real robot, instantiate hardware IO implementations
-                        default: 
-                                swerve = new SwerveBase(swerveConstants, new int[]{}, new Matrix[]{}, null);
-
+                        case REAL:
+                                swerve = new Swerve(swerveConstants,
+                                                new int[] {},
+                                                new Matrix[] {
+                                                                VecBuilder.fill(0, 0, 0),
+                                                                VecBuilder.fill(0, 0, 0),
+                                                                VecBuilder.fill(0, 0, 0),
+                                                                VecBuilder.fill(0, 0, 0)
+                                                },
+                                                new Vision[] {});
+                        default:
+                                swerve = new Swerve(swerveConstants,
+                                                new int[] {},
+                                                new Matrix[] {
+                                                                VecBuilder.fill(0, 0, 0),
+                                                                VecBuilder.fill(0, 0, 0),
+                                                                VecBuilder.fill(0, 0, 0),
+                                                                VecBuilder.fill(0, 0, 0)
+                                                },
+                                                new Vision[] {});
 
                 }
                 configureBindings();
@@ -98,27 +111,27 @@ public class RobotContainer {
          * () -> buttonOrAxisValue
          */
         public void configureBindings() {
-                swerve.setAimAssistTranslation(new Translation2d(5, 5));
-                TranslationAssist transAssist = new TranslationAssist(() -> swerve.getAimAssistTranslation(),
-                                () -> swerve.getPose().getTranslation(), gp.a, () -> false);
-                RotationalAssist rotAssist = new RotationalAssist(() -> new Rotation2d(), () -> swerve.getYaw(),
-                                () -> false, () -> false);
+                swerve.setAimAssistTranslation(new Translation2d(0,0)); // (x,y) coordinate aim assist will go to
+                swerve.setAutoAlignAngle(Rotation2d.fromDegrees(0)); // heading autoalign will face 
+
 
                 swerve.setDefaultCommand(
-                                new TeleopSwerve(
-                                                swerve,
-                                                gp.leftYAxis,
-                                                gp.leftXAxis,
-                                                gp.rightXAxis,
-                                                gp.rb,
-                                                () -> 0,
-                                                () -> 0,
-                                                transAssist,
-                                                rotAssist));
+                                new TeleopSwerve(swerve,
+                                                gp.leftYAxis, // translation (front-back)
+                                                gp.leftYAxis, // strafe (left-right)
+                                                gp.rightXAxis, // rotation
+                                                () -> false, // robot centric
+                                                () -> 0.0, // fine strafe
+                                                () -> 0.0, // fine translation
+                                                gp.a, // Aim assist
+                                                gp.b, //autoalign
+                                                0, //stick deadband [0,1]
+                                                swerveConstants.speedLimits.chassisLimits.maxVelocity, //max speed m/s
+                                                swerveConstants.speedLimits.chassisLimits.maxAngularVelocity));// max angular velocity 
 
                 // sysid routines
                 gp.start.onTrue(new InstantCommand(() -> swerve.resetPose(new Pose2d())));
-                gp.back.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
+                gp.select.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
         }
 

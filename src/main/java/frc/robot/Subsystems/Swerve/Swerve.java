@@ -13,9 +13,11 @@ import edu.wpi.first.math.Matrix;
 /** Add your docs here. */
 public class Swerve extends SwerveBase{
     
-    public Swerve(SwerveConstants constants, int[] filterTags, Matrix[] visionStdDevs, Vision... cameras){
-        super(constants, filterTags, visionStdDevs, cameras);
+    public Swerve(SwerveConstants constants, int[] filterTags, Matrix[] visionStdDevs, Vision[] cameras){
+        super(constants, filterTags, visionStdDevs, cameras); 
     }
+
+
     
 
     /*  add season specific methods here
