@@ -195,10 +195,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
    * @param cameras the cameras to be used for vision
    */
   public SwerveBase(
-      SwerveConstants constants,
-      int[] filterTags,
-      Matrix[] visionStdDevs,
-      Vision... cameras) {
+      SwerveConstants constants, int[] filterTags, Matrix[] visionStdDevs, Vision... cameras) {
     this(
         constants,
         filterTags,
