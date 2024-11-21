@@ -51,7 +51,7 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
   public SwerveMotorConfig driveMotorConfig;
   public SwerveMotorConfig angleMotorConfig;
   AbsoluteSensorRangeValue cancoderSensorRange;
-  SensorDirectionValue foncancoderSensorDirection;
+  SensorDirectionValue cancoderSensorDirection;
 
   public SwerveModuleIOFalcon(
       ModuleConstants moduleConstants,
