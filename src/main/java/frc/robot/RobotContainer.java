@@ -11,6 +11,8 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import BobcatLib.Team177.Gamepads.EightBitDo;
 import BobcatLib.Team177.Swerve.Constants.SwerveConstantCreator;
 import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
+import BobcatLib.Team177.Swerve.StandardDeviations.StandardDeviation;
+import BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs;
 import BobcatLib.Team177.Vision.Vision;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -22,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Subsystems.Swerve.Swerve;
 import BobcatLib.Team177.Swerve.TeleopSwerve;
+
 
 public class RobotContainer {
 
@@ -50,22 +53,16 @@ public class RobotContainer {
                         case REAL:
                                 swerve = new Swerve(swerveConstants,
                                                 new int[] {},
-                                                new Matrix[] {
-                                                                VecBuilder.fill(0, 0, 0),
-                                                                VecBuilder.fill(0, 0, 0),
-                                                                VecBuilder.fill(0, 0, 0),
-                                                                VecBuilder.fill(0, 0, 0)
-                                                },
+                                                new SwerveStdDevs(
+                                                        new StandardDeviation(0, 0, 0, 0),
+                                                        new StandardDeviation(0, 0, 0, 0)),
                                                 new Vision[] {});
                         default:
                                 swerve = new Swerve(swerveConstants,
                                                 new int[] {},
-                                                new Matrix[] {
-                                                                VecBuilder.fill(0, 0, 0),
-                                                                VecBuilder.fill(0, 0, 0),
-                                                                VecBuilder.fill(0, 0, 0),
-                                                                VecBuilder.fill(0, 0, 0)
-                                                },
+                                                new SwerveStdDevs(
+                                                        new StandardDeviation(0, 0, 0, 0),
+                                                        new StandardDeviation(0, 0, 0, 0)),
                                                 new Vision[] {});
 
                 }

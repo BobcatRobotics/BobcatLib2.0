@@ -7,14 +7,14 @@ package frc.robot.Subsystems.Swerve;
 
 import BobcatLib.Team177.Swerve.SwerveBase;
 import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
+import BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs;
 import BobcatLib.Team177.Vision.Vision;
-import edu.wpi.first.math.Matrix;
 
 /** Add your docs here. */
 public class Swerve extends SwerveBase{
     
-    public Swerve(SwerveConstants constants, int[] filterTags, Matrix[] visionStdDevs, Vision[] cameras){
-        super(constants, filterTags, visionStdDevs, cameras); 
+    public Swerve(SwerveConstants constants, int[] filterTags, SwerveStdDevs standardDeviations, Vision[] cameras){
+        super(constants, filterTags, standardDeviations, cameras); 
     }
 
 
