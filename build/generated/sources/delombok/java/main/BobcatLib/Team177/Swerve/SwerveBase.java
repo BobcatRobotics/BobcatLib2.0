@@ -10,6 +10,7 @@ import BobcatLib.Team177.Swerve.Gyro.GyroIOInputsAutoLogged;
 import BobcatLib.Team177.Swerve.Gyro.GyroIOPigeon2;
 import BobcatLib.Team177.Swerve.Interfaces.AutomatedSwerve;
 import BobcatLib.Team177.Swerve.Interfaces.SysidCompatibleSwerve;
+import BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs;
 import BobcatLib.Team177.Swerve.SwerveModule.SwerveModule;
 import BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO;
 import BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIOFalcon;
@@ -189,20 +190,18 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   /**
    * @param constants the constants for the swerve base
    * @param filterTags the tags to be ignored by the cameras
-   * @param visionStdDevs should contain 4 3x1 matrices, the first two are the trust std devs for
-   *     auto and tele, the last two are the regular std devs for auto and tele, the matrices should
-   *     be in the order of x, y, theta
+   * @param standardDeviations vision measurement std devs
    * @param cameras the cameras to be used for vision
    */
   public SwerveBase(
       SwerveConstants constants,
       int[] filterTags,
-      Matrix<N3, N1>[] visionStdDevs,
+      SwerveStdDevs standardDeviations,
       Vision... cameras) {
     this(
         constants,
         filterTags,
-        visionStdDevs,
+        standardDeviations.toMatrix(),
         0.02,
         AbsoluteSensorRangeValue.Unsigned_0To1,
         SensorDirectionValue.CounterClockwise_Positive,
