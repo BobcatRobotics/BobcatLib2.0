@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.io.File;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -14,8 +16,6 @@ import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
 import BobcatLib.Team177.Swerve.StandardDeviations.StandardDeviation;
 import BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs;
 import BobcatLib.Team177.Vision.Vision;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -44,9 +44,10 @@ public class RobotContainer {
 
         public RobotContainer() {
                 try {
-                        swerveConstants = SwerveConstantCreator.parseConstants(null);
+                        // swerveConstants = SwerveConstantCreator.parseConstants(new File("/src/main/java/frc/robot/Subsystems/Swerve/swerve-config.json"));
+                        swerveConstants = SwerveConstantCreator.parseConstants(new File("Subsystems/Swerve/swerve-config.json"));
                 } catch (Exception e) {
-                        // TODO: handle exception
+                        e.printStackTrace();
                 }
                 switch (Constants.currentMode) {
                         // Real robot, instantiate hardware IO implementations
