@@ -8,22 +8,23 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import BobcatLib.Team177.Gamepads.Logitech;
+import BobcatLib.Team177.Swerve.Constants.SwerveConstantCreator;
+import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
+import BobcatLib.Team177.Swerve.Gyro.GyroIOPigeon2;
+import BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIOFalcon;
+import BobcatLib.Team177.Vision.Vision;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.lib.BobcatLib.Gamepads.Logitech;
-import frc.lib.BobcatLib.Swerve.GyroIO;
-import frc.lib.BobcatLib.Swerve.GyroIOPigeon2;
-import frc.lib.BobcatLib.Swerve.SwerveConstants;
-import frc.lib.BobcatLib.Swerve.TeleopSwerve;
-import frc.lib.BobcatLib.Swerve.Assists.RotationalAssist;
-import frc.lib.BobcatLib.Swerve.Assists.TranslationAssist;
-import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOFalcon;
-import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIOSim;
 import frc.robot.Subsystems.Swerve.Swerve;
+import smile.math.matrix.fp32.Matrix;
+import BobcatLib.Team177.Swerve.SwerveBase;
+
 
 public class RobotContainer {
 
@@ -31,83 +32,53 @@ public class RobotContainer {
         private final Logitech gp = new Logitech(0);
 
         /* Subsystems */
-        public final Swerve swerve;
-        //public Vision limelight1;
-        //public Vision[] cameras;
-        
+        public final SwerveBase swerve;
+        public SwerveConstants swerveConstants;
+        // public Vision limelight1;
+        // public Vision[] cameras;
+
         /* Commands */
 
         /* Shuffleboard Inputs */
         private final LoggedDashboardChooser<Command> autoChooser = new LoggedDashboardChooser<>("Auto Choices");
 
         public RobotContainer() {
+                try {
+                        swerveConstants = SwerveConstantCreator.parseConstants(null);
+                } catch (Exception e) {
+                        // TODO: handle exception
+                }
                 switch (Constants.currentMode) {
                         // Real robot, instantiate hardware IO implementations
-                        case REAL:
-                                //limelight1 = new Vision(new VisionIOLimelight("limelight1", LimeLightType.LL3G_APRILTAG));
-                               // cameras = new Vision[]{limelight1};
-                                
-                                swerve = new Swerve(new GyroIOPigeon2(),
-                                                new SwerveModuleIOFalcon(SwerveConstants.Module.Module0Constants.constants), //fl
-                                                new SwerveModuleIOFalcon(SwerveConstants.Module.Module1Constants.constants), //fr
-                                                new SwerveModuleIOFalcon(SwerveConstants.Module.Module2Constants.constants), //bl
-                                                new SwerveModuleIOFalcon(SwerveConstants.Module.Module3Constants.constants) //br
-                                                );
-                                break;
-
-                        // Sim robot, instantiate physics sim IO implementations
-                        case SIM:
-                                //limelight1 = new Vision(new VisionIOLimelight("limelight1", LimeLightType.LL3G_APRILTAG));
-                                //cameras = new Vision[]{limelight1};
-
-                                swerve = new Swerve(new GyroIO() {
-                                },
-                                                new SwerveModuleIOSim(Constants.loopPeriodSecs),
-                                                new SwerveModuleIOSim(Constants.loopPeriodSecs),
-                                                new SwerveModuleIOSim(Constants.loopPeriodSecs),
-                                                new SwerveModuleIOSim(Constants.loopPeriodSecs)
-                                                );
-
-
-                                break;
-
-                        // Replayed robot, disable IO implementations
                         default:
-                                //limelight1 = new Vision(new VisionIO() {
-                                //});
-                                //cameras = new Vision[]{limelight1};
-                                swerve = new Swerve(new GyroIO() {
-                                },
-                                                new SwerveModuleIOSim(Constants.loopPeriodSecs) {
-                                                },
-                                                new SwerveModuleIOSim(Constants.loopPeriodSecs) {
-                                                },
-                                                new SwerveModuleIOSim(Constants.loopPeriodSecs) {
-                                                },
-                                                new SwerveModuleIOSim(Constants.loopPeriodSecs) {
-                                                });
-                                break;
+                                
+                                swerve = new SwerveBase(swerveConstants,
+                                 new int[]{},
+                                  null,
+                                   null);
+
 
                 }
                 configureBindings();
         }
 
-        public boolean autoChooserInitialized(){
+        public boolean autoChooserInitialized() {
                 return autoChooser.get() != null;
         }
 
         /**
          * this should only be called once DS and FMS are attached
          */
-        public void configureAutos(){
-                
+        public void configureAutos() {
+
                 /*
                  * Auto Events
                  * 
                  * Names must match what is in PathPlanner
                  * Please give descriptive names
                  */
-                //NamedCommands.registerCommand("PathfindingCommand", swerve.driveToPose(new Pose2d()));
+                // NamedCommands.registerCommand("PathfindingCommand", swerve.driveToPose(new
+                // Pose2d()));
 
                 /*
                  * Auto Chooser
@@ -130,37 +101,36 @@ public class RobotContainer {
          * () -> buttonOrAxisValue
          */
         public void configureBindings() {
-                swerve.setAimAssistTranslation(new Translation2d(5,5));
-                TranslationAssist transAssist = new TranslationAssist(() -> swerve.getAimAssistTranslation(),() -> swerve.getPose().getTranslation(), gp.a, () -> false);
-                RotationalAssist rotAssist = new RotationalAssist(() -> new Rotation2d(), () -> swerve.getYaw(), () -> false, () -> false);
-                
+                swerve.setAimAssistTranslation(new Translation2d(5, 5));
+                TranslationAssist transAssist = new TranslationAssist(() -> swerve.getAimAssistTranslation(),
+                                () -> swerve.getPose().getTranslation(), gp.a, () -> false);
+                RotationalAssist rotAssist = new RotationalAssist(() -> new Rotation2d(), () -> swerve.getYaw(),
+                                () -> false, () -> false);
+
                 swerve.setDefaultCommand(
-                   new TeleopSwerve(
-                        swerve,
-                        gp.leftYAxis,
-                        gp.leftXAxis, 
-                        gp.rightXAxis, 
-                        gp.rb,
-                        () -> 0 , 
-                        () -> 0, 
-                        transAssist, 
-                        rotAssist
-                        ));
-                
-                
-                //sysid routines
+                                new TeleopSwerve(
+                                                swerve,
+                                                gp.leftYAxis,
+                                                gp.leftXAxis,
+                                                gp.rightXAxis,
+                                                gp.rb,
+                                                () -> 0,
+                                                () -> 0,
+                                                transAssist,
+                                                rotAssist));
+
+                // sysid routines
                 gp.start.onTrue(new InstantCommand(() -> swerve.resetPose(new Pose2d())));
                 gp.back.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
-               
+
         }
 
         public Command getAutonomousCommand() {
                 return autoChooser.get();
         }
 
-
         // public Pose3d getArmPoseAScope(){
-        //         Rotation2d angle = Rotation2d.fromRotations(rotate.getRawAxis(2));
-        //         return new Pose3d(0, -0.16, 0.23, new Rotation3d(angle.getRadians(), 0, 0));
+        // Rotation2d angle = Rotation2d.fromRotations(rotate.getRawAxis(2));
+        // return new Pose3d(0, -0.16, 0.23, new Rotation3d(angle.getRadians(), 0, 0));
         // }
 }

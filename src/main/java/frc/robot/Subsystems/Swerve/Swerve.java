@@ -4,17 +4,17 @@
 
 package frc.robot.Subsystems.Swerve;
 
-import frc.lib.BobcatLib.Swerve.GyroIO;
-import frc.lib.BobcatLib.Swerve.SwerveBase;
-import frc.lib.BobcatLib.Swerve.SwerveModule.SwerveModuleIO;
-import frc.lib.BobcatLib.Vision.Vision;
-import frc.robot.Constants;
+
+import BobcatLib.Team177.Swerve.SwerveBase;
+import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
+import BobcatLib.Team177.Vision.Vision;
+import edu.wpi.first.math.Matrix;
 
 /** Add your docs here. */
 public class Swerve extends SwerveBase{
     
-    public Swerve(GyroIO gyroIO, SwerveModuleIO flIO, SwerveModuleIO frIO, SwerveModuleIO blIO, SwerveModuleIO brIO, Vision... cameras){
-        super(gyroIO, flIO, frIO, blIO, brIO, Constants.loopPeriodSecs, cameras);
+    public Swerve(SwerveConstants constants, int[] filterTags, Matrix[] visionStdDevs, Vision... cameras){
+        super(constants, filterTags, visionStdDevs, cameras);
     }
     
 
