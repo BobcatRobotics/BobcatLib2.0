@@ -5,13 +5,16 @@
 package frc.robot;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import BobcatLib.Team177.Gamepads.EightBitDo;
 import BobcatLib.Team177.Swerve.Constants.SwerveConstantCreator;
+import BobcatLib.Team177.Swerve.Constants.SwerveConstantCreator.JsonElements;
 import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
 import BobcatLib.Team177.Swerve.StandardDeviations.StandardDeviation;
 import BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs;
@@ -19,6 +22,7 @@ import BobcatLib.Team177.Vision.Vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -45,7 +49,10 @@ public class RobotContainer {
         public RobotContainer() {
                 try {
                         // swerveConstants = SwerveConstantCreator.parseConstants(new File("/src/main/java/frc/robot/Subsystems/Swerve/swerve-config.json"));
-                        swerveConstants = SwerveConstantCreator.parseConstants(new File("Subsystems/Swerve/swerve-config.json"));
+                        swerveConstants = SwerveConstantCreator.parseConstants(new File(
+                                Filesystem.getDeployDirectory().toString()+ "/swerve-config.json"));
+                                System.out.println(new ObjectMapper().readTree(new File(
+                                Filesystem.getDeployDirectory().toString()+ "/swerve-config.json")).get(JsonElements.angleSupplyCurrentLimitEnable).asBoolean());
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
