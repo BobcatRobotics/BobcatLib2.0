@@ -9,5 +9,7 @@
 * ### [Sysid](docs/WHAT-IS-SYSID.md)
 * ### [Lombok guide](docs/WHAT-IS-LOMBOK.md)
 
+#### If you want to make a change to bobcatlib, check out the [update guide](docs/HACK-ON-BOBCATLIB.md)
+
 #### if you have any questions feel free to email akeegan@bobcatrobotics.org 
 
