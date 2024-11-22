@@ -3,6 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>BobcatLib</groupId>
-  <artifactId>BobcatLib-java</artifactId>
-  <version>0.0.0.5</version>
+  <artifactId>BobcatLib-cpp</artifactId>
+  <version>0.0.0.7</version>
+  <packaging>pom</packaging>
 </project>
