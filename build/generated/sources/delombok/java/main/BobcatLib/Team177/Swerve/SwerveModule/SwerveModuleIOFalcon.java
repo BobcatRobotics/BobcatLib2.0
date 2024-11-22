@@ -67,6 +67,8 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
     this.canbus = canbus;
     driveGearRatio = driveMotorConfig.gearRatio;
     angleGearRatio = angleMotorConfig.gearRatio;
+    this.driveMotorConfig = driveMotorConfig;
+    this.angleMotorConfig = angleMotorConfig;
 
     angleEncoder = new CANcoder(moduleConstants.cancoderID, canbus);
     configAngleEncoder();

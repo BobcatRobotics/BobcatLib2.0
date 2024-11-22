@@ -1,4 +1,4 @@
-package BobcatLib.Team177.Swerve.Gyro;
+package frc.lib.BobcatLib.Swerve;
 
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;

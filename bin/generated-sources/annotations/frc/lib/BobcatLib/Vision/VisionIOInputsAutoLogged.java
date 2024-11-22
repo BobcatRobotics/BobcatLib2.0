@@ -1,4 +1,4 @@
-package BobcatLib.Team177.Vision;
+package frc.lib.BobcatLib.Vision;
 
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
