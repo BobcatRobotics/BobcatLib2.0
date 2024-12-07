@@ -19,9 +19,7 @@ import BobcatLib.Team177.Vision.VisionObservation;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
@@ -161,35 +159,13 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
             new Pose2d(),
             VecBuilder.fill(0, 0, 0),
             VecBuilder.fill(0, 0, 0));
-
-    // setpointGenerator =
-    // SwerveSetpointGenerator.builder()
-    // .kinematics(SwerveConstants.swerveKinematics)
-    // .moduleLocations(SwerveConstants.moduleTranslations)
-    // .build();
-
-    AutoBuilder.configureHolonomic(
-        this::getPose,
-        this::resetPose,
-        this::getChassisSpeeds,
-        this::drive,
-        new HolonomicPathFollowerConfig(
-            constants.pidConfigs.autoConfig.transPidConstants,
-            constants.pidConfigs.autoConfig.rotPidConstants,
-            constants.speedLimits.moduleLimits.maxVelocity,
-            constants.kinematicsConstants.driveBaseRadius,
-            constants.replanningConfig),
-        () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red
-          // alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-          return BobcatUtil.isRed();
-        },
-        this);
-
-    PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTarget);
   }
+
+  // setpointGenerator =
+  // SwerveSetpointGenerator.builder()
+  // .kinematics(SwerveConstants.swerveKinematics)
+  // .moduleLocations(SwerveConstants.moduleTranslations)
+  // .build();
 
   /**
    * @param constants the constants for the swerve base
