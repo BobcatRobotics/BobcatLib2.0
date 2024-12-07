@@ -52,6 +52,7 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
   public SwerveMotorConfig angleMotorConfig;
   AbsoluteSensorRangeValue cancoderSensorRange;
   SensorDirectionValue cancoderSensorDirection;
+  private final PhoenixOdometryThread thread;
 
   public SwerveModuleIOFalcon(
       ModuleConstants moduleConstants,
@@ -60,7 +61,9 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
       SwerveMotorConfig angleMotorConfig,
       AbsoluteSensorRangeValue cancoderSensorRange,
       SensorDirectionValue cancoderSensorDirection,
-      String canbus) {
+      String canbus,
+      PhoenixOdometryThread thread) {
+    this.thread = thread;
     encoderOffset = moduleConstants.angleOffset;
     this.cancoderSensorDirection = cancoderSensorDirection;
     this.cancoderSensorRange = cancoderSensorRange;
@@ -80,17 +83,14 @@ public class SwerveModuleIOFalcon implements SwerveModuleIO {
     driveRequest = new DutyCycleOut(0.0).withEnableFOC(useFOC);
     angleRequest = new DutyCycleOut(0.0).withEnableFOC(useFOC);
 
-    timestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
+    timestampQueue = thread.makeTimestampQueue();
 
     drivePosition = driveMotor.getPosition();
-    drivePositionQueue =
-        PhoenixOdometryThread.getInstance().registerSignal(driveMotor, driveMotor.getPosition());
+    drivePositionQueue = thread.registerSignal(driveMotor, driveMotor.getPosition());
     driveVelocity = driveMotor.getVelocity();
     driveAcceleration = driveMotor.getAcceleration();
     angleAbsolutePosition = angleEncoder.getAbsolutePosition();
-    anglePositionQueue =
-        PhoenixOdometryThread.getInstance()
-            .registerSignal(angleEncoder, angleEncoder.getPosition());
+    anglePositionQueue = thread.registerSignal(angleEncoder, angleEncoder.getPosition());
 
     internalTempDrive = driveMotor.getDeviceTemp();
     processorTempDrive = driveMotor.getProcessorTemp();
