@@ -14,7 +14,7 @@ import BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs;
 import BobcatLib.Team177.Swerve.SwerveModule.SwerveModule;
 import BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO;
 import BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIOFalcon;
-import BobcatLib.Team177.Vision.Vision;
+import BobcatLib.Team177.Vision.VisionCore;
 import BobcatLib.Team177.Vision.VisionObservation;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -53,7 +53,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final SwerveModule[] modules;
   private final BobcatSwerveEstimator poseEstimator;
-  private List<Vision> cameras;
+  private List<VisionCore> cameras;
 
   private final double[] swerveModuleStates = new double[8];
   private final double[] desiredSwerveModuleStates = new double[8];
@@ -118,7 +118,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
       Matrix<N3, N1> regautostdDev,
       Matrix<N3, N1> regtelestdDev,
       SwerveConstants constants,
-      Vision... cameras) {
+      VisionCore... cameras) {
 
     this.cameras = Arrays.asList(cameras);
     this.constants = constants;
@@ -197,7 +197,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
       SwerveConstants constants,
       int[] filterTags,
       SwerveStdDevs standardDeviations,
-      Vision... cameras) {
+      VisionCore... cameras) {
     this(
         constants,
         filterTags,
@@ -215,7 +215,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
       double loopPeriodSecs,
       AbsoluteSensorRangeValue cancoderRange,
       SensorDirectionValue cancoderDirection,
-      Vision... cameras) {
+      VisionCore... cameras) {
     this(
         new GyroIOPigeon2(0),
         new SwerveModuleIOFalcon( // front left
@@ -380,9 +380,9 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     }
 
     // update pose and configure cameras
-    for (Vision camera : cameras) {
+    for (VisionCore camera : cameras) {
       // tells the limelight the orientation of the gyro for calculating pose ambiguity
-      camera.SetRobotOrientation(getYaw());
+      camera.setRobotOrientation(getYaw());
 
       // updates the pose using megatag 2 algo
       addVisionMG2(camera);
@@ -670,23 +670,23 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     }
   }
 
-  public void addVisionMG2(Vision vision) {
+  public void addVisionMG2(VisionCore vision) {
 
     Matrix<N3, N1> stdDev;
     Matrix<N3, N1> truststdDev = DriverStation.isAutonomous() ? trustautostdDev : trusttelestdDev;
     Matrix<N3, N1> regstdDev = DriverStation.isAutonomous() ? regautostdDev : regtelestdDev;
-    Logger.recordOutput("Pose/" + vision.getLimelightName(), vision.getBotPoseMG2());
+    Logger.recordOutput("Pose/" + vision.getName(), vision.getBotPose());
 
     // stdDev = regstdDev;
-    if (vision.tagCount() >= 2) {
+    if (vision.getTagCount() >= 2) {
       stdDev = truststdDev;
     } else {
       stdDev = regstdDev;
     }
 
-    if (vision.getPoseValidMG2(getYaw())) {
+    if (vision.getPoseValid(getYaw())) {
       poseEstimator.addVisionMeasurement(
-          vision.getBotPoseMG2(), vision.getPoseTimestampMG2(), stdDev);
+          vision.getBotPose(), vision.getPoseTimestamp(), stdDev);
       // System.out.println("yes " + vision.getLimelightName() + " " +
       // Timer.getFPGATimestamp());
     }
