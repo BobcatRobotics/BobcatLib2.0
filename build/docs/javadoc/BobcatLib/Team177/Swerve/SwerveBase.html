@@ -129,20 +129,22 @@ implements <a href="Interfaces/SysidCompatibleSwerve.html" title="interface in B
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(BobcatLib.Team177.Swerve.Constants.SwerveConstants,int%5B%5D,BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs,BobcatLib.Team177.Vision.Vision...)" class="member-name-link">SwerveBase</a><wbr>(<a href="Constants/SwerveConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants</a>&nbsp;constants,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(BobcatLib.Team177.Swerve.Constants.SwerveConstants,int%5B%5D,BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs,BobcatLib.Team177.Swerve.PhoenixOdometryThread,BobcatLib.Team177.Vision.Vision...)" class="member-name-link">SwerveBase</a><wbr>(<a href="Constants/SwerveConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants</a>&nbsp;constants,
  int[]&nbsp;filterTags,
  <a href="StandardDeviations/SwerveStdDevs.html" title="class in BobcatLib.Team177.Swerve.StandardDeviations">SwerveStdDevs</a>&nbsp;standardDeviations,
+ <a href="PhoenixOdometryThread.html" title="class in BobcatLib.Team177.Swerve">PhoenixOdometryThread</a>&nbsp;threadInstance,
  <a href="../Vision/Vision.html" title="class in BobcatLib.Team177.Vision">Vision</a>...&nbsp;cameras)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(BobcatLib.Team177.Swerve.Constants.SwerveConstants,int%5B%5D,edu.wpi.first.math.Matrix%5B%5D,double,com.ctre.phoenix6.signals.AbsoluteSensorRangeValue,com.ctre.phoenix6.signals.SensorDirectionValue,BobcatLib.Team177.Vision.Vision...)" class="member-name-link">SwerveBase</a><wbr>(<a href="Constants/SwerveConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants</a>&nbsp;constants,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(BobcatLib.Team177.Swerve.Constants.SwerveConstants,int%5B%5D,edu.wpi.first.math.Matrix%5B%5D,double,com.ctre.phoenix6.signals.AbsoluteSensorRangeValue,com.ctre.phoenix6.signals.SensorDirectionValue,BobcatLib.Team177.Swerve.PhoenixOdometryThread,BobcatLib.Team177.Vision.Vision...)" class="member-name-link">SwerveBase</a><wbr>(<a href="Constants/SwerveConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants</a>&nbsp;constants,
  int[]&nbsp;filterTags,
  edu.wpi.first.math.Matrix&lt;edu.wpi.first.math.numbers.N3,<wbr>edu.wpi.first.math.numbers.N1&gt;[]&nbsp;visionStdDevs,
  double&nbsp;loopPeriodSecs,
  com.ctre.phoenix6.signals.AbsoluteSensorRangeValue&nbsp;cancoderRange,
  com.ctre.phoenix6.signals.SensorDirectionValue&nbsp;cancoderDirection,
+ <a href="PhoenixOdometryThread.html" title="class in BobcatLib.Team177.Swerve">PhoenixOdometryThread</a>&nbsp;threadInstance,
  <a href="../Vision/Vision.html" title="class in BobcatLib.Team177.Vision">Vision</a>...&nbsp;cameras)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(BobcatLib.Team177.Swerve.Gyro.GyroIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,double,int%5B%5D,edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,BobcatLib.Team177.Swerve.Constants.SwerveConstants,BobcatLib.Team177.Vision.Vision...)" class="member-name-link">SwerveBase</a><wbr>(<a href="Gyro/GyroIO.html" title="interface in BobcatLib.Team177.Swerve.Gyro">GyroIO</a>&nbsp;gyroIO,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(BobcatLib.Team177.Swerve.Gyro.GyroIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,double,int%5B%5D,edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,BobcatLib.Team177.Swerve.Constants.SwerveConstants,BobcatLib.Team177.Swerve.PhoenixOdometryThread,BobcatLib.Team177.Vision.Vision...)" class="member-name-link">SwerveBase</a><wbr>(<a href="Gyro/GyroIO.html" title="interface in BobcatLib.Team177.Swerve.Gyro">GyroIO</a>&nbsp;gyroIO,
  <a href="SwerveModule/SwerveModuleIO.html" title="interface in BobcatLib.Team177.Swerve.SwerveModule">SwerveModuleIO</a>&nbsp;flIO,
  <a href="SwerveModule/SwerveModuleIO.html" title="interface in BobcatLib.Team177.Swerve.SwerveModule">SwerveModuleIO</a>&nbsp;frIO,
  <a href="SwerveModule/SwerveModuleIO.html" title="interface in BobcatLib.Team177.Swerve.SwerveModule">SwerveModuleIO</a>&nbsp;blIO,
@@ -154,6 +156,7 @@ implements <a href="Interfaces/SysidCompatibleSwerve.html" title="interface in B
  edu.wpi.first.math.Matrix&lt;edu.wpi.first.math.numbers.N3,<wbr>edu.wpi.first.math.numbers.N1&gt;&nbsp;regautostdDev,
  edu.wpi.first.math.Matrix&lt;edu.wpi.first.math.numbers.N3,<wbr>edu.wpi.first.math.numbers.N1&gt;&nbsp;regtelestdDev,
  <a href="Constants/SwerveConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants</a>&nbsp;constants,
+ <a href="PhoenixOdometryThread.html" title="class in BobcatLib.Team177.Swerve">PhoenixOdometryThread</a>&nbsp;threadInstance,
  <a href="../Vision/Vision.html" title="class in BobcatLib.Team177.Vision">Vision</a>...&nbsp;cameras)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Core constructor for the swerve base, dont use this unless you know what you are doing</div>
@@ -356,7 +359,7 @@ implements <a href="Interfaces/SysidCompatibleSwerve.html" title="interface in B
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(BobcatLib.Team177.Swerve.Gyro.GyroIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,double,int[],edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,BobcatLib.Team177.Swerve.Constants.SwerveConstants,BobcatLib.Team177.Vision.Vision...)">
+<section class="detail" id="&lt;init&gt;(BobcatLib.Team177.Swerve.Gyro.GyroIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,BobcatLib.Team177.Swerve.SwerveModule.SwerveModuleIO,double,int[],edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,edu.wpi.first.math.Matrix,BobcatLib.Team177.Swerve.Constants.SwerveConstants,BobcatLib.Team177.Swerve.PhoenixOdometryThread,BobcatLib.Team177.Vision.Vision...)">
 <h3>SwerveBase</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SwerveBase</span><wbr><span class="parameters">(<a href="Gyro/GyroIO.html" title="interface in BobcatLib.Team177.Swerve.Gyro">GyroIO</a>&nbsp;gyroIO,
  <a href="SwerveModule/SwerveModuleIO.html" title="interface in BobcatLib.Team177.Swerve.SwerveModule">SwerveModuleIO</a>&nbsp;flIO,
@@ -370,6 +373,7 @@ implements <a href="Interfaces/SysidCompatibleSwerve.html" title="interface in B
  edu.wpi.first.math.Matrix&lt;edu.wpi.first.math.numbers.N3,<wbr>edu.wpi.first.math.numbers.N1&gt;&nbsp;regautostdDev,
  edu.wpi.first.math.Matrix&lt;edu.wpi.first.math.numbers.N3,<wbr>edu.wpi.first.math.numbers.N1&gt;&nbsp;regtelestdDev,
  <a href="Constants/SwerveConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants</a>&nbsp;constants,
+ <a href="PhoenixOdometryThread.html" title="class in BobcatLib.Team177.Swerve">PhoenixOdometryThread</a>&nbsp;threadInstance,
  <a href="../Vision/Vision.html" title="class in BobcatLib.Team177.Vision">Vision</a>...&nbsp;cameras)</span></div>
 <div class="block">Core constructor for the swerve base, dont use this unless you know what you are doing</div>
 <dl class="notes">
@@ -391,11 +395,12 @@ implements <a href="Interfaces/SysidCompatibleSwerve.html" title="interface in B
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(BobcatLib.Team177.Swerve.Constants.SwerveConstants,int[],BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs,BobcatLib.Team177.Vision.Vision...)">
+<section class="detail" id="&lt;init&gt;(BobcatLib.Team177.Swerve.Constants.SwerveConstants,int[],BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs,BobcatLib.Team177.Swerve.PhoenixOdometryThread,BobcatLib.Team177.Vision.Vision...)">
 <h3>SwerveBase</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SwerveBase</span><wbr><span class="parameters">(<a href="Constants/SwerveConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants</a>&nbsp;constants,
  int[]&nbsp;filterTags,
  <a href="StandardDeviations/SwerveStdDevs.html" title="class in BobcatLib.Team177.Swerve.StandardDeviations">SwerveStdDevs</a>&nbsp;standardDeviations,
+ <a href="PhoenixOdometryThread.html" title="class in BobcatLib.Team177.Swerve">PhoenixOdometryThread</a>&nbsp;threadInstance,
  <a href="../Vision/Vision.html" title="class in BobcatLib.Team177.Vision">Vision</a>...&nbsp;cameras)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -407,7 +412,7 @@ implements <a href="Interfaces/SysidCompatibleSwerve.html" title="interface in B
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(BobcatLib.Team177.Swerve.Constants.SwerveConstants,int[],edu.wpi.first.math.Matrix[],double,com.ctre.phoenix6.signals.AbsoluteSensorRangeValue,com.ctre.phoenix6.signals.SensorDirectionValue,BobcatLib.Team177.Vision.Vision...)">
+<section class="detail" id="&lt;init&gt;(BobcatLib.Team177.Swerve.Constants.SwerveConstants,int[],edu.wpi.first.math.Matrix[],double,com.ctre.phoenix6.signals.AbsoluteSensorRangeValue,com.ctre.phoenix6.signals.SensorDirectionValue,BobcatLib.Team177.Swerve.PhoenixOdometryThread,BobcatLib.Team177.Vision.Vision...)">
 <h3>SwerveBase</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SwerveBase</span><wbr><span class="parameters">(<a href="Constants/SwerveConstants.html" title="class in BobcatLib.Team177.Swerve.Constants">SwerveConstants</a>&nbsp;constants,
  int[]&nbsp;filterTags,
@@ -415,6 +420,7 @@ implements <a href="Interfaces/SysidCompatibleSwerve.html" title="interface in B
  double&nbsp;loopPeriodSecs,
  com.ctre.phoenix6.signals.AbsoluteSensorRangeValue&nbsp;cancoderRange,
  com.ctre.phoenix6.signals.SensorDirectionValue&nbsp;cancoderDirection,
+ <a href="PhoenixOdometryThread.html" title="class in BobcatLib.Team177.Swerve">PhoenixOdometryThread</a>&nbsp;threadInstance,
  <a href="../Vision/Vision.html" title="class in BobcatLib.Team177.Vision">Vision</a>...&nbsp;cameras)</span></div>
 </section>
 </li>

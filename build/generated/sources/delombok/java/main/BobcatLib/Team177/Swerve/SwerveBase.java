@@ -113,6 +113,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
       Matrix<N3, N1> regautostdDev,
       Matrix<N3, N1> regtelestdDev,
       SwerveConstants constants,
+      PhoenixOdometryThread threadInstance,
       Vision... cameras) {
 
     this.cameras = Arrays.asList(cameras);
@@ -136,7 +137,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     this.loopPeriodSecs = loopPeriodSecs;
     this.filterTags = filterTags;
 
-    PhoenixOdometryThread.getInstance().start();
+    threadInstance.start();
 
     rotationPID =
         new PIDController(
@@ -200,6 +201,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
       SwerveConstants constants,
       int[] filterTags,
       SwerveStdDevs standardDeviations,
+      PhoenixOdometryThread threadInstance,
       Vision... cameras) {
     this(
         constants,
@@ -208,6 +210,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         0.02,
         AbsoluteSensorRangeValue.Unsigned_0To1,
         SensorDirectionValue.CounterClockwise_Positive,
+        threadInstance,
         cameras);
   }
 
@@ -218,6 +221,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
       double loopPeriodSecs,
       AbsoluteSensorRangeValue cancoderRange,
       SensorDirectionValue cancoderDirection,
+      PhoenixOdometryThread threadInstance,
       Vision... cameras) {
     this(
         new GyroIOPigeon2(0),
@@ -260,6 +264,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         visionStdDevs[2],
         visionStdDevs[3],
         constants,
+        threadInstance,
         cameras);
   }
 
