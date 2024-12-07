@@ -31,7 +31,6 @@ public class SwerveModule {
     this.io = io;
     this.index = index;
     this.constants = constants;
-    angleController.enableContinuousInput(0, 2 * Math.PI);
 
     lastAngle = getState().angle;
 
@@ -50,6 +49,8 @@ public class SwerveModule {
             constants.pidConfigs.angleMotorConfig.kP,
             constants.pidConfigs.angleMotorConfig.kI,
             constants.pidConfigs.angleMotorConfig.kD);
+
+    angleController.enableContinuousInput(0, 2 * Math.PI);
   }
 
   public void periodic() {
