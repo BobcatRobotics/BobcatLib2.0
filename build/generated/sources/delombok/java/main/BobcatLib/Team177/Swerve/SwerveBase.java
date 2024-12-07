@@ -76,12 +76,7 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   private Rotation2d autoAlignAngle = new Rotation2d();
   private Translation2d aimAssistTranslation = new Translation2d();
 
-  private final PathConstraints pathfindingConstraints =
-      new PathConstraints(
-          constants.speedLimits.chassisLimits.maxVelocity,
-          constants.speedLimits.chassisLimits.maxAccel,
-          constants.speedLimits.chassisLimits.maxAngularVelocity.getRadians(),
-          constants.speedLimits.chassisLimits.maxAngularAccel.getRadians());
+  private final PathConstraints pathfindingConstraints;
 
   Matrix<N3, N1> trustautostdDev;
   Matrix<N3, N1> trusttelestdDev;
@@ -123,6 +118,14 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     this.cameras = Arrays.asList(cameras);
     this.constants = constants;
     this.gyroIO = gyroIO;
+
+    pathfindingConstraints =
+        new PathConstraints(
+            constants.speedLimits.chassisLimits.maxVelocity,
+            constants.speedLimits.chassisLimits.maxAccel,
+            constants.speedLimits.chassisLimits.maxAngularVelocity.getRadians(),
+            constants.speedLimits.chassisLimits.maxAngularAccel.getRadians());
+
     modules =
         new SwerveModule[] {
           new SwerveModule(flIO, 0, constants),
