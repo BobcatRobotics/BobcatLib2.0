@@ -13,8 +13,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
-import BobcatLib.Team177.BobcatUtil;
-import BobcatLib.Team6328.LocalADStarAK;
+import lib.BobcatLib.Team177.BobcatUtil;
+import lib.BobcatLib.Team6328.LocalADStarAK;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;

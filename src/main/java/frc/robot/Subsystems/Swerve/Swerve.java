@@ -4,17 +4,21 @@
 
 package frc.robot.Subsystems.Swerve;
 
-
-import BobcatLib.Team177.Swerve.SwerveBase;
-import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
-import BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs;
-import BobcatLib.Team177.Vision.Vision;
+import lib.BobcatLib.Team177.Swerve.PhoenixOdometryThread;
+import lib.BobcatLib.Team177.Swerve.SwerveBase;
+import lib.BobcatLib.Team177.Swerve.Constants.SwerveConstants;
+import lib.BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs;
+import lib.BobcatLib.Team177.Vision.Vision;
 
 /** Add your docs here. */
 public class Swerve extends SwerveBase{
     
-    public Swerve(SwerveConstants constants, int[] filterTags, SwerveStdDevs standardDeviations, Vision[] cameras){
-        super(constants, filterTags, standardDeviations, cameras); 
+    public Swerve(SwerveConstants constants,
+      int[] filterTags,
+      SwerveStdDevs standardDeviations,
+      PhoenixOdometryThread threadInstance,
+      Vision... cameras){
+        super(constants, filterTags, standardDeviations, threadInstance, cameras);
     }
 
 

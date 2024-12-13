@@ -12,13 +12,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import BobcatLib.Team177.Gamepads.EightBitDo;
-import BobcatLib.Team177.Swerve.Constants.SwerveConstantCreator;
-import BobcatLib.Team177.Swerve.Constants.SwerveConstantCreator.JsonElements;
-import BobcatLib.Team177.Swerve.Constants.SwerveConstants;
-import BobcatLib.Team177.Swerve.StandardDeviations.StandardDeviation;
-import BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs;
-import BobcatLib.Team177.Vision.Vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,14 +20,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Subsystems.Swerve.Swerve;
-import BobcatLib.Team177.Swerve.TeleopSwerve;
+import lib.BobcatLib.Team177.Gamepads.EightBitDo;
+import lib.BobcatLib.Team177.Swerve.TeleopSwerve;
+import lib.BobcatLib.Team177.Swerve.Constants.SwerveConstantCreator;
+import lib.BobcatLib.Team177.Swerve.Constants.SwerveConstants;
+import lib.BobcatLib.Team177.Swerve.Constants.SwerveConstantCreator.JsonElements;
+import lib.BobcatLib.Team177.Swerve.StandardDeviations.StandardDeviation;
+import lib.BobcatLib.Team177.Swerve.StandardDeviations.SwerveStdDevs;
+import lib.BobcatLib.Team177.Vision.Vision;
 
 
 public class RobotContainer {
 
         /* Joysticks + Gamepad */
         private final EightBitDo gp = new EightBitDo(0);
-
         /* Subsystems */
         public Swerve swerve;
         public SwerveConstants swerveConstants;
@@ -64,14 +63,14 @@ public class RobotContainer {
                                                 new SwerveStdDevs(
                                                         new StandardDeviation(0, 0, 0, 0),
                                                         new StandardDeviation(0, 0, 0, 0)),
-                                                new Vision[] {});
+                                                null, new Vision[] {});
                         default:
                                 swerve = new Swerve(swerveConstants,
                                                 new int[] {},
                                                 new SwerveStdDevs(
                                                         new StandardDeviation(0, 0, 0, 0),
                                                         new StandardDeviation(0, 0, 0, 0)),
-                                                new Vision[] {});
+                                                null, new Vision[] {});
 
                 }
                 configureBindings();
