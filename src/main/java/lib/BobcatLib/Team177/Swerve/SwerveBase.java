@@ -82,21 +82,22 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   Matrix<N3, N1> regtelestdDev;
 
   /**
-   * Core constructor for the swerve base, dont use this unless you know what you are doing
+   * Core constructor for the swerve base, dont use this unless you know what you
+   * are doing
    *
-   * @param gyroIO the gyro to be used
-   * @param flIO the front left swerve module
-   * @param frIO the front right swerve module
-   * @param blIO the back left swerve module
-   * @param brIO the back right swerve module
-   * @param loopPeriodSecs processor loop period in seconds (default 0.02)
-   * @param filterTags the tags to be ignored by the cameras
+   * @param gyroIO          the gyro to be used
+   * @param flIO            the front left swerve module
+   * @param frIO            the front right swerve module
+   * @param blIO            the back left swerve module
+   * @param brIO            the back right swerve module
+   * @param loopPeriodSecs  processor loop period in seconds (default 0.02)
+   * @param filterTags      the tags to be ignored by the cameras
    * @param trustautostdDev the trust std devs for auto
    * @param trusttelestdDev the trust std devs for tele
-   * @param regautostdDev the regular std devs for auto
-   * @param regtelestdDev the regular std devs for tele
-   * @param constants the constants for the swerve base
-   * @param cameras the cameras to be used for vision
+   * @param regautostdDev   the regular std devs for auto
+   * @param regtelestdDev   the regular std devs for tele
+   * @param constants       the constants for the swerve base
+   * @param cameras         the cameras to be used for vision
    */
   public SwerveBase(
       GyroIO gyroIO,
@@ -118,60 +119,56 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     this.constants = constants;
     this.gyroIO = gyroIO;
 
-    pathfindingConstraints =
-        new PathConstraints(
-            constants.speedLimits.chassisLimits.maxVelocity,
-            constants.speedLimits.chassisLimits.maxAccel,
-            constants.speedLimits.chassisLimits.maxAngularVelocity.getRadians(),
-            constants.speedLimits.chassisLimits.maxAngularAccel.getRadians());
+    pathfindingConstraints = new PathConstraints(
+        constants.speedLimits.chassisLimits.maxVelocity,
+        constants.speedLimits.chassisLimits.maxAccel,
+        constants.speedLimits.chassisLimits.maxAngularVelocity.getRadians(),
+        constants.speedLimits.chassisLimits.maxAngularAccel.getRadians());
 
-    modules =
-        new SwerveModule[] {
-          new SwerveModule(flIO, 0, constants),
-          new SwerveModule(frIO, 1, constants),
-          new SwerveModule(blIO, 2, constants),
-          new SwerveModule(brIO, 3, constants)
-        };
+    modules = new SwerveModule[] {
+        new SwerveModule(flIO, 0, constants),
+        new SwerveModule(frIO, 1, constants),
+        new SwerveModule(blIO, 2, constants),
+        new SwerveModule(brIO, 3, constants)
+    };
     this.loopPeriodSecs = loopPeriodSecs;
     this.filterTags = filterTags;
 
+    this.trustautostdDev = trustautostdDev;
+    this.trusttelestdDev = trusttelestdDev;
+    this.regautostdDev = regautostdDev;
+    this.regtelestdDev = regtelestdDev;
+
     threadInstance.start();
 
-    rotationPID =
-        new PIDController(
-            constants.pidConfigs.teleopConfig.rotKP,
-            constants.pidConfigs.teleopConfig.rotKI,
-            constants.pidConfigs.teleopConfig.rotKD);
+    rotationPID = new PIDController(
+        constants.pidConfigs.teleopConfig.rotKP,
+        constants.pidConfigs.teleopConfig.rotKI,
+        constants.pidConfigs.teleopConfig.rotKD);
     rotationPID.enableContinuousInput(0, 2 * Math.PI);
-    autoAlignPID =
-        new PIDController(
-            constants.pidConfigs.autoAlignConfig.rotKP,
-            constants.pidConfigs.autoAlignConfig.rotKI,
-            constants.pidConfigs.autoAlignConfig.rotKD);
+    autoAlignPID = new PIDController(
+        constants.pidConfigs.autoAlignConfig.rotKP,
+        constants.pidConfigs.autoAlignConfig.rotKI,
+        constants.pidConfigs.autoAlignConfig.rotKD);
     autoAlignPID.enableContinuousInput(0, 2 * Math.PI);
 
-    // std devs will be actually set later, so we dont need to initialize them to actual values here
-    poseEstimator =
-        new BobcatSwerveEstimator(
-            constants.kinematicsConstants.kinematics,
-            getYaw(),
-            getModulePositions(),
-            new Pose2d(),
-            VecBuilder.fill(0, 0, 0),
-            VecBuilder.fill(0, 0, 0));
+    // std devs will be actually set later, so we dont need to initialize them to
+    // actual values here
+    poseEstimator = new BobcatSwerveEstimator(
+        constants.kinematicsConstants.kinematics,
+        getYaw(),
+        getModulePositions(),
+        new Pose2d(),
+        VecBuilder.fill(0, 0, 0),
+        VecBuilder.fill(0, 0, 0));
   }
 
-  // setpointGenerator =
-  // SwerveSetpointGenerator.builder()
-  // .kinematics(SwerveConstants.swerveKinematics)
-  // .moduleLocations(SwerveConstants.moduleTranslations)
-  // .build();
 
   /**
-   * @param constants the constants for the swerve base
-   * @param filterTags the tags to be ignored by the cameras
+   * @param constants          the constants for the swerve base
+   * @param filterTags         the tags to be ignored by the cameras
    * @param standardDeviations vision measurement std devs
-   * @param cameras the cameras to be used for vision
+   * @param cameras            the cameras to be used for vision
    */
   public SwerveBase(
       SwerveConstants constants,
@@ -179,80 +176,97 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
       SwerveStdDevs standardDeviations,
       PhoenixOdometryThread threadInstance,
       Vision... cameras) {
-    this(
-        constants,
-        filterTags,
-        standardDeviations.toMatrix(),
-        0.02,
-        AbsoluteSensorRangeValue.Unsigned_0To1,
-        SensorDirectionValue.CounterClockwise_Positive,
-        threadInstance,
-        cameras);
-  }
 
-  public SwerveBase(
-      SwerveConstants constants,
-      int[] filterTags,
-      Matrix<N3, N1>[] visionStdDevs,
-      double loopPeriodSecs,
-      AbsoluteSensorRangeValue cancoderRange,
-      SensorDirectionValue cancoderDirection,
-      PhoenixOdometryThread threadInstance,
-      Vision... cameras) {
-    this(
-        new GyroIOPigeon2(0, threadInstance),
-        new SwerveModuleIOFalcon( // front left
+    this.cameras = Arrays.asList(cameras);
+    this.constants = constants;
+    this.trustautostdDev = standardDeviations.autoStdDevs.trustMatrix();
+    this.trusttelestdDev = standardDeviations.teleStdDevs.trustMatrix();
+    this.regautostdDev = standardDeviations.autoStdDevs.distrustMatrix();
+    this.regtelestdDev = standardDeviations.teleStdDevs.distrustMatrix();
+
+    this.gyroIO = new GyroIOPigeon2(constants.pigeonID, threadInstance);
+
+    pathfindingConstraints = new PathConstraints(
+        constants.speedLimits.chassisLimits.maxVelocity,
+        constants.speedLimits.chassisLimits.maxAccel,
+        constants.speedLimits.chassisLimits.maxAngularVelocity.getRadians(),
+        constants.speedLimits.chassisLimits.maxAngularAccel.getRadians());
+
+    modules = new SwerveModule[] {
+        new SwerveModule(new SwerveModuleIOFalcon( // front left
             constants.moduleConfigs.frontLeft.moduleConstants,
             constants.useFOC,
             constants.pidConfigs.driveMotorConfig,
             constants.pidConfigs.angleMotorConfig,
-            cancoderRange,
-            cancoderDirection,
+            AbsoluteSensorRangeValue.Unsigned_0To1,
+            SensorDirectionValue.CounterClockwise_Positive,
             constants.canbus,
-            threadInstance),
-        new SwerveModuleIOFalcon( // front right
+            threadInstance), 0, constants),
+        new SwerveModule(new SwerveModuleIOFalcon( // front right
             constants.moduleConfigs.frontRight.moduleConstants,
             constants.useFOC,
             constants.pidConfigs.driveMotorConfig,
             constants.pidConfigs.angleMotorConfig,
-            cancoderRange,
-            cancoderDirection,
+            AbsoluteSensorRangeValue.Unsigned_0To1,
+            SensorDirectionValue.CounterClockwise_Positive,
             constants.canbus,
-            threadInstance),
-        new SwerveModuleIOFalcon( // back left
+            threadInstance), 1, constants),
+        new SwerveModule(new SwerveModuleIOFalcon( // back left
             constants.moduleConfigs.backLeft.moduleConstants,
             constants.useFOC,
             constants.pidConfigs.driveMotorConfig,
             constants.pidConfigs.angleMotorConfig,
-            cancoderRange,
-            cancoderDirection,
+            AbsoluteSensorRangeValue.Unsigned_0To1,
+            SensorDirectionValue.CounterClockwise_Positive,
             constants.canbus,
             threadInstance),
-        new SwerveModuleIOFalcon( // back right
+            2, constants),
+        new SwerveModule(new SwerveModuleIOFalcon( // back right
             constants.moduleConfigs.backRight.moduleConstants,
             constants.useFOC,
             constants.pidConfigs.driveMotorConfig,
             constants.pidConfigs.angleMotorConfig,
-            cancoderRange,
-            cancoderDirection,
+            AbsoluteSensorRangeValue.Unsigned_0To1,
+            SensorDirectionValue.CounterClockwise_Positive,
             constants.canbus,
-            threadInstance),
-        loopPeriodSecs,
-        filterTags,
-        visionStdDevs[0],
-        visionStdDevs[1],
-        visionStdDevs[2],
-        visionStdDevs[3],
-        constants,
-        threadInstance,
-        cameras);
+            threadInstance), 3, constants)
+    };
+    this.loopPeriodSecs = 0.02;
+    this.filterTags = filterTags;
+
+    threadInstance.start();
+
+    rotationPID = new PIDController(
+        constants.pidConfigs.teleopConfig.rotKP,
+        constants.pidConfigs.teleopConfig.rotKI,
+        constants.pidConfigs.teleopConfig.rotKD);
+    rotationPID.enableContinuousInput(0, 2 * Math.PI);
+    autoAlignPID = new PIDController(
+        constants.pidConfigs.autoAlignConfig.rotKP,
+        constants.pidConfigs.autoAlignConfig.rotKI,
+        constants.pidConfigs.autoAlignConfig.rotKD);
+    autoAlignPID.enableContinuousInput(0, 2 * Math.PI);
+
+    // std devs will be actually set later, so we dont need to initialize them to
+    // actual values here
+    poseEstimator = new BobcatSwerveEstimator(
+        constants.kinematicsConstants.kinematics,
+        getYaw(),
+        getModulePositions(),
+        new Pose2d(),
+        VecBuilder.fill(0, 0, 0),
+        VecBuilder.fill(0, 0, 0));
+
   }
 
   public void setLastMovingYaw(double value) {
     lastMovingYaw = value;
   }
 
-  /** if we are overriding the rotation target, return it, otherwise return an empty optional */
+  /**
+   * if we are overriding the rotation target, return it, otherwise return an
+   * empty optional
+   */
   public Optional<Rotation2d> getRotationTarget() {
     if (getRotationTarget() != null) {
       return Optional.of(getRotationTargetOverride());
@@ -262,7 +276,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   }
 
   /**
-   * the rotation2d this returns will override the one in pathplanner, if null, the default
+   * the rotation2d this returns will override the one in pathplanner, if null,
+   * the default
    * pathplanner rotation will be used
    */
   public Rotation2d getRotationTargetOverride() {
@@ -275,7 +290,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
   @Override
   public void periodic() {
-    // Priority IDs should be set in your SEASON SPECIFIC swerve subsystem, NOT in this base
+    // Priority IDs should be set in your SEASON SPECIFIC swerve subsystem, NOT in
+    // this base
     // subsystem
 
     odometryLock.lock();
@@ -307,9 +323,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
         Rotation2d yaw = getYaw();
         lastYaw = yaw;
       } else { // If disconnected or sim, use angular velocity
-        Rotation2d yaw =
-            lastYaw.plus(
-                Rotation2d.fromRadians(getChassisSpeeds().omegaRadiansPerSecond * loopPeriodSecs));
+        Rotation2d yaw = lastYaw.plus(
+            Rotation2d.fromRadians(getChassisSpeeds().omegaRadiansPerSecond * loopPeriodSecs));
         lastYaw = yaw;
       }
 
@@ -369,14 +384,16 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
     // update pose and configure cameras
     for (Vision camera : cameras) {
-      // tells the limelight the orientation of the gyro for calculating pose ambiguity
+      // tells the limelight the orientation of the gyro for calculating pose
+      // ambiguity
       camera.SetRobotOrientation(getYaw());
 
       // updates the pose using megatag 2 algo
       addVisionMG2(camera);
 
       // tells the cameras which tag to ignore,
-      // we do this multiple times because sometimes the code will execute before the LLs are booted
+      // we do this multiple times because sometimes the code will execute before the
+      // LLs are booted
       // up
       if (DriverStation.isDisabled()) {
         camera.setPermittedTags(filterTags);
@@ -386,9 +403,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
   @Override
   public void simulationPeriodic() {
-    Rotation2d yaw =
-        lastYaw.plus(
-            Rotation2d.fromRadians(getChassisSpeeds().omegaRadiansPerSecond * loopPeriodSecs));
+    Rotation2d yaw = lastYaw.plus(
+        Rotation2d.fromRadians(getChassisSpeeds().omegaRadiansPerSecond * loopPeriodSecs));
     lastYaw = yaw;
     switch (getOdometryState()) {
       case THROWOUT:
@@ -410,8 +426,9 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   }
 
   /**
-   * @return the OdometryState representing how much we should trust the odometry based on
-   *     acceleration
+   * @return the OdometryState representing how much we should trust the odometry
+   *         based on
+   *         acceleration
    */
   public OdometryState getOdometryState() {
     double avgAccel = 0;
@@ -430,7 +447,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   }
 
   /**
-   * Gets the current yaw of the gyro or the estimated yaw if the gyro is disconnected
+   * Gets the current yaw of the gyro or the estimated yaw if the gyro is
+   * disconnected
    *
    * @return current yaw of the gyro
    */
@@ -449,27 +467,27 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   /**
    * Makes the swerve drive move
    *
-   * @param translation desired x and y speeds of the swerve drive in meters per second
-   * @param rotation desired rotation speed of the swerve drive in radians per second
+   * @param translation   desired x and y speeds of the swerve drive in meters per
+   *                      second
+   * @param rotation      desired rotation speed of the swerve drive in radians
+   *                      per second
    * @param fieldRelative whether the values should be field relative or not
-   * @param autoAlign in radians
+   * @param autoAlign     in radians
    */
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean autoAlign) {
-    boolean rotationOverriden =
-        Math.abs(rotation)
-            < 0.02; // add a little bit of tolerance for if the stick gets bumped or smth
+    boolean rotationOverriden = Math.abs(rotation) < 0.02; // add a little bit of tolerance for if the stick gets bumped
+                                                           // or smth
     autoAlignAngle = BobcatUtil.wrapRot2d(autoAlignAngle());
 
-    ChassisSpeeds desiredSpeeds =
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getYaw())
-            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    ChassisSpeeds desiredSpeeds = fieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+            translation.getX(), translation.getY(), rotation, getYaw())
+        : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
 
     if (autoAlign && !rotationOverriden) {
-      desiredSpeeds.omegaRadiansPerSecond =
-          autoAlignPID.calculate(getWrappedYaw().getRadians(), autoAlignAngle.getRadians());
+      desiredSpeeds.omegaRadiansPerSecond = autoAlignPID.calculate(getWrappedYaw().getRadians(),
+          autoAlignAngle.getRadians());
       lastMovingYaw = getYaw().getRadians();
     } else {
       if (rotation == 0) {
@@ -477,9 +495,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
           rotating = false;
           lastMovingYaw = getYaw().getRadians();
         }
-        desiredSpeeds.omegaRadiansPerSecond =
-            rotationPID.calculate(
-                BobcatUtil.get0to2Pi(getYaw().getRadians()), BobcatUtil.get0to2Pi(lastMovingYaw));
+        desiredSpeeds.omegaRadiansPerSecond = rotationPID.calculate(
+            BobcatUtil.get0to2Pi(getYaw().getRadians()), BobcatUtil.get0to2Pi(lastMovingYaw));
       } else {
         rotating = true;
       }
@@ -491,8 +508,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     // setpointGenerator.generateSetpoint(SwerveConstants.moduleLimits,
     // currentSetpoint, desiredSpeeds, Constants.loopPeriodSecs);
 
-    SwerveModuleState[] swerveModuleStates =
-        constants.kinematicsConstants.kinematics.toSwerveModuleStates(desiredSpeeds);
+    SwerveModuleState[] swerveModuleStates = constants.kinematicsConstants.kinematics
+        .toSwerveModuleStates(desiredSpeeds);
     // SwerveModuleState[] swerveModuleStates = currentSetpoint.moduleStates();
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, constants.speedLimits.moduleLimits.maxVelocity);
@@ -512,8 +529,8 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
     lastMovingYaw = getYaw().getRadians();
 
-    SwerveModuleState[] swerveModuleStates =
-        constants.kinematicsConstants.kinematics.toSwerveModuleStates(targetSpeeds);
+    SwerveModuleState[] swerveModuleStates = constants.kinematicsConstants.kinematics
+        .toSwerveModuleStates(targetSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, constants.speedLimits.moduleLimits.maxVelocity);
 
@@ -638,10 +655,9 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
           return Math.abs(ppRotationOverride.getRadians() - getYaw().getRadians()) <= tolerance;
         } else {
           return Math.abs(
-                  ppRotationOverride.getRadians()
-                      - BobcatUtil.get0to2Pi(
-                          getYaw().rotateBy(Rotation2d.fromDegrees(180)).getRadians()))
-              <= tolerance;
+              ppRotationOverride.getRadians()
+                  - BobcatUtil.get0to2Pi(
+                      getYaw().rotateBy(Rotation2d.fromDegrees(180)).getRadians())) <= tolerance;
         }
       default:
         return false;
@@ -650,11 +666,9 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
 
   public boolean aligned(Rotation2d angle) {
     if (BobcatUtil.getAlliance() == Alliance.Blue) {
-      return Math.abs(angle.getRadians() - getYaw().getRadians())
-          <= constants.holoAlignTolerance.getRadians();
+      return Math.abs(angle.getRadians() - getYaw().getRadians()) <= constants.holoAlignTolerance.getRadians();
     } else {
-      return Math.abs(angle.getRadians() - getYaw().getRadians())
-          <= constants.holoAlignTolerance.getRadians();
+      return Math.abs(angle.getRadians() - getYaw().getRadians()) <= constants.holoAlignTolerance.getRadians();
     }
   }
 
@@ -710,12 +724,14 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   /**
    * volts
    *
-   * <p>index of module number starts at 0
+   * <p>
+   * index of module number starts at 0
    */
   @Override
   public double getModuleVoltage(int moduleNumber) {
     return modules[moduleNumber].getVoltage();
   }
+
   /** meters */
   @Override
   public double getModuleDistance(int moduleNumber) {
@@ -728,9 +744,9 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
     return modules[moduleNumber].getVelocityMetersPerSec();
   }
 
-  /*end sysid stuff */
+  /* end sysid stuff */
 
-  /*aim assist stuff */
+  /* aim assist stuff */
   @Override
   public Rotation2d autoAlignAngle() {
     return autoAlignAngle;
@@ -750,5 +766,5 @@ public class SwerveBase extends SubsystemBase implements SysidCompatibleSwerve, 
   public void setAimAssistTranslation(Translation2d translation) {
     aimAssistTranslation = translation;
   }
-  /*end aim assist stuff*/
+  /* end aim assist stuff */
 }
