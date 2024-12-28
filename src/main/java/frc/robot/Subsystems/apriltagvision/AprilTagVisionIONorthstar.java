@@ -25,10 +25,10 @@ public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
   private static final int cameraResolutionWidth = 1600;
   private static final int cameraResolutionHeight = 1304;
   private static final int cameraAutoExposure = 1;
-  // private static final int cameraExposure = 10;
-  private static final int cameraGain = 2;
+  private static final int cameraExposure = 200;
+  private static final int cameraGain = 1;
   private static final int maxFPS = 50;
-  private int cameraExposure = (int)SmartDashboard.getNumber("cameraExposure", 10);
+
   private final Supplier<AprilTagLayoutType> aprilTagTypeSupplier;
   private AprilTagLayoutType lastAprilTagType = null;
 

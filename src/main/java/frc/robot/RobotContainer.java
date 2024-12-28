@@ -107,7 +107,7 @@ public class RobotContainer {
 
                                 sysid = new Sysid(swerve);
                                 
-                                northstar =new AprilTagVision(swerve, this::getLayout, new AprilTagVisionIONorthstar(this::getLayout, 0));
+                                northstar =new AprilTagVision(swerve, this::getLayout, new AprilTagVisionIONorthstar(this::getLayout, 0), new AprilTagVisionIONorthstar(this::getLayout, 1));
 
                                 break;
 

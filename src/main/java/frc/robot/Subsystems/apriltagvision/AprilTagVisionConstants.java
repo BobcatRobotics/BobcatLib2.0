@@ -30,11 +30,11 @@ public class AprilTagVisionConstants {
                   new Rotation3d(0.0, Units.degreesToRadians(-30), Units.degreesToRadians(180.0))),
                       // .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(30.0)))),
               new Pose3d(
-                  Units.inchesToMeters(9.735),
-                  Units.inchesToMeters(-9.974),
-                  Units.inchesToMeters(8.837),
-                  new Rotation3d(0.0, Units.degreesToRadians(-28.125), 0.0)
-                      .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(-30.0))))
+                  Units.inchesToMeters(0),
+                  Units.inchesToMeters(0),
+                  Units.inchesToMeters(0),
+                  new Rotation3d(0.0, Units.degreesToRadians(0), 0.0)
+                      .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(0.0))))
             };
 
   public static final String[] instanceNames =
