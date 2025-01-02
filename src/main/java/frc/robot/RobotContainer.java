@@ -138,7 +138,7 @@ public class RobotContainer {
                 gp.start.onTrue(new InstantCommand(() -> swerve.resetPose(new Pose2d())));
                 gp.select.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
-        }
+        } 
 
         public Command getAutonomousCommand() {
                 return autoChooser.get();
